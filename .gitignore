@@ -1,0 +1,27 @@
+﻿# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Build output
+dist/
+build/
+
+# Logs
+*.log
+
+# Media files
+*.mp4
+*.wav
+*.mov
+*.avi
+
+# Uploads / generated files
+uploads/
+
+# OS files
+.DS_Store
+Thumbs.db

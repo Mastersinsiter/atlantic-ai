@@ -1,0 +1,3556 @@
+﻿[
+    {
+        "index":  0,
+        "sourceStart":  18,
+        "sourceEnd":  75,
+        "words":  [
+                      {
+                          "word":  "chal",
+                          "start":  17.654,
+                          "end":  17.824
+                      },
+                      {
+                          "word":  "rahi",
+                          "start":  17.824,
+                          "end":  18.064
+                      },
+                      {
+                          "word":  "thi",
+                          "start":  18.064,
+                          "end":  18.574
+                      },
+                      {
+                          "word":  "student",
+                          "start":  18.574,
+                          "end":  19.034
+                      },
+                      {
+                          "word":  "protest",
+                          "start":  19.034,
+                          "end":  19.164
+                      },
+                      {
+                          "word":  "chal",
+                          "start":  19.164,
+                          "end":  19.314
+                      },
+                      {
+                          "word":  "rahe",
+                          "start":  19.314,
+                          "end":  19.584
+                      },
+                      {
+                          "word":  "the",
+                          "start":  19.584,
+                          "end":  19.854
+                      },
+                      {
+                          "word":  "and",
+                          "start":  19.854,
+                          "end":  20.004
+                      },
+                      {
+                          "word":  "sab",
+                          "start":  20.004,
+                          "end":  20.304
+                      },
+                      {
+                          "word":  "batata",
+                          "start":  20.304,
+                          "end":  20.364
+                      },
+                      {
+                          "word":  "hu",
+                          "start":  20.364,
+                          "end":  20.734
+                      },
+                      {
+                          "word":  "dekhte",
+                          "start":  20.734,
+                          "end":  21.054
+                      },
+                      {
+                          "word":  "video",
+                          "start":  21.054,
+                          "end":  21.284
+                      },
+                      {
+                          "word":  "mein",
+                          "start":  21.284,
+                          "end":  21.654
+                      },
+                      {
+                          "word":  "kya",
+                          "start":  21.654,
+                          "end":  21.844
+                      },
+                      {
+                          "word":  "hai",
+                          "start":  21.844,
+                          "end":  22.044
+                      },
+                      {
+                          "word":  "aaj",
+                          "start":  22.044,
+                          "end":  22.644000000000002
+                      },
+                      {
+                          "word":  "ye",
+                          "start":  22.954,
+                          "end":  23.094
+                      },
+                      {
+                          "word":  "scene",
+                          "start":  23.094,
+                          "end":  23.154
+                      },
+                      {
+                          "word":  "hai",
+                          "start":  23.154,
+                          "end":  23.284
+                      },
+                      {
+                          "word":  "bhai",
+                          "start":  23.284,
+                          "end":  23.444
+                      },
+                      {
+                          "word":  "log",
+                          "start":  23.444,
+                          "end":  23.684
+                      },
+                      {
+                          "word":  "suno",
+                          "start":  23.684,
+                          "end":  23.824
+                      },
+                      {
+                          "word":  "abhi",
+                          "start":  23.824,
+                          "end":  24.424000000000003
+                      },
+                      {
+                          "word":  "dekho",
+                          "start":  25.804,
+                          "end":  25.924
+                      },
+                      {
+                          "word":  "mai",
+                          "start":  25.924,
+                          "end":  26.424
+                      },
+                      {
+                          "word":  "lifetime",
+                          "start":  26.424,
+                          "end":  26.784
+                      },
+                      {
+                          "word":  "clear",
+                          "start":  26.784,
+                          "end":  27.024
+                      },
+                      {
+                          "word":  "nahi",
+                          "start":  27.024,
+                          "end":  27.184
+                      },
+                      {
+                          "word":  "kar",
+                          "start":  27.184,
+                          "end":  27.504
+                      },
+                      {
+                          "word":  "sakta",
+                          "start":  27.504,
+                          "end":  27.584
+                      },
+                      {
+                          "word":  "ye",
+                          "start":  27.584,
+                          "end":  27.764
+                      },
+                      {
+                          "word":  "sab",
+                          "start":  27.764,
+                          "end":  28.054
+                      },
+                      {
+                          "word":  "baat",
+                          "start":  28.054,
+                          "end":  28.534
+                      },
+                      {
+                          "word":  "nahi",
+                          "start":  28.534,
+                          "end":  28.764
+                      },
+                      {
+                          "word":  "kar",
+                          "start":  28.764,
+                          "end":  29.074
+                      },
+                      {
+                          "word":  "sakta",
+                          "start":  29.074,
+                          "end":  29.134
+                      },
+                      {
+                          "word":  "ye",
+                          "start":  29.134,
+                          "end":  29.354
+                      },
+                      {
+                          "word":  "baat",
+                          "start":  29.354,
+                          "end":  29.894
+                      },
+                      {
+                          "word":  "please",
+                          "start":  29.894,
+                          "end":  30.404
+                      },
+                      {
+                          "word":  "tumhare",
+                          "start":  30.404,
+                          "end":  30.734
+                      },
+                      {
+                          "word":  "zehen",
+                          "start":  30.734,
+                          "end":  30.884
+                      },
+                      {
+                          "word":  "mein",
+                          "start":  30.884,
+                          "end":  31.254
+                      },
+                      {
+                          "word":  "daalo",
+                          "start":  31.254,
+                          "end":  31.434
+                      },
+                      {
+                          "word":  "bhai",
+                          "start":  31.434,
+                          "end":  31.624
+                      },
+                      {
+                          "word":  "log",
+                          "start":  31.624,
+                          "end":  32.224
+                      },
+                      {
+                          "word":  "please",
+                          "start":  32.224,
+                          "end":  32.484
+                      },
+                      {
+                          "word":  "mai",
+                          "start":  32.484,
+                          "end":  32.964
+                      },
+                      {
+                          "word":  "lifetime",
+                          "start":  32.964,
+                          "end":  33.094
+                      },
+                      {
+                          "word":  "ye",
+                          "start":  33.094,
+                          "end":  33.314
+                      },
+                      {
+                          "word":  "cheez",
+                          "start":  33.314,
+                          "end":  33.474
+                      },
+                      {
+                          "word":  "nahi",
+                          "start":  33.474,
+                          "end":  33.604
+                      },
+                      {
+                          "word":  "kar",
+                          "start":  33.604,
+                          "end":  33.864
+                      },
+                      {
+                          "word":  "sakta",
+                          "start":  33.864,
+                          "end":  34.054
+                      },
+                      {
+                          "word":  "mereko",
+                          "start":  34.054,
+                          "end":  34.304
+                      },
+                      {
+                          "word":  "bahut",
+                          "start":  34.304,
+                          "end":  34.524
+                      },
+                      {
+                          "word":  "kaam",
+                          "start":  34.524,
+                          "end":  34.904
+                      },
+                      {
+                          "word":  "dhandhe",
+                          "start":  34.904,
+                          "end":  35.144
+                      },
+                      {
+                          "word":  "hai",
+                          "start":  35.144,
+                          "end":  35.334
+                      },
+                      {
+                          "word":  "mereko",
+                          "start":  35.334,
+                          "end":  35.434
+                      },
+                      {
+                          "word":  "nahi",
+                          "start":  35.434,
+                          "end":  35.704
+                      },
+                      {
+                          "word":  "maloom",
+                          "start":  35.704,
+                          "end":  35.794
+                      },
+                      {
+                          "word":  "ye",
+                          "start":  35.794,
+                          "end":  36.144
+                      },
+                      {
+                          "word":  "rapper",
+                          "start":  36.144,
+                          "end":  36.274
+                      },
+                      {
+                          "word":  "log",
+                          "start":  36.274,
+                          "end":  36.434
+                      },
+                      {
+                          "word":  "kya",
+                          "start":  36.434,
+                          "end":  36.684
+                      },
+                      {
+                          "word":  "karte",
+                          "start":  36.684,
+                          "end":  37.164
+                      },
+                      {
+                          "word":  "din",
+                          "start":  37.164,
+                          "end":  37.284
+                      },
+                      {
+                          "word":  "mein",
+                          "start":  37.284,
+                          "end":  37.884
+                      },
+                      {
+                          "word":  "gaali",
+                          "start":  37.954,
+                          "end":  38.554
+                      },
+                      {
+                          "word":  "kya",
+                          "start":  38.604,
+                          "end":  38.984
+                      },
+                      {
+                          "word":  "kaam",
+                          "start":  38.984,
+                          "end":  39.064
+                      },
+                      {
+                          "word":  "kar",
+                          "start":  39.064,
+                          "end":  39.224
+                      },
+                      {
+                          "word":  "rahe",
+                          "start":  39.224,
+                          "end":  39.464
+                      },
+                      {
+                          "word":  "kya",
+                          "start":  39.464,
+                          "end":  40.064
+                      },
+                      {
+                          "word":  "bahut",
+                          "start":  40.064,
+                          "end":  40.234
+                      },
+                      {
+                          "word":  "kaam",
+                          "start":  40.234,
+                          "end":  40.404
+                      },
+                      {
+                          "word":  "unda",
+                          "start":  40.404,
+                          "end":  40.464
+                      },
+                      {
+                          "word":  "hai",
+                          "start":  40.464,
+                          "end":  40.674
+                      },
+                      {
+                          "word":  "bhai",
+                          "start":  40.674,
+                          "end":  40.854
+                      },
+                      {
+                          "word":  "mat",
+                          "start":  40.854,
+                          "end":  41.054
+                      },
+                      {
+                          "word":  "karo",
+                          "start":  41.054,
+                          "end":  41.654
+                      },
+                      {
+                          "word":  "lag",
+                          "start":  41.674,
+                          "end":  41.834
+                      },
+                      {
+                          "word":  "raha",
+                          "start":  41.834,
+                          "end":  42.064
+                      },
+                      {
+                          "word":  "tha",
+                          "start":  42.064,
+                          "end":  42.234
+                      },
+                      {
+                          "word":  "mujhe",
+                          "start":  42.234,
+                          "end":  42.424
+                      },
+                      {
+                          "word":  "laga",
+                          "start":  42.424,
+                          "end":  42.664
+                      },
+                      {
+                          "word":  "tumne",
+                          "start":  42.664,
+                          "end":  42.944
+                      },
+                      {
+                          "word":  "block",
+                          "start":  42.944,
+                          "end":  43.084
+                      },
+                      {
+                          "word":  "kar",
+                          "start":  43.084,
+                          "end":  43.194
+                      },
+                      {
+                          "word":  "diya",
+                          "start":  43.194,
+                          "end":  43.414
+                      },
+                      {
+                          "word":  "mujhe",
+                          "start":  43.414,
+                          "end":  44.014
+                      },
+                      {
+                          "word":  "i\u0027m",
+                          "start":  44.224,
+                          "end":  44.404
+                      },
+                      {
+                          "word":  "so",
+                          "start":  44.404,
+                          "end":  44.754
+                      },
+                      {
+                          "word":  "sorry",
+                          "start":  44.754,
+                          "end":  45.224
+                      },
+                      {
+                          "word":  "bha",
+                          "start":  45.224,
+                          "end":  45.644
+                      },
+                      {
+                          "word":  "yahan",
+                          "start":  45.644,
+                          "end":  45.704
+                      },
+                      {
+                          "word":  "pe",
+                          "start":  45.704,
+                          "end":  45.864
+                      },
+                      {
+                          "word":  "na",
+                          "start":  45.864,
+                          "end":  46.124
+                      },
+                      {
+                          "word":  "bahut",
+                          "start":  46.124,
+                          "end":  46.364
+                      },
+                      {
+                          "word":  "kuch",
+                          "start":  46.364,
+                          "end":  46.594
+                      },
+                      {
+                          "word":  "chal",
+                          "start":  46.594,
+                          "end":  46.724
+                      },
+                      {
+                          "word":  "raha",
+                          "start":  46.724,
+                          "end":  46.864
+                      },
+                      {
+                          "word":  "hai",
+                          "start":  46.864,
+                          "end":  47.094
+                      },
+                      {
+                          "word":  "yaar",
+                          "start":  47.094,
+                          "end":  47.694
+                      },
+                      {
+                          "word":  "kya",
+                          "start":  48.454,
+                          "end":  48.814
+                      },
+                      {
+                          "word":  "pad",
+                          "start":  48.814,
+                          "end":  49.004
+                      },
+                      {
+                          "word":  "rahe",
+                          "start":  49.004,
+                          "end":  49.604
+                      },
+                      {
+                          "word":  "mereko",
+                          "start":  49.964,
+                          "end":  50.194
+                      },
+                      {
+                          "word":  "mat",
+                          "start":  50.194,
+                          "end":  50.694
+                      },
+                      {
+                          "word":  "bhai",
+                          "start":  50.694,
+                          "end":  50.894
+                      },
+                      {
+                          "word":  "maine",
+                          "start":  50.894,
+                          "end":  51.044
+                      },
+                      {
+                          "word":  "nahi",
+                          "start":  51.044,
+                          "end":  51.344
+                      },
+                      {
+                          "word":  "socha",
+                          "start":  51.344,
+                          "end":  51.584
+                      },
+                      {
+                          "word":  "life",
+                          "start":  51.584,
+                          "end":  51.704
+                      },
+                      {
+                          "word":  "me",
+                          "start":  51.704,
+                          "end":  51.904
+                      },
+                      {
+                          "word":  "kabhi",
+                          "start":  51.904,
+                          "end":  51.964
+                      },
+                      {
+                          "word":  "ki",
+                          "start":  51.964,
+                          "end":  52.264
+                      },
+                      {
+                          "word":  "modi",
+                          "start":  52.264,
+                          "end":  52.394
+                      },
+                      {
+                          "word":  "ji",
+                          "start":  52.394,
+                          "end":  52.704
+                      },
+                      {
+                          "word":  "mujhse",
+                          "start":  52.704,
+                          "end":  52.884
+                      },
+                      {
+                          "word":  "zyada",
+                          "start":  52.884,
+                          "end":  53.484
+                      },
+                      {
+                          "word":  "consistent",
+                          "start":  53.514,
+                          "end":  53.594
+                      },
+                      {
+                          "word":  "ho",
+                          "start":  53.594,
+                          "end":  53.944
+                      },
+                      {
+                          "word":  "jayenge",
+                          "start":  53.944,
+                          "end":  54.434
+                      },
+                      {
+                          "word":  "instagram",
+                          "start":  54.434,
+                          "end":  54.594
+                      },
+                      {
+                          "word":  "pe",
+                          "start":  54.594,
+                          "end":  54.824
+                      },
+                      {
+                          "word":  "bhai",
+                          "start":  54.824,
+                          "end":  55.054
+                      },
+                      {
+                          "word":  "kya",
+                          "start":  55.054,
+                          "end":  55.334
+                      },
+                      {
+                          "word":  "reach",
+                          "start":  55.334,
+                          "end":  55.454
+                      },
+                      {
+                          "word":  "aa",
+                          "start":  55.454,
+                          "end":  55.614
+                      },
+                      {
+                          "word":  "rahi",
+                          "start":  55.614,
+                          "end":  55.674
+                      },
+                      {
+                          "word":  "hai",
+                          "start":  55.674,
+                          "end":  55.834
+                      },
+                      {
+                          "word":  "bhai",
+                          "start":  55.834,
+                          "end":  55.994
+                      },
+                      {
+                          "word":  "kya",
+                          "start":  55.994,
+                          "end":  56.284
+                      },
+                      {
+                          "word":  "reach",
+                          "start":  56.284,
+                          "end":  56.404
+                      },
+                      {
+                          "word":  "hai",
+                          "start":  56.404,
+                          "end":  56.554
+                      },
+                      {
+                          "word":  "ye",
+                          "start":  56.554,
+                          "end":  56.884
+                      },
+                      {
+                          "word":  "300",
+                          "start":  56.884,
+                          "end":  57.484
+                      },
+                      {
+                          "word":  "million",
+                          "start":  57.734,
+                          "end":  58.074
+                      },
+                      {
+                          "word":  "bro",
+                          "start":  58.074,
+                          "end":  58.464
+                      },
+                      {
+                          "word":  "ek",
+                          "start":  58.464,
+                          "end":  58.824
+                      },
+                      {
+                          "word":  "million",
+                          "start":  58.824,
+                          "end":  59.044
+                      },
+                      {
+                          "word":  "lane",
+                          "start":  59.044,
+                          "end":  59.204
+                      },
+                      {
+                          "word":  "aur",
+                          "start":  59.204,
+                          "end":  59.574
+                      },
+                      {
+                          "word":  "hekdi",
+                          "start":  59.574,
+                          "end":  59.694
+                      },
+                      {
+                          "word":  "li",
+                          "start":  59.694,
+                          "end":  59.984
+                      },
+                      {
+                          "word":  "jaati",
+                          "start":  59.984,
+                          "end":  60.094
+                      },
+                      {
+                          "word":  "hai",
+                          "start":  60.094,
+                          "end":  60.384
+                      },
+                      {
+                          "word":  "idhar",
+                          "start":  60.384,
+                          "end":  60.854
+                      },
+                      {
+                          "word":  "tereko",
+                          "start":  60.854,
+                          "end":  61.124
+                      },
+                      {
+                          "word":  "kya",
+                          "start":  61.124,
+                          "end":  61.504
+                      },
+                      {
+                          "word":  "bahut",
+                          "start":  61.504,
+                          "end":  61.804
+                      },
+                      {
+                          "word":  "mazaak",
+                          "start":  61.804,
+                          "end":  61.944
+                      },
+                      {
+                          "word":  "lag",
+                          "start":  61.944,
+                          "end":  62.064
+                      },
+                      {
+                          "word":  "raha",
+                          "start":  62.064,
+                          "end":  62.124
+                      },
+                      {
+                          "word":  "hai",
+                          "start":  62.124,
+                          "end":  62.334
+                      },
+                      {
+                          "word":  "tereko",
+                          "start":  62.334,
+                          "end":  62.404
+                      },
+                      {
+                          "word":  "ye",
+                          "start":  62.404,
+                          "end":  62.624
+                      },
+                      {
+                          "word":  "sab",
+                          "start":  62.624,
+                          "end":  62.834
+                      },
+                      {
+                          "word":  "cheez",
+                          "start":  62.834,
+                          "end":  63.384
+                      },
+                      {
+                          "word":  "mat",
+                          "start":  63.384,
+                          "end":  63.534
+                      },
+                      {
+                          "word":  "kar",
+                          "start":  63.534,
+                          "end":  63.784
+                      },
+                      {
+                          "word":  "beta",
+                          "start":  63.784,
+                          "end":  63.954
+                      },
+                      {
+                          "word":  "mat",
+                          "start":  63.954,
+                          "end":  64.184
+                      },
+                      {
+                          "word":  "kar",
+                          "start":  64.184,
+                          "end":  64.78399999999999
+                      },
+                      {
+                          "word":  "mai",
+                          "start":  64.884,
+                          "end":  65.044
+                      },
+                      {
+                          "word":  "bol",
+                          "start":  65.044,
+                          "end":  65.174
+                      },
+                      {
+                          "word":  "raha",
+                          "start":  65.174,
+                          "end":  65.254
+                      },
+                      {
+                          "word":  "hu",
+                          "start":  65.254,
+                          "end":  65.504
+                      },
+                      {
+                          "word":  "beta",
+                          "start":  65.504,
+                          "end":  65.734
+                      },
+                      {
+                          "word":  "mat",
+                          "start":  65.734,
+                          "end":  65.924
+                      },
+                      {
+                          "word":  "kar",
+                          "start":  65.924,
+                          "end":  66.074
+                      },
+                      {
+                          "word":  "ye",
+                          "start":  66.074,
+                          "end":  66.424
+                      },
+                      {
+                          "word":  "sab",
+                          "start":  66.424,
+                          "end":  67.024
+                      },
+                      {
+                          "word":  "mat",
+                          "start":  67.924,
+                          "end":  68.044
+                      },
+                      {
+                          "word":  "kar",
+                          "start":  68.044,
+                          "end":  68.324
+                      },
+                      {
+                          "word":  "tere",
+                          "start":  68.324,
+                          "end":  68.644
+                      },
+                      {
+                          "word":  "ko",
+                          "start":  68.644,
+                          "end":  69.244
+                      },
+                      {
+                          "word":  "mera",
+                          "start":  69.964,
+                          "end":  70.214
+                      },
+                      {
+                          "word":  "intro",
+                          "start":  70.214,
+                          "end":  70.624
+                      },
+                      {
+                          "word":  "bolenge",
+                          "start":  70.624,
+                          "end":  70.834
+                      },
+                      {
+                          "word":  "kaise",
+                          "start":  70.834,
+                          "end":  71.184
+                      },
+                      {
+                          "word":  "lagenge",
+                          "start":  71.184,
+                          "end":  71.424
+                      },
+                      {
+                          "word":  "modi",
+                          "start":  71.424,
+                          "end":  71.554
+                      },
+                      {
+                          "word":  "ji",
+                          "start":  71.554,
+                          "end":  72.064
+                      },
+                      {
+                          "word":  "hello",
+                          "start":  72.064,
+                          "end":  72.334
+                      },
+                      {
+                          "word":  "guys",
+                          "start":  72.334,
+                          "end":  72.484
+                      },
+                      {
+                          "word":  "mai",
+                          "start":  72.484,
+                          "end":  72.634
+                      },
+                      {
+                          "word":  "ish",
+                          "start":  72.634,
+                          "end":  72.824
+                      },
+                      {
+                          "word":  "kesh",
+                          "start":  72.824,
+                          "end":  73.194
+                      },
+                      {
+                          "word":  "wala",
+                          "start":  73.194,
+                          "end":  73.494
+                      },
+                      {
+                          "word":  "a",
+                          "start":  73.494,
+                          "end":  73.784
+                      },
+                      {
+                          "word":  "k",
+                          "start":  73.784,
+                          "end":  74.384
+                      },
+                      {
+                          "word":  "thagesh",
+                          "start":  74.454,
+                          "end":  74.964
+                      },
+                      {
+                          "word":  "two",
+                          "start":  74.964,
+                          "end":  75.124
+                      },
+                      {
+                          "word":  "out",
+                          "start":  75.124,
+                          "end":  75.42399999999999
+                      }
+                  ]
+    },
+    {
+        "index":  1,
+        "sourceStart":  449,
+        "sourceEnd":  509,
+        "words":  [
+                      {
+                          "word":  "मिल",
+                          "start":  448.582,
+                          "end":  448.962
+                      },
+                      {
+                          "word":  "जाओ",
+                          "start":  448.962,
+                          "end":  449.562
+                      },
+                      {
+                          "word":  "दादी",
+                          "start":  449.78200000000004,
+                          "end":  449.98199999999997
+                      },
+                      {
+                          "word":  "कौन",
+                          "start":  449.98199999999997,
+                          "end":  450.062
+                      },
+                      {
+                          "word":  "सी",
+                          "start":  450.062,
+                          "end":  450.342
+                      },
+                      {
+                          "word":  "भाषा",
+                          "start":  450.342,
+                          "end":  450.432
+                      },
+                      {
+                          "word":  "में",
+                          "start":  450.432,
+                          "end":  450.622
+                      },
+                      {
+                          "word":  "बोल",
+                          "start":  450.622,
+                          "end":  450.73199999999997
+                      },
+                      {
+                          "word":  "रही",
+                          "start":  450.73199999999997,
+                          "end":  450.822
+                      },
+                      {
+                          "word":  "हो",
+                          "start":  450.822,
+                          "end":  451.072
+                      },
+                      {
+                          "word":  "मोदी",
+                          "start":  451.072,
+                          "end":  451.672
+                      },
+                      {
+                          "word":  "इंग्लिश",
+                          "start":  453.322,
+                          "end":  453.502
+                      },
+                      {
+                          "word":  "में",
+                          "start":  453.502,
+                          "end":  454.10200000000003
+                      },
+                      {
+                          "word":  "बोलता",
+                          "start":  454.152,
+                          "end":  454.712
+                      },
+                      {
+                          "word":  "हिंदी",
+                          "start":  454.712,
+                          "end":  454.91200000000003
+                      },
+                      {
+                          "word":  "में",
+                          "start":  454.91200000000003,
+                          "end":  455.51200000000006
+                      },
+                      {
+                          "word":  "बोलता",
+                          "start":  455.66200000000003,
+                          "end":  455.78200000000004
+                      },
+                      {
+                          "word":  "है",
+                          "start":  455.78200000000004,
+                          "end":  456.38200000000006
+                      },
+                      {
+                          "word":  "हिंदी",
+                          "start":  457.302,
+                          "end":  457.392
+                      },
+                      {
+                          "word":  "में",
+                          "start":  457.392,
+                          "end":  457.812
+                      },
+                      {
+                          "word":  "बोलता",
+                          "start":  457.812,
+                          "end":  457.942
+                      },
+                      {
+                          "word":  "है",
+                          "start":  457.942,
+                          "end":  458.54200000000003
+                      },
+                      {
+                          "word":  "हिंदी",
+                          "start":  458.722,
+                          "end":  458.822
+                      },
+                      {
+                          "word":  "में",
+                          "start":  458.822,
+                          "end":  459.182
+                      },
+                      {
+                          "word":  "बोलता",
+                          "start":  459.182,
+                          "end":  459.372
+                      },
+                      {
+                          "word":  "है",
+                          "start":  459.372,
+                          "end":  459.97200000000004
+                      },
+                      {
+                          "word":  "हां",
+                          "start":  460.702,
+                          "end":  461.082
+                      },
+                      {
+                          "word":  "बड़े",
+                          "start":  461.082,
+                          "end":  461.23199999999997
+                      },
+                      {
+                          "word":  "हैं",
+                          "start":  461.23199999999997,
+                          "end":  461.692
+                      },
+                      {
+                          "word":  "बात",
+                          "start":  461.692,
+                          "end":  461.78200000000004
+                      },
+                      {
+                          "word":  "तो",
+                          "start":  461.78200000000004,
+                          "end":  461.972
+                      },
+                      {
+                          "word":  "करो",
+                          "start":  461.972,
+                          "end":  462.572
+                      },
+                      {
+                          "word":  "मोद",
+                          "start":  462.592,
+                          "end":  462.99199999999996
+                      },
+                      {
+                          "word":  "बोलो",
+                          "start":  462.99199999999996,
+                          "end":  463.312
+                      },
+                      {
+                          "word":  "मोद",
+                          "start":  463.312,
+                          "end":  463.432
+                      },
+                      {
+                          "word":  "से",
+                          "start":  463.432,
+                          "end":  463.682
+                      },
+                      {
+                          "word":  "वीडियो",
+                          "start":  463.682,
+                          "end":  464.022
+                      },
+                      {
+                          "word":  "सो",
+                          "start":  464.022,
+                          "end":  464.182
+                      },
+                      {
+                          "word":  "स्वीट",
+                          "start":  464.182,
+                          "end":  464.602
+                      },
+                      {
+                          "word":  "वीडियो",
+                          "start":  464.602,
+                          "end":  464.842
+                      },
+                      {
+                          "word":  "कॉल",
+                          "start":  464.842,
+                          "end":  465.092
+                      },
+                      {
+                          "word":  "चालू",
+                          "start":  465.092,
+                          "end":  465.16200000000003
+                      },
+                      {
+                          "word":  "है",
+                          "start":  465.16200000000003,
+                          "end":  465.652
+                      },
+                      {
+                          "word":  "वीडियो",
+                          "start":  465.652,
+                          "end":  465.892
+                      },
+                      {
+                          "word":  "कॉल",
+                          "start":  465.892,
+                          "end":  466.172
+                      },
+                      {
+                          "word":  "चालू",
+                          "start":  466.172,
+                          "end":  466.272
+                      },
+                      {
+                          "word":  "हो",
+                          "start":  466.272,
+                          "end":  466.352
+                      },
+                      {
+                          "word":  "ये",
+                          "start":  466.352,
+                          "end":  466.472
+                      },
+                      {
+                          "word":  "तो",
+                          "start":  466.472,
+                          "end":  466.61199999999997
+                      },
+                      {
+                          "word":  "मैं",
+                          "start":  466.61199999999997,
+                          "end":  467.122
+                      },
+                      {
+                          "word":  "बोलती",
+                          "start":  467.122,
+                          "end":  467.29200000000003
+                      },
+                      {
+                          "word":  "हूं",
+                          "start":  467.29200000000003,
+                          "end":  467.392
+                      },
+                      {
+                          "word":  "ना",
+                          "start":  467.392,
+                          "end":  467.73199999999997
+                      },
+                      {
+                          "word":  "हां",
+                          "start":  467.73199999999997,
+                          "end":  468.332
+                      },
+                      {
+                          "word":  "उनको",
+                          "start":  469.422,
+                          "end":  469.552
+                      },
+                      {
+                          "word":  "लग",
+                          "start":  469.552,
+                          "end":  469.652
+                      },
+                      {
+                          "word":  "रहा",
+                          "start":  469.652,
+                          "end":  469.712
+                      },
+                      {
+                          "word":  "है",
+                          "start":  469.712,
+                          "end":  470.022
+                      },
+                      {
+                          "word":  "वेटिंग",
+                          "start":  470.022,
+                          "end":  470.562
+                      },
+                      {
+                          "word":  "बड़ी",
+                          "start":  470.562,
+                          "end":  471.022
+                      },
+                      {
+                          "word":  "बातचीत",
+                          "start":  471.022,
+                          "end":  471.122
+                      },
+                      {
+                          "word":  "है",
+                          "start":  471.122,
+                          "end":  471.692
+                      },
+                      {
+                          "word":  "पोते",
+                          "start":  471.692,
+                          "end":  471.78200000000004
+                      },
+                      {
+                          "word":  "की",
+                          "start":  471.78200000000004,
+                          "end":  472.38200000000006
+                      },
+                      {
+                          "word":  "बात",
+                          "start":  472.53200000000004,
+                          "end":  472.802
+                      },
+                      {
+                          "word":  "करती",
+                          "start":  472.802,
+                          "end":  472.91200000000003
+                      },
+                      {
+                          "word":  "हूं",
+                          "start":  472.91200000000003,
+                          "end":  473.51200000000006
+                      },
+                      {
+                          "word":  "प्राइम",
+                          "start":  473.78200000000004,
+                          "end":  474.226
+                      },
+                      {
+                          "word":  "Kuch",
+                          "start":  474.226,
+                          "end":  474.29200000000003
+                      },
+                      {
+                          "word":  "मिनिस्टर",
+                          "start":  474.29200000000003,
+                          "end":  474.446
+                      },
+                      {
+                          "word":  "bhi",
+                          "start":  474.446,
+                          "end":  474.586
+                      },
+                      {
+                          "word":  "ho",
+                          "start":  474.586,
+                          "end":  474.726
+                      },
+                      {
+                          "word":  "jae",
+                          "start":  474.726,
+                          "end":  474.892
+                      },
+                      {
+                          "word":  "बोला",
+                          "start":  474.892,
+                          "end":  474.946
+                      },
+                      {
+                          "word":  "na",
+                          "start":  474.946,
+                          "end":  475.0024
+                      },
+                      {
+                          "word":  "kehta",
+                          "start":  475.0024,
+                          "end":  475.0039
+                      },
+                      {
+                          "word":  "tha",
+                          "start":  475.0039,
+                          "end":  475.0061
+                      },
+                      {
+                          "word":  "Shri",
+                          "start":  475.0061,
+                          "end":  475.0114
+                      },
+                      {
+                          "word":  "Narayan",
+                          "start":  475.0114,
+                          "end":  475.0126
+                      },
+                      {
+                          "word":  "kab",
+                          "start":  475.0126,
+                          "end":  475.0142
+                      },
+                      {
+                          "word":  "se",
+                          "start":  475.0142,
+                          "end":  475.0163
+                      },
+                      {
+                          "word":  "hai",
+                          "start":  475.0163,
+                          "end":  475.01804
+                      },
+                      {
+                          "word":  "jisne",
+                          "start":  475.01804,
+                          "end":  475.02024
+                      },
+                      {
+                          "word":  "nahi",
+                          "start":  475.02024,
+                          "end":  475.02234
+                      },
+                      {
+                          "word":  "kiya",
+                          "start":  475.02234,
+                          "end":  475.02724
+                      },
+                      {
+                          "word":  "khatam",
+                          "start":  475.02724,
+                          "end":  475.0372
+                      },
+                      {
+                          "word":  "to",
+                          "start":  475.0372,
+                          "end":  475.0396
+                      },
+                      {
+                          "word":  "bahut",
+                          "start":  475.0396,
+                          "end":  475.0427
+                      },
+                      {
+                          "word":  "purana",
+                          "start":  475.0427,
+                          "end":  475.0474
+                      },
+                      {
+                          "word":  "Lakshmi",
+                          "start":  475.0474,
+                          "end":  475.0487
+                      },
+                      {
+                          "word":  "ji",
+                          "start":  475.0487,
+                          "end":  475.0691
+                      },
+                      {
+                          "word":  "bataiye",
+                          "start":  475.0691,
+                          "end":  475.0712
+                      },
+                      {
+                          "word":  "aapka",
+                          "start":  475.0712,
+                          "end":  475.0734
+                      },
+                      {
+                          "word":  "naam",
+                          "start":  475.0734,
+                          "end":  475.0754
+                      },
+                      {
+                          "word":  "kya",
+                          "start":  475.0754,
+                          "end":  475.0792
+                      },
+                      {
+                          "word":  "Mera",
+                          "start":  475.0792,
+                          "end":  475.0855
+                      },
+                      {
+                          "word":  "Mohammad",
+                          "start":  475.0855,
+                          "end":  475.0886
+                      },
+                      {
+                          "word":  "Faiz",
+                          "start":  475.0886,
+                          "end":  475.091
+                      },
+                      {
+                          "word":  "Khan",
+                          "start":  475.091,
+                          "end":  475.0968
+                      },
+                      {
+                          "word":  "aur",
+                          "start":  475.0968,
+                          "end":  475.0978
+                      },
+                      {
+                          "word":  "main",
+                          "start":  475.0978,
+                          "end":  475.1032
+                      },
+                      {
+                          "word":  "Gosevak",
+                          "start":  475.1032,
+                          "end":  475.1042
+                      },
+                      {
+                          "word":  "hoon",
+                          "start":  475.1042,
+                          "end":  475.10654
+                      },
+                      {
+                          "word":  "I",
+                          "start":  475.10654,
+                          "end":  475.10904
+                      },
+                      {
+                          "word":  "love",
+                          "start":  475.10904,
+                          "end":  475.11184
+                      },
+                      {
+                          "word":  "Salman",
+                          "start":  475.11184,
+                          "end":  475.12214
+                      },
+                      {
+                          "word":  "bare",
+                          "start":  475.12214,
+                          "end":  475.12274
+                      },
+                      {
+                          "word":  "mein",
+                          "start":  475.12274,
+                          "end":  475.12424
+                      },
+                      {
+                          "word":  "aaj",
+                          "start":  475.12424,
+                          "end":  475.12564
+                      },
+                      {
+                          "word":  "kal",
+                          "start":  475.12564,
+                          "end":  475.12784
+                      },
+                      {
+                          "word":  "kuch",
+                          "start":  475.12784,
+                          "end":  475.1292
+                      },
+                      {
+                          "word":  "checkmate",
+                          "start":  475.1292,
+                          "end":  475.13404
+                      },
+                      {
+                          "word":  "alag",
+                          "start":  475.13404,
+                          "end":  475.1353
+                      },
+                      {
+                          "word":  "मामला",
+                          "start":  475.1353,
+                          "end":  475.1374
+                      },
+                      {
+                          "word":  "पूरा",
+                          "start":  475.1374,
+                          "end":  475.14024
+                      },
+                      {
+                          "word":  "pichhle",
+                          "start":  475.14024,
+                          "end":  475.1408
+                      },
+                      {
+                          "word":  "मोहम्मद",
+                          "start":  475.1408,
+                          "end":  475.14154
+                      },
+                      {
+                          "word":  "ek",
+                          "start":  475.14154,
+                          "end":  475.14374
+                      },
+                      {
+                          "word":  "saal",
+                          "start":  475.14374,
+                          "end":  475.1444
+                      },
+                      {
+                          "word":  "फैज",
+                          "start":  475.1444,
+                          "end":  475.146
+                      },
+                      {
+                          "word":  "ye",
+                          "start":  475.146,
+                          "end":  475.1462
+                      },
+                      {
+                          "word":  "खान",
+                          "start":  475.1462,
+                          "end":  475.1472
+                      },
+                      {
+                          "word":  "के",
+                          "start":  475.1472,
+                          "end":  475.1481
+                      },
+                      {
+                          "word":  "आप",
+                          "start":  475.1481,
+                          "end":  475.14924
+                      },
+                      {
+                          "word":  "hua",
+                          "start":  475.14924,
+                          "end":  475.1506
+                      },
+                      {
+                          "word":  "सोच",
+                          "start":  475.1506,
+                          "end":  475.1517
+                      },
+                      {
+                          "word":  "रहे",
+                          "start":  475.1517,
+                          "end":  475.1524
+                      },
+                      {
+                          "word":  "है",
+                          "start":  475.1524,
+                          "end":  475.1541
+                      },
+                      {
+                          "word":  "ये",
+                          "start":  475.1541,
+                          "end":  475.1554
+                      },
+                      {
+                          "word":  "तो",
+                          "start":  475.1554,
+                          "end":  475.15544
+                      },
+                      {
+                          "word":  "tweets",
+                          "start":  475.15544,
+                          "end":  475.15834
+                      },
+                      {
+                          "word":  "wapas",
+                          "start":  475.15834,
+                          "end":  475.15934
+                      },
+                      {
+                          "word":  "aa",
+                          "start":  475.15934,
+                          "end":  475.16074
+                      },
+                      {
+                          "word":  "gaye",
+                          "start":  475.16074,
+                          "end":  475.16544
+                      },
+                      {
+                          "word":  "posts",
+                          "start":  475.16544,
+                          "end":  475.1732
+                      },
+                      {
+                          "word":  "Checkmate",
+                          "start":  475.1732,
+                          "end":  475.1743
+                      },
+                      {
+                          "word":  "ho",
+                          "start":  475.1743,
+                          "end":  475.1764
+                      },
+                      {
+                          "word":  "gaya",
+                          "start":  475.1764,
+                          "end":  475.1793
+                      },
+                      {
+                          "word":  "bhai",
+                          "start":  475.1793,
+                          "end":  475.18024
+                      },
+                      {
+                          "word":  "dohe",
+                          "start":  475.18024,
+                          "end":  475.19424
+                      },
+                      {
+                          "word":  "ghar",
+                          "start":  475.19424,
+                          "end":  475.19484
+                      },
+                      {
+                          "word":  "pe",
+                          "start":  475.19484,
+                          "end":  475.19634
+                      },
+                      {
+                          "word":  "aake",
+                          "start":  475.19634,
+                          "end":  475.19894
+                      },
+                      {
+                          "word":  "baar",
+                          "start":  475.19894,
+                          "end":  475.20164
+                      },
+                      {
+                          "word":  "dekhte",
+                          "start":  475.20164,
+                          "end":  475.20524
+                      },
+                      {
+                          "word":  "honge",
+                          "start":  475.20524,
+                          "end":  475.20654
+                      },
+                      {
+                          "word":  "kon",
+                          "start":  475.20654,
+                          "end":  475.21044
+                      },
+                      {
+                          "word":  "vibe",
+                          "start":  475.21044,
+                          "end":  475.21374
+                      },
+                      {
+                          "word":  "rahe",
+                          "start":  475.21374,
+                          "end":  475.21664
+                      },
+                      {
+                          "word":  "acha",
+                          "start":  475.21664,
+                          "end":  475.22474
+                      },
+                      {
+                          "word":  "theek",
+                          "start":  475.22474,
+                          "end":  475.23354
+                      },
+                      {
+                          "word":  "Interviewer",
+                          "start":  475.23354,
+                          "end":  475.23384
+                      },
+                      {
+                          "word":  "dosto",
+                          "start":  475.23384,
+                          "end":  475.23964
+                      },
+                      {
+                          "word":  "mob",
+                          "start":  475.23964,
+                          "end":  475.24224
+                      },
+                      {
+                          "word":  "number",
+                          "start":  475.24224,
+                          "end":  475.24644
+                      },
+                      {
+                          "word":  "1110",
+                          "start":  475.24644,
+                          "end":  475.24784
+                      },
+                      {
+                          "word":  "side",
+                          "start":  475.24784,
+                          "end":  475.25054
+                      },
+                      {
+                          "word":  "kam",
+                          "start":  475.25054,
+                          "end":  475.2525
+                      },
+                      {
+                          "word":  "Muslim",
+                          "start":  475.2525,
+                          "end":  475.25254
+                      },
+                      {
+                          "word":  "mare",
+                          "start":  475.25254,
+                          "end":  475.2548
+                      },
+                      {
+                          "word":  "par",
+                          "start":  475.2548,
+                          "end":  475.25754
+                      },
+                      {
+                          "word":  "fod",
+                          "start":  475.25754,
+                          "end":  475.25924
+                      },
+                      {
+                          "word":  "dunga",
+                          "start":  475.25924,
+                          "end":  475.2605
+                      },
+                      {
+                          "word":  "nishpaksh",
+                          "start":  475.2605,
+                          "end":  475.2628
+                      },
+                      {
+                          "word":  "baat",
+                          "start":  475.2628,
+                          "end":  475.2655
+                      },
+                      {
+                          "word":  "karta",
+                          "start":  475.2655,
+                          "end":  475.269
+                      },
+                      {
+                          "word":  "dekhiye",
+                          "start":  475.269,
+                          "end":  475.2707
+                      },
+                      {
+                          "word":  "aap",
+                          "start":  475.2707,
+                          "end":  475.27104
+                      },
+                      {
+                          "word":  "jagah",
+                          "start":  475.27104,
+                          "end":  475.2716
+                      },
+                      {
+                          "word":  "is",
+                          "start":  475.2716,
+                          "end":  475.27374
+                      },
+                      {
+                          "word":  "bicep",
+                          "start":  475.27374,
+                          "end":  475.2743
+                      },
+                      {
+                          "word":  "ko",
+                          "start":  475.2743,
+                          "end":  475.2778
+                      },
+                      {
+                          "word":  "samajh",
+                          "start":  475.2778,
+                          "end":  475.2809
+                      },
+                      {
+                          "word":  "jaiyega",
+                          "start":  475.2809,
+                          "end":  475.2882
+                      },
+                      {
+                          "word":  "are",
+                          "start":  475.2882,
+                          "end":  475.2917
+                      },
+                      {
+                          "word":  "yaar",
+                          "start":  475.2917,
+                          "end":  475.2955
+                      },
+                      {
+                          "word":  "ismein",
+                          "start":  475.2955,
+                          "end":  475.3006
+                      },
+                      {
+                          "word":  "pura",
+                          "start":  475.3006,
+                          "end":  475.3039
+                      },
+                      {
+                          "word":  "Hanuman",
+                          "start":  475.3039,
+                          "end":  475.3072
+                      },
+                      {
+                          "word":  "Chalisa",
+                          "start":  475.3072,
+                          "end":  475.3094
+                      },
+                      {
+                          "word":  "suna",
+                          "start":  475.3094,
+                          "end":  475.3125
+                      },
+                      {
+                          "word":  "sakta",
+                          "start":  475.3125,
+                          "end":  475.3155
+                      },
+                      {
+                          "word":  "aapko",
+                          "start":  475.3155,
+                          "end":  475.3175
+                      },
+                      {
+                          "word":  "yahan",
+                          "start":  475.3175,
+                          "end":  475.3216
+                      },
+                      {
+                          "word":  "baith",
+                          "start":  475.3216,
+                          "end":  475.3228
+                      },
+                      {
+                          "word":  "kar",
+                          "start":  475.3228,
+                          "end":  475.3379
+                      },
+                      {
+                          "word":  "Dada",
+                          "start":  475.3379,
+                          "end":  475.3392
+                      },
+                      {
+                          "word":  "ki",
+                          "start":  475.3392,
+                          "end":  475.3418
+                      },
+                      {
+                          "word":  "fat",
+                          "start":  475.3418,
+                          "end":  475.3429
+                      },
+                      {
+                          "word":  "ke",
+                          "start":  475.3429,
+                          "end":  475.3452
+                      },
+                      {
+                          "word":  "haath",
+                          "start":  475.3452,
+                          "end":  475.45508
+                      },
+                      {
+                          "word":  "Talvindar",
+                          "start":  475.45508,
+                          "end":  475.45688
+                      },
+                      {
+                          "word":  "bana",
+                          "start":  475.45688,
+                          "end":  475.45898
+                      },
+                      {
+                          "word":  "diya",
+                          "start":  475.45898,
+                          "end":  475.546
+                      },
+                      {
+                          "word":  "memes",
+                          "start":  475.546,
+                          "end":  475.54924
+                      },
+                      {
+                          "word":  "Bhai",
+                          "start":  475.54924,
+                          "end":  475.55164
+                      },
+                      {
+                          "word":  "woh",
+                          "start":  475.55164,
+                          "end":  475.55314
+                      },
+                      {
+                          "word":  "nahi",
+                          "start":  475.55314,
+                          "end":  475.55424
+                      },
+                      {
+                          "word":  "lag",
+                          "start":  475.55424,
+                          "end":  475.55554
+                      },
+                      {
+                          "word":  "rahi",
+                          "start":  475.55554,
+                          "end":  475.55624
+                      },
+                      {
+                          "word":  "hai",
+                          "start":  475.55624,
+                          "end":  475.56824
+                      },
+                      {
+                          "word":  "Japanese",
+                          "start":  475.56824,
+                          "end":  475.57094
+                      },
+                      {
+                          "word":  "bhoot",
+                          "start":  475.57094,
+                          "end":  475.57354
+                      },
+                      {
+                          "word":  "konsa",
+                          "start":  475.57354,
+                          "end":  475.57564
+                      },
+                      {
+                          "word":  "hota",
+                          "start":  475.57564,
+                          "end":  475.58354
+                      },
+                      {
+                          "word":  "Momo",
+                          "start":  475.58354,
+                          "end":  475.58734
+                      },
+                      {
+                          "word":  "Koko",
+                          "start":  475.58734,
+                          "end":  475.592
+                      },
+                      {
+                          "word":  "बना",
+                          "start":  475.592,
+                          "end":  475.59464
+                      },
+                      {
+                          "word":  "They",
+                          "start":  475.59464,
+                          "end":  475.59714
+                      },
+                      {
+                          "word":  "have",
+                          "start":  475.59714,
+                          "end":  475.832
+                      },
+                      {
+                          "word":  "लो",
+                          "start":  475.832,
+                          "end":  475.896
+                      },
+                      {
+                          "word":  "hamesha",
+                          "start":  475.896,
+                          "end":  476.0164
+                      },
+                      {
+                          "word":  "sleep",
+                          "start":  476.0164,
+                          "end":  476.022
+                      },
+                      {
+                          "word":  "नहीं",
+                          "start":  476.022,
+                          "end":  476.05404
+                      },
+                      {
+                          "word":  "paralysis",
+                          "start":  476.05404,
+                          "end":  476.06784
+                      },
+                      {
+                          "word":  "but",
+                          "start":  476.06784,
+                          "end":  476.07324
+                      },
+                      {
+                          "word":  "you",
+                          "start":  476.07324,
+                          "end":  476.09134
+                      },
+                      {
+                          "word":  "leave",
+                          "start":  476.09134,
+                          "end":  476.10304
+                      },
+                      {
+                          "word":  "Instagram",
+                          "start":  476.10304,
+                          "end":  476.11204
+                      },
+                      {
+                          "word":  "reels",
+                          "start":  476.11204,
+                          "end":  476.122
+                      },
+                      {
+                          "word":  "अब",
+                          "start":  476.122,
+                          "end":  476.12784
+                      },
+                      {
+                          "word":  "on",
+                          "start":  476.12784,
+                          "end":  476.146
+                      },
+                      {
+                          "word":  "ready",
+                          "start":  476.146,
+                          "end":  476.296
+                      },
+                      {
+                          "word":  "hi",
+                          "start":  476.296,
+                          "end":  476.474
+                      },
+                      {
+                          "word":  "Aamir",
+                          "start":  476.474,
+                          "end":  476.692
+                      },
+                      {
+                          "word":  "प्राइम",
+                          "start":  476.692,
+                          "end":  476.724
+                      },
+                      {
+                          "word":  "Khan",
+                          "start":  476.724,
+                          "end":  476.726
+                      },
+                      {
+                          "word":  "rahenge",
+                          "start":  476.726,
+                          "end":  476.924
+                      },
+                      {
+                          "word":  "ka",
+                          "start":  476.924,
+                          "end":  477.03200000000004
+                      },
+                      {
+                          "word":  "मिनिस्टर",
+                          "start":  477.03200000000004,
+                          "end":  477.244
+                      },
+                      {
+                          "word":  "beta",
+                          "start":  477.244,
+                          "end":  477.426
+                      },
+                      {
+                          "word":  "kitna",
+                          "start":  477.426,
+                          "end":  477.564
+                      },
+                      {
+                          "word":  "Juned",
+                          "start":  477.564,
+                          "end":  477.756
+                      },
+                      {
+                          "word":  "serious",
+                          "start":  477.756,
+                          "end":  477.864
+                      },
+                      {
+                          "word":  "Khan",
+                          "start":  477.864,
+                          "end":  478.026
+                      },
+                      {
+                          "word":  "mudda",
+                          "start":  478.026,
+                          "end":  478.106
+                      },
+                      {
+                          "word":  "ho",
+                          "start":  478.106,
+                          "end":  478.222
+                      },
+                      {
+                          "word":  "हां",
+                          "start":  478.222,
+                          "end":  478.296
+                      },
+                      {
+                          "word":  "jae",
+                          "start":  478.296,
+                          "end":  478.314
+                      },
+                      {
+                          "word":  "itna",
+                          "start":  478.314,
+                          "end":  478.496
+                      },
+                      {
+                          "word":  "kuch",
+                          "start":  478.496,
+                          "end":  478.606
+                      },
+                      {
+                          "word":  "bhi",
+                          "start":  478.606,
+                          "end":  478.634
+                      },
+                      {
+                          "word":  "bola",
+                          "start":  478.634,
+                          "end":  478.696
+                      },
+                      {
+                          "word":  "ho",
+                          "start":  478.696,
+                          "end":  478.806
+                      },
+                      {
+                          "word":  "jae",
+                          "start":  478.806,
+                          "end":  479.062
+                      },
+                      {
+                          "word":  "आपको",
+                          "start":  479.062,
+                          "end":  479.084
+                      },
+                      {
+                          "word":  "bhala",
+                          "start":  479.084,
+                          "end":  479.274
+                      },
+                      {
+                          "word":  "aur",
+                          "start":  479.274,
+                          "end":  479.36199999999997
+                      },
+                      {
+                          "word":  "प्राइम",
+                          "start":  479.36199999999997,
+                          "end":  479.436
+                      },
+                      {
+                          "word":  "agar",
+                          "start":  479.436,
+                          "end":  479.704
+                      },
+                      {
+                          "word":  "seedha",
+                          "start":  479.704,
+                          "end":  479.842
+                      },
+                      {
+                          "word":  "मिनिस्टर",
+                          "start":  479.842,
+                          "end":  479.866
+                      },
+                      {
+                          "word":  "protest",
+                          "start":  479.866,
+                          "end":  479.964
+                      },
+                      {
+                          "word":  "kaise",
+                          "start":  479.964,
+                          "end":  480.006
+                      },
+                      {
+                          "word":  "nahi",
+                          "start":  480.006,
+                          "end":  480.074
+                      },
+                      {
+                          "word":  "ho",
+                          "start":  480.074,
+                          "end":  480.142
+                      },
+                      {
+                          "word":  "बनना",
+                          "start":  480.142,
+                          "end":  480.206
+                      },
+                      {
+                          "word":  "hota",
+                          "start":  480.206,
+                          "end":  480.212
+                      },
+                      {
+                          "word":  "है",
+                          "start":  480.212,
+                          "end":  480.266
+                      },
+                      {
+                          "word":  "to",
+                          "start":  480.266,
+                          "end":  480.456
+                      },
+                      {
+                          "word":  "mujhe",
+                          "start":  480.456,
+                          "end":  480.554
+                      },
+                      {
+                          "word":  "sakta",
+                          "start":  480.554,
+                          "end":  480.576
+                      },
+                      {
+                          "word":  "ye",
+                          "start":  480.576,
+                          "end":  480.682
+                      },
+                      {
+                          "word":  "हां",
+                          "start":  480.682,
+                          "end":  480.696
+                      },
+                      {
+                          "word":  "bhi",
+                          "start":  480.696,
+                          "end":  480.816
+                      },
+                      {
+                          "word":  "nahi",
+                          "start":  480.816,
+                          "end":  481.006
+                      },
+                      {
+                          "word":  "pata",
+                          "start":  481.006,
+                          "end":  481.226
+                      },
+                      {
+                          "word":  "chalta",
+                          "start":  481.226,
+                          "end":  481.356
+                      },
+                      {
+                          "word":  "ki",
+                          "start":  481.356,
+                          "end":  481.374
+                      },
+                      {
+                          "word":  "hai",
+                          "start":  481.374,
+                          "end":  481.422
+                      },
+                      {
+                          "word":  "मैं",
+                          "start":  481.422,
+                          "end":  481.636
+                      },
+                      {
+                          "word":  "bharat",
+                          "start":  481.636,
+                          "end":  481.644
+                      },
+                      {
+                          "word":  "jo",
+                          "start":  481.644,
+                          "end":  481.746
+                      },
+                      {
+                          "word":  "ka",
+                          "start":  481.746,
+                          "end":  481.752
+                      },
+                      {
+                          "word":  "मिलना",
+                          "start":  481.752,
+                          "end":  481.892
+                      },
+                      {
+                          "word":  "है",
+                          "start":  481.892,
+                          "end":  482.164
+                      },
+                      {
+                          "word":  "yeh",
+                          "start":  482.164,
+                          "end":  482.166
+                      },
+                      {
+                          "word":  "shiksha",
+                          "start":  482.166,
+                          "end":  482.24199999999996
+                      },
+                      {
+                          "word":  "लव",
+                          "start":  482.24199999999996,
+                          "end":  482.274
+                      },
+                      {
+                          "word":  "to",
+                          "start":  482.274,
+                          "end":  482.444
+                      },
+                      {
+                          "word":  "bhai",
+                          "start":  482.444,
+                          "end":  482.562
+                      },
+                      {
+                          "word":  "दादी",
+                          "start":  482.562,
+                          "end":  482.616
+                      },
+                      {
+                          "word":  "mantri",
+                          "start":  482.616,
+                          "end":  482.652
+                      },
+                      {
+                          "word":  "अब",
+                          "start":  482.652,
+                          "end":  482.764
+                      },
+                      {
+                          "word":  "peer",
+                          "start":  482.764,
+                          "end":  482.974
+                      },
+                      {
+                          "word":  "purav",
+                          "start":  482.974,
+                          "end":  483.04200000000003
+                      },
+                      {
+                          "word":  "फोन",
+                          "start":  483.04200000000003,
+                          "end":  483.076
+                      },
+                      {
+                          "word":  "kon",
+                          "start":  483.076,
+                          "end":  483.212
+                      },
+                      {
+                          "word":  "कट",
+                          "start":  483.212,
+                          "end":  483.332
+                      },
+                      {
+                          "word":  "कर",
+                          "start":  483.332,
+                          "end":  483.432
+                      },
+                      {
+                          "word":  "दो",
+                          "start":  483.432,
+                          "end":  483.514
+                      },
+                      {
+                          "word":  "papa",
+                          "start":  483.514,
+                          "end":  483.682
+                      },
+                      {
+                          "word":  "बहुत",
+                          "start":  483.682,
+                          "end":  483.774
+                      },
+                      {
+                          "word":  "Aamir",
+                          "start":  483.774,
+                          "end":  483.852
+                      },
+                      {
+                          "word":  "बात",
+                          "start":  483.852,
+                          "end":  483.99199999999996
+                      },
+                      {
+                          "word":  "कर",
+                          "start":  483.99199999999996,
+                          "end":  484.154
+                      },
+                      {
+                          "word":  "Khan",
+                          "start":  484.154,
+                          "end":  484.16200000000003
+                      },
+                      {
+                          "word":  "ली",
+                          "start":  484.16200000000003,
+                          "end":  484.454
+                      },
+                      {
+                          "word":  "Aamir",
+                          "start":  484.454,
+                          "end":  484.74199999999996
+                      },
+                      {
+                          "word":  "मोदी",
+                          "start":  484.74199999999996,
+                          "end":  484.744
+                      },
+                      {
+                          "word":  "Khan",
+                          "start":  484.744,
+                          "end":  484.882
+                      },
+                      {
+                          "word":  "जी",
+                          "start":  484.882,
+                          "end":  485.072
+                      },
+                      {
+                          "word":  "बिजी",
+                          "start":  485.072,
+                          "end":  485.16200000000003
+                      },
+                      {
+                          "word":  "है",
+                          "start":  485.16200000000003,
+                          "end":  485.234
+                      },
+                      {
+                          "word":  "Aamir",
+                          "start":  485.234,
+                          "end":  485.332
+                      },
+                      {
+                          "word":  "भाई",
+                          "start":  485.332,
+                          "end":  485.432
+                      },
+                      {
+                          "word":  "अब",
+                          "start":  485.432,
+                          "end":  485.454
+                      },
+                      {
+                          "word":  "Khan",
+                          "start":  485.454,
+                          "end":  485.592
+                      },
+                      {
+                          "word":  "रख",
+                          "start":  485.592,
+                          "end":  485.596
+                      },
+                      {
+                          "word":  "sachi",
+                          "start":  485.596,
+                          "end":  485.702
+                      },
+                      {
+                          "word":  "दे",
+                          "start":  485.702,
+                          "end":  485.876
+                      },
+                      {
+                          "word":  "batao",
+                          "start":  485.876,
+                          "end":  485.91200000000003
+                      },
+                      {
+                          "word":  "फोन",
+                          "start":  485.91200000000003,
+                          "end":  486.066
+                      },
+                      {
+                          "word":  "guys",
+                          "start":  486.066,
+                          "end":  486.072
+                      },
+                      {
+                          "word":  "कब",
+                          "start":  486.072,
+                          "end":  486.184
+                      },
+                      {
+                          "word":  "Aamir",
+                          "start":  486.184,
+                          "end":  486.202
+                      },
+                      {
+                          "word":  "तक",
+                          "start":  486.202,
+                          "end":  486.386
+                      },
+                      {
+                          "word":  "sachi",
+                          "start":  486.386,
+                          "end":  486.444
+                      },
+                      {
+                          "word":  "Khan",
+                          "start":  486.444,
+                          "end":  486.686
+                      },
+                      {
+                          "word":  "batao",
+                          "start":  486.686,
+                          "end":  486.772
+                      },
+                      {
+                          "word":  "चलाएगा",
+                          "start":  486.772,
+                          "end":  486.874
+                      },
+                      {
+                          "word":  "Aamir",
+                          "start":  486.874,
+                          "end":  487.104
+                      },
+                      {
+                          "word":  "Khan",
+                          "start":  487.104,
+                          "end":  487.146
+                      },
+                      {
+                          "word":  "protest",
+                          "start":  487.146,
+                          "end":  487.256
+                      },
+                      {
+                          "word":  "ho",
+                          "start":  487.256,
+                          "end":  487.294
+                      },
+                      {
+                          "word":  "ka",
+                          "start":  487.294,
+                          "end":  487.436
+                      },
+                      {
+                          "word":  "gaya",
+                          "start":  487.436,
+                          "end":  487.594
+                      },
+                      {
+                          "word":  "beta",
+                          "start":  487.594,
+                          "end":  487.602
+                      },
+                      {
+                          "word":  "मिस्टर",
+                          "start":  487.602,
+                          "end":  487.626
+                      },
+                      {
+                          "word":  "theek",
+                          "start":  487.626,
+                          "end":  487.686
+                      },
+                      {
+                          "word":  "hai",
+                          "start":  487.686,
+                          "end":  487.942
+                      },
+                      {
+                          "word":  "प्राइम",
+                          "start":  487.942,
+                          "end":  488.076
+                      },
+                      {
+                          "word":  "aapne",
+                          "start":  488.076,
+                          "end":  488.394
+                      },
+                      {
+                          "word":  "Aamir",
+                          "start":  488.394,
+                          "end":  488.416
+                      },
+                      {
+                          "word":  "support",
+                          "start":  488.416,
+                          "end":  488.522
+                      },
+                      {
+                          "word":  "मिनिस्टर",
+                          "start":  488.522,
+                          "end":  488.546
+                      },
+                      {
+                          "word":  "kiya",
+                          "start":  488.546,
+                          "end":  488.654
+                      },
+                      {
+                          "word":  "Khan",
+                          "start":  488.654,
+                          "end":  488.736
+                      },
+                      {
+                          "word":  "aapne",
+                          "start":  488.736,
+                          "end":  488.884
+                      },
+                      {
+                          "word":  "ki",
+                          "start":  488.884,
+                          "end":  488.902
+                      },
+                      {
+                          "word":  "मिस्टर",
+                          "start":  488.902,
+                          "end":  488.906
+                      },
+                      {
+                          "word":  "nahi",
+                          "start":  488.906,
+                          "end":  489.114
+                      },
+                      {
+                          "word":  "Aamir",
+                          "start":  489.114,
+                          "end":  489.192
+                      },
+                      {
+                          "word":  "बिजी",
+                          "start":  489.192,
+                          "end":  489.206
+                      },
+                      {
+                          "word":  "support",
+                          "start":  489.206,
+                          "end":  489.356
+                      },
+                      {
+                          "word":  "kiya",
+                          "start":  489.356,
+                          "end":  489.424
+                      },
+                      {
+                          "word":  "Khan",
+                          "start":  489.424,
+                          "end":  489.536
+                      },
+                      {
+                          "word":  "lekin",
+                          "start":  489.536,
+                          "end":  489.54200000000003
+                      },
+                      {
+                          "word":  "प्राइम",
+                          "start":  489.54200000000003,
+                          "end":  489.544
+                      },
+                      {
+                          "word":  "ki",
+                          "start":  489.544,
+                          "end":  489.696
+                      },
+                      {
+                          "word":  "mujhe",
+                          "start":  489.696,
+                          "end":  489.936
+                      },
+                      {
+                          "word":  "sachi",
+                          "start":  489.936,
+                          "end":  490.11199999999997
+                      },
+                      {
+                          "word":  "मिनिस्टर",
+                          "start":  490.11199999999997,
+                          "end":  490.206
+                      },
+                      {
+                          "word":  "batao",
+                          "start":  490.206,
+                          "end":  490.274
+                      },
+                      {
+                          "word":  "Khan",
+                          "start":  490.274,
+                          "end":  490.34
+                      },
+                      {
+                          "word":  "Aamir",
+                          "start":  490.34,
+                          "end":  490.424
+                      },
+                      {
+                          "word":  "ka",
+                          "start":  490.424,
+                          "end":  490.642
+                      },
+                      {
+                          "word":  "मिस्टर",
+                          "start":  490.642,
+                          "end":  490.744
+                      },
+                      {
+                          "word":  "beta",
+                          "start":  490.744,
+                          "end":  490.86199999999997
+                      },
+                      {
+                          "word":  "मन",
+                          "start":  490.86199999999997,
+                          "end":  490.896
+                      },
+                      {
+                          "word":  "kis",
+                          "start":  490.896,
+                          "end":  490.972
+                      },
+                      {
+                          "word":  "की",
+                          "start":  490.972,
+                          "end":  491.064
+                      },
+                      {
+                          "word":  "thake",
+                          "start":  491.064,
+                          "end":  491.206
+                      },
+                      {
+                          "word":  "ko",
+                          "start":  491.206,
+                          "end":  491.212
+                      },
+                      {
+                          "word":  "बात",
+                          "start":  491.212,
+                          "end":  491.294
+                      },
+                      {
+                          "word":  "show",
+                          "start":  491.294,
+                          "end":  491.484
+                      },
+                      {
+                          "word":  "mein",
+                          "start":  491.484,
+                          "end":  491.512
+                      },
+                      {
+                          "word":  "प्राइम",
+                          "start":  491.512,
+                          "end":  491.654
+                      },
+                      {
+                          "word":  "kis",
+                          "start":  491.654,
+                          "end":  491.656
+                      },
+                      {
+                          "word":  "pata",
+                          "start":  491.656,
+                          "end":  491.934
+                      },
+                      {
+                          "word":  "tarah",
+                          "start":  491.934,
+                          "end":  492.064
+                      },
+                      {
+                          "word":  "se",
+                          "start":  492.064,
+                          "end":  492.066
+                      },
+                      {
+                          "word":  "tha",
+                          "start":  492.066,
+                          "end":  492.082
+                      },
+                      {
+                          "word":  "मिनिस्टर",
+                          "start":  492.082,
+                          "end":  492.364
+                      },
+                      {
+                          "word":  "baitha",
+                          "start":  492.364,
+                          "end":  492.426
+                      },
+                      {
+                          "word":  "jis",
+                          "start":  492.426,
+                          "end":  492.486
+                      },
+                      {
+                          "word":  "ko",
+                          "start":  492.486,
+                          "end":  492.666
+                      },
+                      {
+                          "word":  "nahi",
+                          "start":  492.666,
+                          "end":  492.844
+                      },
+                      {
+                          "word":  "kis",
+                          "start":  492.844,
+                          "end":  492.866
+                      },
+                      {
+                          "word":  "pata",
+                          "start":  492.866,
+                          "end":  493.006
+                      },
+                      {
+                          "word":  "tha",
+                          "start":  493.006,
+                          "end":  493.064
+                      },
+                      {
+                          "word":  "tarah",
+                          "start":  493.064,
+                          "end":  493.126
+                      },
+                      {
+                          "word":  "woh",
+                          "start":  493.126,
+                          "end":  493.384
+                      },
+                      {
+                          "word":  "se",
+                          "start":  493.384,
+                          "end":  493.386
+                      },
+                      {
+                          "word":  "pehle",
+                          "start":  493.386,
+                          "end":  493.534
+                      },
+                      {
+                          "word":  "kis",
+                          "start":  493.534,
+                          "end":  493.646
+                      },
+                      {
+                          "word":  "aao",
+                          "start":  493.646,
+                          "end":  493.784
+                      },
+                      {
+                          "word":  "tarah",
+                          "start":  493.784,
+                          "end":  493.894
+                      },
+                      {
+                          "word":  "se",
+                          "start":  493.894,
+                          "end":  493.986
+                      },
+                      {
+                          "word":  "comment",
+                          "start":  493.986,
+                          "end":  494.086
+                      },
+                      {
+                          "word":  "pe",
+                          "start":  494.086,
+                          "end":  494.304
+                      },
+                      {
+                          "word":  "baitha",
+                          "start":  494.304,
+                          "end":  494.306
+                      },
+                      {
+                          "word":  "aur",
+                          "start":  494.306,
+                          "end":  494.486
+                      },
+                      {
+                          "word":  "agar",
+                          "start":  494.486,
+                          "end":  494.554
+                      },
+                      {
+                          "word":  "apne",
+                          "start":  494.554,
+                          "end":  494.653
+                      },
+                      {
+                          "word":  "अच्छा",
+                          "start":  494.653,
+                          "end":  494.666
+                      },
+                      {
+                          "word":  "kisi",
+                          "start":  494.666,
+                          "end":  494.726
+                      },
+                      {
+                          "word":  "ke",
+                          "start":  494.726,
+                          "end":  494.853
+                      },
+                      {
+                          "word":  "हंस",
+                          "start":  494.853,
+                          "end":  494.896
+                      },
+                      {
+                          "word":  "sath",
+                          "start":  494.896,
+                          "end":  494.944
+                      },
+                      {
+                          "word":  "papa",
+                          "start":  494.944,
+                          "end":  494.963
+                      },
+                      {
+                          "word":  "रही",
+                          "start":  494.963,
+                          "end":  495.023
+                      },
+                      {
+                          "word":  "है",
+                          "start":  495.023,
+                          "end":  495.146
+                      },
+                      {
+                          "word":  "galat",
+                          "start":  495.146,
+                          "end":  495.204
+                      },
+                      {
+                          "word":  "Aamir",
+                          "start":  495.204,
+                          "end":  495.236
+                      },
+                      {
+                          "word":  "ho",
+                          "start":  495.236,
+                          "end":  495.263
+                      },
+                      {
+                          "word":  "उनको",
+                          "start":  495.263,
+                          "end":  495.366
+                      },
+                      {
+                          "word":  "raha",
+                          "start":  495.366,
+                          "end":  495.383
+                      },
+                      {
+                          "word":  "भी",
+                          "start":  495.383,
+                          "end":  495.436
+                      },
+                      {
+                          "word":  "hai",
+                          "start":  495.436,
+                          "end":  495.506
+                      },
+                      {
+                          "word":  "to",
+                          "start":  495.506,
+                          "end":  495.553
+                      },
+                      {
+                          "word":  "पता",
+                          "start":  495.553,
+                          "end":  495.574
+                      },
+                      {
+                          "word":  "Khan",
+                          "start":  495.574,
+                          "end":  495.643
+                      },
+                      {
+                          "word":  "ही",
+                          "start":  495.643,
+                          "end":  495.726
+                      },
+                      {
+                          "word":  "uske",
+                          "start":  495.726,
+                          "end":  495.946
+                      },
+                      {
+                          "word":  "sath",
+                          "start":  495.946,
+                          "end":  496.014
+                      },
+                      {
+                          "word":  "Aamir",
+                          "start":  496.014,
+                          "end":  496.254
+                      },
+                      {
+                          "word":  "Khan",
+                          "start":  496.254,
+                          "end":  496.343
+                      },
+                      {
+                          "word":  "बर्गर",
+                          "start":  496.343,
+                          "end":  496.426
+                      },
+                      {
+                          "word":  "khade",
+                          "start":  496.426,
+                          "end":  496.564
+                      },
+                      {
+                          "word":  "Aamir",
+                          "start":  496.564,
+                          "end":  496.623
+                      },
+                      {
+                          "word":  "पिज्जा",
+                          "start":  496.623,
+                          "end":  496.686
+                      },
+                      {
+                          "word":  "mat",
+                          "start":  496.686,
+                          "end":  496.754
+                      },
+                      {
+                          "word":  "Khan",
+                          "start":  496.754,
+                          "end":  496.853
+                      },
+                      {
+                          "word":  "खाने",
+                          "start":  496.853,
+                          "end":  497.016
+                      },
+                      {
+                          "word":  "rehna",
+                          "start":  497.016,
+                          "end":  497.084
+                      },
+                      {
+                          "word":  "Aamir",
+                          "start":  497.084,
+                          "end":  497.236
+                      },
+                      {
+                          "word":  "uske",
+                          "start":  497.236,
+                          "end":  497.404
+                      },
+                      {
+                          "word":  "Khan",
+                          "start":  497.404,
+                          "end":  497.623
+                      },
+                      {
+                          "word":  "जंतरमंतर",
+                          "start":  497.623,
+                          "end":  497.636
+                      },
+                      {
+                          "word":  "khilaf",
+                          "start":  497.636,
+                          "end":  497.684
+                      },
+                      {
+                          "word":  "Aamir",
+                          "start":  497.684,
+                          "end":  497.954
+                      },
+                      {
+                          "word":  "Khan",
+                          "start":  497.954,
+                          "end":  497.956
+                      },
+                      {
+                          "word":  "aawaz",
+                          "start":  497.956,
+                          "end":  498.023
+                      },
+                      {
+                          "word":  "पहुंचा",
+                          "start":  498.023,
+                          "end":  498.123
+                      },
+                      {
+                          "word":  "ही",
+                          "start":  498.123,
+                          "end":  498.164
+                      },
+                      {
+                          "word":  "ke",
+                          "start":  498.164,
+                          "end":  498.343
+                      },
+                      {
+                          "word":  "था",
+                          "start":  498.343,
+                          "end":  498.366
+                      },
+                      {
+                          "word":  "uthana",
+                          "start":  498.366,
+                          "end":  498.473
+                      },
+                      {
+                          "word":  "तब",
+                          "start":  498.473,
+                          "end":  498.623
+                      },
+                      {
+                          "word":  "तक",
+                          "start":  498.623,
+                          "end":  498.634
+                      },
+                      {
+                          "word":  "apne",
+                          "start":  498.634,
+                          "end":  498.964
+                      },
+                      {
+                          "word":  "papa",
+                          "start":  498.964,
+                          "end":  499.063
+                      },
+                      {
+                          "word":  "धर्मेंद्र",
+                          "start":  499.063,
+                          "end":  499.373
+                      },
+                      {
+                          "word":  "प्रधान",
+                          "start":  499.373,
+                          "end":  499.594
+                      },
+                      {
+                          "word":  "Era",
+                          "start":  499.594,
+                          "end":  499.653
+                      },
+                      {
+                          "word":  "ऐसी",
+                          "start":  499.653,
+                          "end":  499.754
+                      },
+                      {
+                          "word":  "aur",
+                          "start":  499.754,
+                          "end":  500.064
+                      },
+                      {
+                          "word":  "Juned",
+                          "start":  500.064,
+                          "end":  500.153
+                      },
+                      {
+                          "word":  "जिंदगी",
+                          "start":  500.153,
+                          "end":  500.334
+                      },
+                      {
+                          "word":  "Khan",
+                          "start":  500.334,
+                          "end":  500.533
+                      },
+                      {
+                          "word":  "भगवान",
+                          "start":  500.533,
+                          "end":  500.763
+                      },
+                      {
+                          "word":  "नहीं",
+                          "start":  500.763,
+                          "end":  500.953
+                      },
+                      {
+                          "word":  "करे",
+                          "start":  500.953,
+                          "end":  501.204
+                      },
+                      {
+                          "word":  "maaf",
+                          "start":  501.204,
+                          "end":  501.333
+                      },
+                      {
+                          "word":  "ये",
+                          "start":  501.333,
+                          "end":  501.354
+                      },
+                      {
+                          "word":  "karo",
+                          "start":  501.354,
+                          "end":  501.673
+                      },
+                      {
+                          "word":  "किसी",
+                          "start":  501.673,
+                          "end":  501.764
+                      },
+                      {
+                          "word":  "bada",
+                          "start":  501.764,
+                          "end":  502.264
+                      },
+                      {
+                          "word":  "topibaj",
+                          "start":  502.264,
+                          "end":  502.463
+                      },
+                      {
+                          "word":  "भाई",
+                          "start":  502.463,
+                          "end":  502.534
+                      },
+                      {
+                          "word":  "aadmi",
+                          "start":  502.534,
+                          "end":  502.553
+                      },
+                      {
+                          "word":  "ओ",
+                          "start":  502.553,
+                          "end":  502.604
+                      },
+                      {
+                          "word":  "hai",
+                          "start":  502.604,
+                          "end":  503.013
+                      },
+                      {
+                          "word":  "हो",
+                          "start":  503.013,
+                          "end":  503.193
+                      },
+                      {
+                          "word":  "गई",
+                          "start":  503.193,
+                          "end":  503.393
+                      },
+                      {
+                          "word":  "भाई",
+                          "start":  503.393,
+                          "end":  503.493
+                      },
+                      {
+                          "word":  "अरे",
+                          "start":  503.493,
+                          "end":  503.564
+                      },
+                      {
+                          "word":  "bas",
+                          "start":  503.564,
+                          "end":  503.804
+                      },
+                      {
+                          "word":  "band",
+                          "start":  503.804,
+                          "end":  503.816
+                      },
+                      {
+                          "word":  "bro",
+                          "start":  503.816,
+                          "end":  503.934
+                      },
+                      {
+                          "word":  "kar",
+                          "start":  503.934,
+                          "end":  504.156
+                      },
+                      {
+                          "word":  "UK",
+                          "start":  504.156,
+                          "end":  504.336
+                      },
+                      {
+                          "word":  "bhai",
+                          "start":  504.336,
+                          "end":  504.566
+                      },
+                      {
+                          "word":  "yaar",
+                          "start":  504.566,
+                          "end":  504.684
+                      },
+                      {
+                          "word":  "theek",
+                          "start":  504.684,
+                          "end":  504.744
+                      },
+                      {
+                          "word":  "hai",
+                          "start":  504.744,
+                          "end":  504.906
+                      },
+                      {
+                          "word":  "main",
+                          "start":  504.906,
+                          "end":  504.934
+                      },
+                      {
+                          "word":  "sir",
+                          "start":  504.934,
+                          "end":  505.064
+                      },
+                      {
+                          "word":  "bahut",
+                          "start":  505.064,
+                          "end":  505.066
+                      },
+                      {
+                          "word":  "mere",
+                          "start":  505.066,
+                          "end":  505.126
+                      },
+                      {
+                          "word":  "ko",
+                          "start":  505.126,
+                          "end":  505.424
+                      },
+                      {
+                          "word":  "achhe",
+                          "start":  505.424,
+                          "end":  505.426
+                      },
+                      {
+                          "word":  "bura",
+                          "start":  505.426,
+                          "end":  505.644
+                      },
+                      {
+                          "word":  "maar",
+                          "start":  505.644,
+                          "end":  505.676
+                      },
+                      {
+                          "word":  "lagta",
+                          "start":  505.676,
+                          "end":  505.816
+                      },
+                      {
+                          "word":  "yaar",
+                          "start":  505.816,
+                          "end":  505.844
+                      },
+                      {
+                          "word":  "diye",
+                          "start":  505.844,
+                          "end":  506.06600000000003
+                      },
+                      {
+                          "word":  "UK",
+                          "start":  506.06600000000003,
+                          "end":  506.18399999999997
+                      },
+                      {
+                          "word":  "humko",
+                          "start":  506.18399999999997,
+                          "end":  506.186
+                      },
+                      {
+                          "word":  "ko",
+                          "start":  506.186,
+                          "end":  506.396
+                      },
+                      {
+                          "word":  "dekh",
+                          "start":  506.396,
+                          "end":  506.506
+                      },
+                      {
+                          "word":  "ke",
+                          "start":  506.506,
+                          "end":  506.614
+                      },
+                      {
+                          "word":  "tumne",
+                          "start":  506.614,
+                          "end":  506.656
+                      },
+                      {
+                          "word":  "yaar",
+                          "start":  506.656,
+                          "end":  506.904
+                      },
+                      {
+                          "word":  "bola",
+                          "start":  506.904,
+                          "end":  507.104
+                      },
+                      {
+                          "word":  "maar",
+                          "start":  507.104,
+                          "end":  507.156
+                      },
+                      {
+                          "word":  "bhai",
+                          "start":  507.156,
+                          "end":  507.264
+                      },
+                      {
+                          "word":  "diye",
+                          "start":  507.264,
+                          "end":  507.396
+                      },
+                      {
+                          "word":  "hope",
+                          "start":  507.396,
+                          "end":  507.806
+                      },
+                      {
+                          "word":  "everything",
+                          "start":  507.806,
+                          "end":  508.016
+                      },
+                      {
+                          "word":  "gets",
+                          "start":  508.016,
+                          "end":  508.024
+                      },
+                      {
+                          "word":  "jeet",
+                          "start":  508.024,
+                          "end":  508.204
+                      },
+                      {
+                          "word":  "gaye",
+                          "start":  508.204,
+                          "end":  508.336
+                      },
+                      {
+                          "word":  "well",
+                          "start":  508.336,
+                          "end":  508.804
+                      },
+                      {
+                          "word":  "jeet",
+                          "start":  508.804,
+                          "end":  508.906
+                      },
+                      {
+                          "word":  "soon",
+                          "start":  508.906,
+                          "end":  508.924
+                      },
+                      {
+                          "word":  "gaye",
+                          "start":  508.924,
+                          "end":  509.136
+                      },
+                      {
+                          "word":  "bro",
+                          "start":  509.136,
+                          "end":  509.154
+                      },
+                      {
+                          "word":  "bhai",
+                          "start":  509.154,
+                          "end":  509.454
+                      }
+                  ]
+    }
+]

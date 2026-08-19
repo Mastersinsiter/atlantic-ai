@@ -1,0 +1,916 @@
+﻿[
+    {
+        "index":  0,
+        "sourceStart":  18,
+        "sourceEnd":  75,
+        "cues":  [
+                     {
+                         "start":  0,
+                         "end":  0.79,
+                         "text":  "chal rahi thi student"
+                     },
+                     {
+                         "start":  0.84,
+                         "end":  1.61,
+                         "text":  "protest chal rahe the"
+                     },
+                     {
+                         "start":  1.66,
+                         "end":  2.79,
+                         "text":  "and sab batata hu"
+                     },
+                     {
+                         "start":  2.82,
+                         "end":  3.93,
+                         "text":  "dekhte video mein kya"
+                     },
+                     {
+                         "start":  3.98,
+                         "end":  4.66,
+                         "text":  "hai"
+                     },
+                     {
+                         "start":  4.72,
+                         "end":  5.33,
+                         "text":  "aaj ye scene hai"
+                     },
+                     {
+                         "start":  5.38,
+                         "end":  7.66,
+                         "text":  "bhai log suno abhi"
+                     },
+                     {
+                         "start":  7.68,
+                         "end":  8.95,
+                         "text":  "dekho mai lifetime clear"
+                     },
+                     {
+                         "start":  9,
+                         "end":  9.85,
+                         "text":  "nahi kar sakta ye"
+                     },
+                     {
+                         "start":  9.9,
+                         "end":  10.81,
+                         "text":  "sab baat nahi kar"
+                     },
+                     {
+                         "start":  10.86,
+                         "end":  11.55,
+                         "text":  "sakta ye baat"
+                     },
+                     {
+                         "start":  11.88,
+                         "end":  12.83,
+                         "text":  "please tumhare zehen mein"
+                     },
+                     {
+                         "start":  12.88,
+                         "end":  14.54,
+                         "text":  "daalo bhai log please"
+                     },
+                     {
+                         "start":  14.58,
+                         "end":  15.51,
+                         "text":  "mai lifetime ye cheez"
+                     },
+                     {
+                         "start":  15.56,
+                         "end":  16.31,
+                         "text":  "nahi kar sakta mereko"
+                     },
+                     {
+                         "start":  16.36,
+                         "end":  17.34,
+                         "text":  "bahut kaam dhandhe"
+                     },
+                     {
+                         "start":  17.9,
+                         "end":  18.11,
+                         "text":  "hai mereko nahi maloom"
+                     },
+                     {
+                         "start":  18.16,
+                         "end":  18.55,
+                         "text":  "ye rapper log kya"
+                     },
+                     {
+                         "start":  18.6,
+                         "end":  19.91,
+                         "text":  "karte din mein gaali"
+                     },
+                     {
+                         "start":  19.96,
+                         "end":  21.39,
+                         "text":  "kya kaam kar rahe"
+                     },
+                     {
+                         "start":  21.44,
+                         "end":  22.51,
+                         "text":  "kya bahut kaam unda"
+                     },
+                     {
+                         "start":  22.56,
+                         "end":  23.6,
+                         "text":  "hai bhai mat karo"
+                     },
+                     {
+                         "start":  23.62,
+                         "end":  24.29,
+                         "text":  "lag raha tha mujhe"
+                     },
+                     {
+                         "start":  24.34,
+                         "end":  25.25,
+                         "text":  "laga tumne block kar"
+                     },
+                     {
+                         "start":  25.3,
+                         "end":  26.51,
+                         "text":  "diya mujhe i\u0027m so"
+                     },
+                     {
+                         "start":  26.56,
+                         "end":  27.71,
+                         "text":  "sorry bha yahan pe"
+                     },
+                     {
+                         "start":  27.76,
+                         "end":  28.71,
+                         "text":  "na bahut kuch chal"
+                     },
+                     {
+                         "start":  28.76,
+                         "end":  30.59,
+                         "text":  "raha hai yaar kya"
+                     },
+                     {
+                         "start":  30.64,
+                         "end":  31.32,
+                         "text":  "pad"
+                     },
+                     {
+                         "start":  31.64,
+                         "end":  32.79,
+                         "text":  "rahe mereko mat bhai"
+                     },
+                     {
+                         "start":  32.84,
+                         "end":  33.79,
+                         "text":  "maine nahi socha life"
+                     },
+                     {
+                         "start":  33.84,
+                         "end":  34.51,
+                         "text":  "me kabhi ki modi"
+                     },
+                     {
+                         "start":  34.56,
+                         "end":  35.71,
+                         "text":  "ji mujhse zyada consistent"
+                     },
+                     {
+                         "start":  35.76,
+                         "end":  36.71,
+                         "text":  "ho jayenge instagram pe"
+                     },
+                     {
+                         "start":  36.76,
+                         "end":  37.69,
+                         "text":  "bhai kya reach aa"
+                     },
+                     {
+                         "start":  37.74,
+                         "end":  38.19,
+                         "text":  "rahi hai bhai kya"
+                     },
+                     {
+                         "start":  38.24,
+                         "end":  39.05,
+                         "text":  "reach hai ye 300"
+                     },
+                     {
+                         "start":  39.1,
+                         "end":  40.93,
+                         "text":  "million bro ek million"
+                     },
+                     {
+                         "start":  40.98,
+                         "end":  41.91,
+                         "text":  "lane aur hekdi li"
+                     },
+                     {
+                         "start":  41.96,
+                         "end":  42.93,
+                         "text":  "jaati hai idhar tereko"
+                     },
+                     {
+                         "start":  42.98,
+                         "end":  43.85,
+                         "text":  "kya bahut mazaak lag"
+                     },
+                     {
+                         "start":  43.9,
+                         "end":  44.43,
+                         "text":  "raha hai tereko ye"
+                     },
+                     {
+                         "start":  44.48,
+                         "end":  45.47,
+                         "text":  "sab cheez mat kar"
+                     },
+                     {
+                         "start":  45.52,
+                         "end":  47.05,
+                         "text":  "beta mat kar mai"
+                     },
+                     {
+                         "start":  47.1,
+                         "end":  47.61,
+                         "text":  "bol raha hu beta"
+                     },
+                     {
+                         "start":  47.66,
+                         "end":  49.01,
+                         "text":  "mat kar ye sab"
+                     },
+                     {
+                         "start":  49.8,
+                         "end":  51.35,
+                         "text":  "mat kar tere"
+                     },
+                     {
+                         "start":  51.68,
+                         "end":  52.65,
+                         "text":  "ko mera intro bolenge"
+                     },
+                     {
+                         "start":  52.7,
+                         "end":  53.73,
+                         "text":  "kaise lagenge modi ji"
+                     },
+                     {
+                         "start":  53.78,
+                         "end":  54.91,
+                         "text":  "hello guys mai ish"
+                     },
+                     {
+                         "start":  54.96,
+                         "end":  55.83,
+                         "text":  "kesh wala a k"
+                     },
+                     {
+                         "start":  55.88,
+                         "end":  56.99,
+                         "text":  "thagesh two out"
+                     }
+                 ]
+    },
+    {
+        "index":  1,
+        "sourceStart":  449,
+        "sourceEnd":  509,
+        "cues":  [
+                     {
+                         "start":  51.22,
+                         "end":  51.83,
+                         "text":  "मिल जाओ दादी कौन"
+                     },
+                     {
+                         "start":  51.88,
+                         "end":  56.45,
+                         "text":  "सी भाषा में बोल"
+                     },
+                     {
+                         "start":  56.5,
+                         "end":  59.39,
+                         "text":  "रही हो मोदी इंग्लिश"
+                     },
+                     {
+                         "start":  59.44,
+                         "end":  59.99,
+                         "text":  "में बोलता हिंदी में"
+                     },
+                     {
+                         "start":  60.04,
+                         "end":  60.59,
+                         "text":  "बोलता है हिंदी में"
+                     },
+                     {
+                         "start":  60.64,
+                         "end":  61.19,
+                         "text":  "बोलता है हिंदी में"
+                     },
+                     {
+                         "start":  61.24,
+                         "end":  61.79,
+                         "text":  "बोलता है हां बड़े"
+                     },
+                     {
+                         "start":  61.84,
+                         "end":  62.39,
+                         "text":  "हैं बात तो करो"
+                     },
+                     {
+                         "start":  62.44,
+                         "end":  62.99,
+                         "text":  "मोद बोलो मोद से"
+                     },
+                     {
+                         "start":  63.04,
+                         "end":  63.59,
+                         "text":  "वीडियो सो स्वीट वीडियो"
+                     },
+                     {
+                         "start":  63.64,
+                         "end":  64.19,
+                         "text":  "कॉल चालू है वीडियो"
+                     },
+                     {
+                         "start":  64.24,
+                         "end":  64.79,
+                         "text":  "कॉल चालू हो ये"
+                     },
+                     {
+                         "start":  64.84,
+                         "end":  65.39,
+                         "text":  "तो मैं बोलती हूं"
+                     },
+                     {
+                         "start":  65.44,
+                         "end":  65.99,
+                         "text":  "ना हां उनको लग"
+                     },
+                     {
+                         "start":  66.04,
+                         "end":  66.59,
+                         "text":  "रहा है वेटिंग बड़ी"
+                     },
+                     {
+                         "start":  66.64,
+                         "end":  67.19,
+                         "text":  "बातचीत है पोते की"
+                     },
+                     {
+                         "start":  67.24,
+                         "end":  67.79,
+                         "text":  "बात करती हूं प्राइम"
+                     },
+                     {
+                         "start":  67.84,
+                         "end":  68.39,
+                         "text":  "Kuch मिनिस्टर bhi ho"
+                     },
+                     {
+                         "start":  68.44,
+                         "end":  68.99,
+                         "text":  "jae बोला na kehta"
+                     },
+                     {
+                         "start":  69.04,
+                         "end":  69.59,
+                         "text":  "tha Shri Narayan kab"
+                     },
+                     {
+                         "start":  69.64,
+                         "end":  70.19,
+                         "text":  "se hai jisne nahi"
+                     },
+                     {
+                         "start":  70.24,
+                         "end":  70.79,
+                         "text":  "kiya khatam to bahut"
+                     },
+                     {
+                         "start":  70.84,
+                         "end":  71.39,
+                         "text":  "purana Lakshmi ji bataiye"
+                     },
+                     {
+                         "start":  71.44,
+                         "end":  71.99,
+                         "text":  "aapka naam kya Mera"
+                     },
+                     {
+                         "start":  72.04,
+                         "end":  72.59,
+                         "text":  "Mohammad Faiz Khan aur"
+                     },
+                     {
+                         "start":  72.64,
+                         "end":  73.19,
+                         "text":  "main Gosevak hoon I"
+                     },
+                     {
+                         "start":  73.24,
+                         "end":  73.79,
+                         "text":  "love Salman bare mein"
+                     },
+                     {
+                         "start":  73.84,
+                         "end":  74.39,
+                         "text":  "aaj kal kuch checkmate"
+                     },
+                     {
+                         "start":  74.44,
+                         "end":  74.99,
+                         "text":  "alag मामला पूरा pichhle"
+                     },
+                     {
+                         "start":  75.04,
+                         "end":  75.59,
+                         "text":  "मोहम्मद ek saal फैज"
+                     },
+                     {
+                         "start":  75.64,
+                         "end":  76.19,
+                         "text":  "ye खान के आप"
+                     },
+                     {
+                         "start":  76.24,
+                         "end":  76.79,
+                         "text":  "hua सोच रहे है"
+                     },
+                     {
+                         "start":  76.84,
+                         "end":  77.39,
+                         "text":  "ये तो tweets wapas"
+                     },
+                     {
+                         "start":  77.44,
+                         "end":  77.99,
+                         "text":  "aa gaye posts Checkmate"
+                     },
+                     {
+                         "start":  78.04,
+                         "end":  78.59,
+                         "text":  "ho gaya bhai dohe"
+                     },
+                     {
+                         "start":  78.64,
+                         "end":  79.19,
+                         "text":  "ghar pe aake baar"
+                     },
+                     {
+                         "start":  79.24,
+                         "end":  79.79,
+                         "text":  "dekhte honge kon vibe"
+                     },
+                     {
+                         "start":  79.84,
+                         "end":  80.39,
+                         "text":  "rahe acha theek Interviewer"
+                     },
+                     {
+                         "start":  80.44,
+                         "end":  80.99,
+                         "text":  "dosto mob number 1110"
+                     },
+                     {
+                         "start":  81.04,
+                         "end":  81.59,
+                         "text":  "side kam Muslim mare"
+                     },
+                     {
+                         "start":  81.64,
+                         "end":  82.19,
+                         "text":  "par fod dunga nishpaksh"
+                     },
+                     {
+                         "start":  82.24,
+                         "end":  82.79,
+                         "text":  "baat karta dekhiye aap"
+                     },
+                     {
+                         "start":  82.84,
+                         "end":  83.39,
+                         "text":  "jagah is bicep ko"
+                     },
+                     {
+                         "start":  83.44,
+                         "end":  83.99,
+                         "text":  "samajh jaiyega are yaar"
+                     },
+                     {
+                         "start":  84.04,
+                         "end":  84.59,
+                         "text":  "ismein pura Hanuman Chalisa"
+                     },
+                     {
+                         "start":  84.64,
+                         "end":  85.19,
+                         "text":  "suna sakta aapko yahan"
+                     },
+                     {
+                         "start":  85.24,
+                         "end":  85.79,
+                         "text":  "baith kar Dada ki"
+                     },
+                     {
+                         "start":  85.84,
+                         "end":  86.39,
+                         "text":  "fat ke haath Talvindar"
+                     },
+                     {
+                         "start":  86.44,
+                         "end":  86.99,
+                         "text":  "bana diya memes Bhai"
+                     },
+                     {
+                         "start":  87.04,
+                         "end":  87.59,
+                         "text":  "woh nahi lag rahi"
+                     },
+                     {
+                         "start":  87.64,
+                         "end":  88.19,
+                         "text":  "hai Japanese bhoot konsa"
+                     },
+                     {
+                         "start":  88.24,
+                         "end":  88.79,
+                         "text":  "hota Momo Koko बना"
+                     },
+                     {
+                         "start":  88.84,
+                         "end":  89.39,
+                         "text":  "They have लो hamesha"
+                     },
+                     {
+                         "start":  89.44,
+                         "end":  89.99,
+                         "text":  "sleep नहीं paralysis but"
+                     },
+                     {
+                         "start":  90.04,
+                         "end":  90.59,
+                         "text":  "you leave Instagram reels"
+                     },
+                     {
+                         "start":  90.64,
+                         "end":  91.19,
+                         "text":  "अब on ready hi"
+                     },
+                     {
+                         "start":  91.24,
+                         "end":  91.79,
+                         "text":  "Aamir प्राइम Khan rahenge"
+                     },
+                     {
+                         "start":  91.84,
+                         "end":  92.39,
+                         "text":  "ka मिनिस्टर beta kitna"
+                     },
+                     {
+                         "start":  92.44,
+                         "end":  92.99,
+                         "text":  "Juned serious Khan mudda"
+                     },
+                     {
+                         "start":  93.04,
+                         "end":  93.59,
+                         "text":  "ho हां jae itna"
+                     },
+                     {
+                         "start":  93.64,
+                         "end":  94.19,
+                         "text":  "kuch bhi bola ho"
+                     },
+                     {
+                         "start":  94.24,
+                         "end":  94.79,
+                         "text":  "jae आपको bhala aur"
+                     },
+                     {
+                         "start":  94.84,
+                         "end":  95.39,
+                         "text":  "प्राइम agar seedha मिनिस्टर"
+                     },
+                     {
+                         "start":  95.44,
+                         "end":  95.99,
+                         "text":  "protest kaise nahi ho"
+                     },
+                     {
+                         "start":  96.04,
+                         "end":  96.59,
+                         "text":  "बनना hota है to"
+                     },
+                     {
+                         "start":  96.64,
+                         "end":  97.19,
+                         "text":  "mujhe sakta ye हां"
+                     },
+                     {
+                         "start":  97.24,
+                         "end":  97.79,
+                         "text":  "bhi nahi pata chalta"
+                     },
+                     {
+                         "start":  97.84,
+                         "end":  98.39,
+                         "text":  "ki hai मैं bharat"
+                     },
+                     {
+                         "start":  98.44,
+                         "end":  98.99,
+                         "text":  "jo ka मिलना है"
+                     },
+                     {
+                         "start":  99.04,
+                         "end":  99.59,
+                         "text":  "yeh shiksha लव to"
+                     },
+                     {
+                         "start":  99.64,
+                         "end":  100.19,
+                         "text":  "bhai दादी mantri अब"
+                     },
+                     {
+                         "start":  100.24,
+                         "end":  100.79,
+                         "text":  "peer purav फोन kon"
+                     },
+                     {
+                         "start":  100.84,
+                         "end":  101.39,
+                         "text":  "कट कर दो papa"
+                     },
+                     {
+                         "start":  101.44,
+                         "end":  101.99,
+                         "text":  "बहुत Aamir बात कर"
+                     },
+                     {
+                         "start":  102.04,
+                         "end":  102.59,
+                         "text":  "Khan ली Aamir मोदी"
+                     },
+                     {
+                         "start":  102.64,
+                         "end":  103.19,
+                         "text":  "Khan जी बिजी है"
+                     },
+                     {
+                         "start":  103.24,
+                         "end":  103.79,
+                         "text":  "Aamir भाई अब Khan"
+                     },
+                     {
+                         "start":  103.84,
+                         "end":  104.39,
+                         "text":  "रख sachi दे batao"
+                     },
+                     {
+                         "start":  104.44,
+                         "end":  104.99,
+                         "text":  "फोन guys कब Aamir"
+                     },
+                     {
+                         "start":  105.04,
+                         "end":  105.59,
+                         "text":  "तक sachi Khan batao"
+                     },
+                     {
+                         "start":  105.64,
+                         "end":  106.19,
+                         "text":  "चलाएगा Aamir Khan protest"
+                     },
+                     {
+                         "start":  106.24,
+                         "end":  106.79,
+                         "text":  "ho ka gaya beta"
+                     },
+                     {
+                         "start":  106.84,
+                         "end":  107.39,
+                         "text":  "मिस्टर theek hai प्राइम"
+                     },
+                     {
+                         "start":  107.44,
+                         "end":  107.99,
+                         "text":  "aapne Aamir support मिनिस्टर"
+                     },
+                     {
+                         "start":  108.04,
+                         "end":  108.59,
+                         "text":  "kiya Khan aapne ki"
+                     },
+                     {
+                         "start":  108.64,
+                         "end":  109.19,
+                         "text":  "मिस्टर nahi Aamir बिजी"
+                     },
+                     {
+                         "start":  109.24,
+                         "end":  109.79,
+                         "text":  "support kiya Khan lekin"
+                     },
+                     {
+                         "start":  109.84,
+                         "end":  110.39,
+                         "text":  "प्राइम ki mujhe sachi"
+                     },
+                     {
+                         "start":  110.44,
+                         "end":  110.99,
+                         "text":  "मिनिस्टर batao Khan Aamir"
+                     },
+                     {
+                         "start":  111.04,
+                         "end":  111.59,
+                         "text":  "ka मिस्टर beta मन"
+                     },
+                     {
+                         "start":  111.64,
+                         "end":  112.19,
+                         "text":  "kis की thake ko"
+                     },
+                     {
+                         "start":  112.24,
+                         "end":  112.79,
+                         "text":  "बात show mein प्राइम"
+                     },
+                     {
+                         "start":  112.84,
+                         "end":  113.39,
+                         "text":  "kis pata tarah se"
+                     },
+                     {
+                         "start":  113.44,
+                         "end":  113.99,
+                         "text":  "tha मिनिस्टर baitha jis"
+                     },
+                     {
+                         "start":  114.04,
+                         "end":  114.59,
+                         "text":  "ko nahi kis pata"
+                     },
+                     {
+                         "start":  114.64,
+                         "end":  115.19,
+                         "text":  "tha tarah woh se"
+                     },
+                     {
+                         "start":  115.24,
+                         "end":  115.79,
+                         "text":  "pehle kis aao tarah"
+                     },
+                     {
+                         "start":  115.84,
+                         "end":  116.39,
+                         "text":  "se comment pe baitha"
+                     },
+                     {
+                         "start":  116.44,
+                         "end":  116.99,
+                         "text":  "aur agar apne अच्छा"
+                     },
+                     {
+                         "start":  117.04,
+                         "end":  117.59,
+                         "text":  "kisi ke हंस sath"
+                     },
+                     {
+                         "start":  117.64,
+                         "end":  118.19,
+                         "text":  "papa रही है galat"
+                     },
+                     {
+                         "start":  118.24,
+                         "end":  118.79,
+                         "text":  "Aamir ho उनको raha"
+                     },
+                     {
+                         "start":  118.84,
+                         "end":  119.39,
+                         "text":  "भी hai to पता"
+                     },
+                     {
+                         "start":  119.44,
+                         "end":  119.99,
+                         "text":  "Khan ही uske sath"
+                     },
+                     {
+                         "start":  120.04,
+                         "end":  120.59,
+                         "text":  "Aamir Khan बर्गर khade"
+                     },
+                     {
+                         "start":  120.64,
+                         "end":  121.19,
+                         "text":  "Aamir पिज्जा mat Khan"
+                     },
+                     {
+                         "start":  121.24,
+                         "end":  121.79,
+                         "text":  "खाने rehna Aamir uske"
+                     },
+                     {
+                         "start":  121.84,
+                         "end":  122.39,
+                         "text":  "Khan जंतरमंतर khilaf Aamir"
+                     },
+                     {
+                         "start":  122.44,
+                         "end":  122.99,
+                         "text":  "Khan aawaz पहुंचा ही"
+                     },
+                     {
+                         "start":  123.04,
+                         "end":  123.59,
+                         "text":  "ke था uthana तब"
+                     },
+                     {
+                         "start":  123.64,
+                         "end":  124.19,
+                         "text":  "तक apne papa धर्मेंद्र"
+                     },
+                     {
+                         "start":  124.24,
+                         "end":  124.79,
+                         "text":  "प्रधान Era ऐसी aur"
+                     },
+                     {
+                         "start":  124.84,
+                         "end":  125.39,
+                         "text":  "Juned जिंदगी Khan भगवान"
+                     },
+                     {
+                         "start":  125.44,
+                         "end":  125.99,
+                         "text":  "नहीं करे maaf ये"
+                     },
+                     {
+                         "start":  126.04,
+                         "end":  126.59,
+                         "text":  "karo किसी bada topibaj"
+                     },
+                     {
+                         "start":  126.64,
+                         "end":  127.19,
+                         "text":  "भाई aadmi ओ hai"
+                     },
+                     {
+                         "start":  127.24,
+                         "end":  127.79,
+                         "text":  "हो गई भाई अरे"
+                     },
+                     {
+                         "start":  127.84,
+                         "end":  128.39,
+                         "text":  "bas band bro kar"
+                     },
+                     {
+                         "start":  128.44,
+                         "end":  128.99,
+                         "text":  "UK bhai yaar theek"
+                     },
+                     {
+                         "start":  129.04,
+                         "end":  129.59,
+                         "text":  "hai main sir bahut"
+                     },
+                     {
+                         "start":  129.64,
+                         "end":  130.19,
+                         "text":  "mere ko achhe bura"
+                     },
+                     {
+                         "start":  130.24,
+                         "end":  130.79,
+                         "text":  "maar lagta yaar diye"
+                     },
+                     {
+                         "start":  130.84,
+                         "end":  131.39,
+                         "text":  "UK humko ko dekh"
+                     },
+                     {
+                         "start":  131.44,
+                         "end":  131.99,
+                         "text":  "ke tumne yaar bola"
+                     },
+                     {
+                         "start":  132.04,
+                         "end":  132.59,
+                         "text":  "maar bhai diye hope"
+                     },
+                     {
+                         "start":  132.64,
+                         "end":  133.19,
+                         "text":  "everything gets jeet gaye"
+                     },
+                     {
+                         "start":  133.24,
+                         "end":  133.79,
+                         "text":  "well jeet soon gaye"
+                     },
+                     {
+                         "start":  133.84,
+                         "end":  59.99,
+                         "text":  "bro bhai"
+                     }
+                 ]
+    }
+]

@@ -1,0 +1,15 @@
+{
+  "name": "atlantic-ai-monorepo",
+  "private": true,
+  "version": "2.0.0",
+  "description": "Atlantic AI — AI video clipping platform. Monorepo: backend (Node/Express/FFmpeg/Gemini) + frontend (vanilla JS app) + landing (React marketing site).",
+  "scripts": {
+    "install:all": "npm install --prefix backend && npm install --prefix landing",
+    "dev:backend": "npm run start --prefix backend",
+    "dev:landing": "npm run dev --prefix landing",
+    "dev": "npm-run-all --parallel dev:backend dev:landing"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}

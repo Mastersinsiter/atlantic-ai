@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png"
+    href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQI12NgAAIABQABNjN9GQAAAABJRElEQkSuQmCC" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Atlantic AI — Editorial AI Video Studio</title>
+  <meta name="description"
+    content="The AI that understands video. Discover viral stream moments, reframe to 9:16 portrait composition, and burn word-level animated subtitles with multimodal intelligence.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+  
+  <link rel="stylesheet" href="styles.css?v=7" />
+</head>
+
+<body>
+
+  <!-- Organic Watercolor Atmosphere & Subtle Paper Texture -->
+  <div class="watercolor-universe" aria-hidden="true">
+    <div class="paper-grain"></div>
+    <div class="watercolor-canvas">
+      <div class="watercolor-wash wash-1" id="wash1"></div>
+      <div class="watercolor-wash wash-2" id="wash2"></div>
+      <div class="watercolor-wash wash-3" id="wash3"></div>
+      <div class="watercolor-wash wash-4" id="wash4"></div>
+    </div>
+  </div>
+
+  <!-- MINIMAL PROCESSING OVERLAY -->
+  <div class="forge-overlay" id="forgeOverlay">
+    <svg class="forge-scene" viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- Minimalist circular progress ring -->
+      <circle cx="120" cy="100" r="52" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="3" />
+      <circle id="loaderRingFill" cx="120" cy="100" r="52" fill="none" stroke="#111827" stroke-width="3"
+        stroke-linecap="round" stroke-dasharray="326.72" stroke-dashoffset="326.72"
+        style="transform: rotate(-90deg); transform-origin: 120px 100px; transition: stroke-dashoffset 0.3s ease;" />
+    </svg>
+    <p class="forge-status" id="forgeStatus">Analyzing stream footage...</p>
+    <p class="forge-sub" id="forgeSub">Multimodal AI is identifying high-engagement highlights & speech timestamps.</p>
+    <p class="forge-pct" id="forgePct">0%</p>
+  </div>
+
+  <div class="pg">
+
+    <!-- REFINED FLOATING NAVIGATION -->
+    <div class="nav-container">
+      <nav class="nav-pill">
+        <a href="#" class="nav-brand">
+          <div class="nav-logo-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 22 22 22"></polygon>
+            </svg>
+          </div>
+          <span class="nav-brand-title">Atlantic AI</span>
+        </a>
+        <div class="nav-links">
+          <a href="#hero" class="nav-link">Studio</a>
+          <a href="#features" class="nav-link">Engine</a>
+          <a href="#demoShowcase" class="nav-link">Demo</a>
+          <a href="#recentSection" class="nav-link">Recent</a>
+        </div>
+        <div class="nav-actions">
+          <div class="nav-status-pill">
+            <span class="status-dot-pulse"></span>
+            Studio Active
+          </div>
+          <button class="nav-btn-profile" onclick="toggleProfilePanel()">
+            <span>⚙️</span> Profile
+          </button>
+        </div>
+      </nav>
+    </div>
+
+    <!-- ╒ ╒ ╒ ╒ ╒ ╒ ╒  INPUT SECTION ╒ ╒ ╒ ╒ ╒ ╒ ╒  -->
+    <div id="input-section" class="active">
+
+      <!-- LARGE EDITORIAL HERO -->
+      <section class="hero-section" id="hero">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span>Creative Video Intelligence</span>
+          </div>
+          
+          <h1 class="hero-title">
+            <span class="title-line">ATLANTIC AI</span>
+            <span class="title-line">THE AI THAT <span class="serif-highlight">understands video.</span></span>
+          </h1>
+
+          <p class="hero-subtitle">
+            Extract viral moments from your streams with multimodal intelligence. Atlantic AI identifies peak hype, reframes faces to 9:16, and burns animated karaoke captions.
+          </p>
+
+          <!-- WHITE EDITORIAL STUDIO INGESTION DECK -->
+          <div class="fw">
+            <div class="console-header-label">
+              <span>Video Ingestion Studio</span>
+              <span>Direct Neural Pipeline</span>
+            </div>
+
+            <!-- Ingestion Mode Tabs -->
+            <div class="tabs">
+              <button class="tab on" id="tab-url" onclick="switchTab('url')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="color:#DC2626;"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                YouTube / Stream URL
+              </button>
+              <button class="tab" id="tab-file" onclick="switchTab('file')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                Local Video File
+              </button>
+            </div>
+
+            <!-- URL Input -->
+            <div id="input-url">
+              <input type="url" class="urlinp" id="dashUrl" placeholder="Paste YouTube stream or VOD URL..." autocomplete="off" />
+            </div>
+
+            <!-- File Upload Drag Zone -->
+            <div class="fzone" id="input-file">
+              <span style="font-size: 26px;">📁</span>
+              <div>
+                <label class="flbl" id="dashFileName">Click or drag a video file to upload</label>
+                <div style="font-size: 11px; color: var(--ink-muted); margin-top: 3px;">Supports MP4, MOV, MKV up to 2GB</div>
+              </div>
+              <input type="file" id="dashFileInput" accept="video/*" onchange="dashFileSelect(event)" style="display:none" />
+            </div>
+
+            <!-- Smart Reframing Options -->
+            <div class="reframe-toggle">
+              <label class="reframe-option">
+                <input type="radio" name="reframeMode" value="blur-pad" checked style="accent-color: var(--ink-primary);" />
+                <div>
+                  <span class="reframe-title">Blurred Letterbox</span>
+                  <span class="reframe-sub">Full frame with soft ambient background wash</span>
+                </div>
+              </label>
+              <label class="reframe-option">
+                <input type="radio" name="reframeMode" value="split-screen" style="accent-color: var(--ink-primary);" />
+                <div>
+                  <span class="reframe-title">Split-Screen Cam</span>
+                  <span class="reframe-sub">Dual-view stacked gamer layout (Facecam + Game)</span>
+                </div>
+              </label>
+            </div>
+
+            <!-- Language selector -->
+            <div class="lang-box">
+              <div style="font-family:var(--fm); font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--ink-secondary); margin-bottom:10px; display:flex; justify-content:space-between;">
+                <span>Caption Language</span>
+                <span style="opacity:0.6; font-size:10px;">Scroll for 15+ Languages →</span>
+              </div>
+              <div class="lang-grid" id="langRow">
+                <button class="lang-btn active" id="langAuto" onclick="setLanguage('auto',this)"><span>Auto Detect</span><span class="lang-native">AI Magic</span></button>
+                <button class="lang-btn" onclick="setLanguage('none',this)"><span>No Captions</span><span class="lang-native">Off</span></button>
+                <button class="lang-btn" onclick="setLanguage('en',this)"><span>English</span><span class="lang-native">Latin</span></button>
+                <button class="lang-btn" onclick="setLanguage('hi',this)"><span>Hindi</span><span class="lang-native">देवनागरी</span></button>
+                <button class="lang-btn" onclick="setLanguage('hinglish',this)"><span>Hinglish</span><span class="lang-native">Hinglish</span></button>
+                <button class="lang-btn" onclick="setLanguage('bn',this)"><span>Bengali</span><span class="lang-native">বাংলা</span></button>
+                <button class="lang-btn" onclick="setLanguage('ta',this)"><span>Tamil</span><span class="lang-native">தமிழ்</span></button>
+                <button class="lang-btn" onclick="setLanguage('te',this)"><span>Telugu</span><span class="lang-native">తెలుగు</span></button>
+                <button class="lang-btn" onclick="setLanguage('mr',this)"><span>Marathi</span><span class="lang-native">मराठी</span></button>
+                <button class="lang-btn" onclick="setLanguage('gu',this)"><span>Gujarati</span><span class="lang-native">ગુજરાતી</span></button>
+                <button class="lang-btn" onclick="setLanguage('kn',this)"><span>Kannada</span><span class="lang-native">ಕನ್ನಡ</span></button>
+                <button class="lang-btn" onclick="setLanguage('ml',this)"><span>Malayalam</span><span class="lang-native">മലയാളം</span></button>
+                <button class="lang-btn" onclick="setLanguage('pa',this)"><span>Punjabi</span><span class="lang-native">ਪੰਜਾਬੀ</span></button>
+                <button class="lang-btn" onclick="setLanguage('ur',this)"><span>Urdu</span><span class="lang-native">اردو</span></button>
+                <button class="lang-btn" onclick="setLanguage('or',this)"><span>Odia</span><span class="lang-native">ଓଡ଼ିଆ</span></button>
+                <button class="lang-btn" onclick="setLanguage('as',this)"><span>Assamese</span><span class="lang-native">অসমীয়া</span></button>
+              </div>
+            </div>
+
+            <!-- Watermark Suite -->
+            <div class="wm-studio-card">
+              <div class="wm-header">
+                <div class="wm-header-title">
+                  <span>Channel Watermark & Branding</span>
+                </div>
+                <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.85rem; color:var(--ink-secondary);">
+                  <input type="checkbox" id="wmEnableToggle" checked onchange="toggleWmFields(this.checked)" style="accent-color:var(--ink-primary);" />
+                  <span>Enable Watermark</span>
+                </label>
+              </div>
+
+              <div id="wmControlsContainer" style="display:flex; flex-direction:column; gap:12px;">
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                  <div style="flex:1; min-width:200px;">
+                    <input type="text" id="wmTextInput" value="" placeholder="Channel handle e.g. @yourname" oninput="updateWmPreview()"
+                      style="width:100%; padding:10px 14px; border:1px solid #E5E7EB; border-radius:8px; background:#FFFFFF; color:var(--ink-primary); font-size:0.88rem; outline:none;" />
+                  </div>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <label for="wmImageUpload" class="lang-btn" style="cursor:pointer; padding:9px 14px; margin:0; font-size:0.82rem; display:flex; align-items:center; gap:6px;">
+                      <span>📁 Upload Logo</span>
+                    </label>
+                    <input type="file" id="wmImageUpload" accept="image/*" onchange="uploadWmImage(event)" style="display:none" />
+                    <span id="wmImageStatus" style="font-size:0.8rem; color:#059669; display:none;">Logo set ✓</span>
+                  </div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                  <div style="display:flex; gap:6px; align-items:center;">
+                    <span style="font-size:0.75rem; color:var(--ink-muted);">Presets:</span>
+                    <button type="button" class="lang-btn" onclick="setWmPreset('twitch')" style="padding:4px 10px; font-size:0.75rem;">Twitch</button>
+                    <button type="button" class="lang-btn" onclick="setWmPreset('youtube')" style="padding:4px 10px; font-size:0.75rem;">YouTube</button>
+                    <button type="button" class="lang-btn" onclick="setWmPreset('tiktok')" style="padding:4px 10px; font-size:0.75rem;">TikTok</button>
+                  </div>
+
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:0.75rem; color:var(--ink-muted);">Position:</span>
+                    <select id="wmPositionSelect" onchange="updateWmPreview()" style="padding:6px 10px; border-radius:6px; background:#FFFFFF; color:var(--ink-primary); border:1px solid #E5E7EB; font-size:0.8rem;">
+                      <option value="bottom-center" selected>Bottom Center</option>
+                      <option value="bottom-left">Bottom Left</option>
+                      <option value="bottom-right">Bottom Right</option>
+                      <option value="top-right">Top Right</option>
+                      <option value="top-left">Top Left</option>
+                      <option value="center">Center</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div style="padding:10px 14px; background:#FFFFFF; border:1px solid #E5E7EB; border-radius:8px; display:flex; align-items:center; justify-content:space-between;">
+                  <span style="font-size:0.75rem; color:var(--ink-muted);">Preview:</span>
+                  <div id="wmBadgePreview" style="display:inline-flex; align-items:center; gap:8px; padding:4px 12px; background:#F9FAFB; border:1px dashed #D1D5DB; border-radius:6px; color:var(--ink-secondary); font-size:0.85rem; font-style:italic;">
+                    <span id="wmBadgeText">Your watermark preview will appear here</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Clip Quantity & Compilation Toggle -->
+            <div class="clip-count-box">
+              <div style="font-family:var(--fm); font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--ink-secondary); margin-bottom:10px;">
+                How many clips to extract?
+              </div>
+              <div class="clip-count-row" id="clipCountRow">
+                <button class="clip-cnt-btn active" id="cntAuto" onclick="setClipCount('auto',this)">Auto (AI Best)</button>
+                <button class="clip-cnt-btn" onclick="setClipCount(1,this)">1</button>
+                <button class="clip-cnt-btn" onclick="setClipCount(2,this)">2</button>
+                <button class="clip-cnt-btn" onclick="setClipCount(3,this)">3</button>
+                <button class="clip-cnt-btn" onclick="setClipCount(5,this)">5</button>
+                <button class="clip-cnt-btn" onclick="setClipCount(7,this)">7</button>
+                <button class="clip-cnt-btn" onclick="setClipCount(10,this)">10</button>
+                <button class="clip-cnt-btn" onclick="setClipCount(20,this)">20</button>
+                <button class="clip-cnt-btn" onclick="setClipCount(30,this)">30</button>
+                <button class="clip-cnt-btn" onclick="setClipCount(50,this)">50</button>
+              </div>
+
+              <div style="margin-top:16px; padding:14px 18px; background:#F9FAFB; border-radius:12px; border:1px solid #E5E7EB;">
+                <label style="display:flex; align-items:center; gap:10px; font-weight:600; font-size:14px; cursor:pointer; color:var(--ink-primary);">
+                  <input type="checkbox" id="compilationToggle" style="width:18px; height:18px; accent-color:var(--ink-primary);">
+                  <span>Create 10-15 Min Compilation Video (Stitches highlights into one master reel)</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Master Action Button -->
+            <button class="fbtn" id="dashProcessBtn" onclick="handleSubmit()">
+              <span class="bnt">Extract Viral Clips</span>
+              <span class="bnl"><span class="fspin"></span>Forging clips...</span>
+            </button>
+          </div>
+
+          <!-- Studio Telemetry -->
+          <div class="sstrip">
+            <span class="si"><span class="sd"></span>847 clips created today</span>
+            <span class="si"><span class="sd cy"></span>2.3M views generated</span>
+            <span class="si"><span class="sd ro"></span>12s avg processing</span>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- GALLERY BENTO MATRIX SECTION -->
+      <section id="features">
+        <div class="siw">
+          <div class="section-header-center rv">
+            <span class="ey">The Intelligent Studio</span>
+            <h2 class="sh">One Stream. Every Highlight.<br>Zero Manual Editing.</h2>
+            <p class="ss">Atlantic AI detects high-energy moments, transcribes with word-level precision, reframes faces automatically, and prepares ready-to-post clips.</p>
+          </div>
+
+          <div class="bgrid">
+            <div class="bc bca rv">
+              <span class="bdg bv">Moment Detection</span>
+              <div class="cnum" id="cfCtr">0</div>
+              <p class="clbl">clips detected this week</p>
+              <div class="ctrk">
+                <div class="cfil" id="cfFil"></div>
+              </div>
+              <p class="ctrd">↑ 14% vs last week</p>
+            </div>
+
+            <div class="bc bcb rv">
+              <div class="wr">
+                <div class="wl">
+                  <span class="bdg bc2">AI Transcription</span>
+                  <p class="wtt">Every word.<br>Timestamped.</p>
+                  <p class="wsb">Faster-Whisper transcribes speech with word-level timing.</p>
+                </div>
+                <div class="wbs" id="wbs"></div>
+              </div>
+            </div>
+
+            <div class="bc bcc rv">
+              <p class="ey" style="margin-bottom:8px;">Publish to</p>
+              <div class="prow">
+                <div class="pt yt" title="YouTube Shorts">▶</div>
+                <div class="pt tt" title="TikTok">🎵</div>
+                <div class="pt ig" title="Instagram Reels">◎</div>
+                <div class="pt xx" title="X / Twitter">𝕏</div>
+              </div>
+              <p class="ptg">Connect once. Post everywhere.</p>
+            </div>
+
+            <div class="bc bcd rv">
+              <div class="phw">
+                <span class="bdg bv">Auto Reframe</span>
+                <div class="phs">
+                  <div class="phl"><span class="phrl">16:9</span>
+                    <div class="phrh"></div>
+                  </div>
+                  <div class="phr"><span class="phrl">9:16</span>
+                    <div class="phrv"></div>
+                  </div>
+                </div>
+                <p class="phtg">Face stays centered.</p>
+              </div>
+            </div>
+
+            <div class="bc bce rv">
+              <div class="rrow">
+                <div class="rl">
+                  <span class="bdg bv">Stream Recap</span>
+                  <p class="rtl">Session Summary.</p>
+                  <p class="rsb">AI summarizes your gameplay and exports ready-to-post vertical shorts.</p>
+                </div>
+                <div class="rsts">
+                  <div class="rst"><span class="rsn">847</span><span class="rsl">clips found</span></div>
+                  <div class="rdv"></div>
+                  <div class="rst"><span class="rsn">2.3M</span><span class="rsl">views</span></div>
+                  <div class="rdv"></div>
+                  <div class="rst"><span class="rsn" style="color:#EC4899">4,200</span><span class="rsl">peak hype/min</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ╒ ╒ ╒ ╒ ╒ ╒ ╒  DEMO SHOWCASE ╒ ╒ ╒ ╒ ╒ ╒ ╒  -->
+      <section class="demo-showcase" id="demoShowcase">
+        <div class="siw">
+          <div class="section-header-center rv">
+            <span class="ey">Interactive Demo</span>
+            <h2 class="sh">From Raw Stream<br>to Viral Clips.</h2>
+            <p class="ss">Click or play the demo stream below to watch Atlantic AI analyze moments, reframe portrait compositions, and generate ready-to-publish shorts.</p>
+          </div>
+
+          <!-- Main Demo Video (Always visible initially) -->
+          <div class="demo-hero-video rv" id="demoHeroVideoBlock">
+            <div class="demo-video-label">
+              <span class="demo-label-dot"></span>
+              <span>Input Stream Footage</span>
+              <span class="demo-label-tag">NVIDIA GeForce Stream • 1080p 60fps</span>
+            </div>
+            <div class="demo-video-wrapper demo-video-main" id="demoMainWrapper">
+              <video id="demoMainVideo" controls preload="metadata" playsinline>
+                <source src="demos/nvidia-demo-video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <div class="demo-play-overlay" id="demoMainOverlay" onclick="triggerDemoExperience(true)">
+                <div class="demo-play-btn">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="#FFFFFF"><polygon points="6 3 20 12 6 21"></polygon></svg>
+                </div>
+                <span class="demo-play-text">Click to Process & Experience AI Reframe</span>
+                <span class="demo-play-badge">⚡ Instant AI Highlights + Interactive Reframe Tool</span>
+              </div>
+            </div>
+
+            <!-- Call to action bar under video -->
+            <div class="demo-trigger-bar" id="demoTriggerBar">
+              <button class="demo-action-btn" id="demoProcessTriggerBtn" onclick="triggerDemoExperience(true)">
+                <span class="demo-btn-icon">⚡</span>
+                <span id="demoTriggerBtnText">Extract Clips & Open Interactive Reframe Studio</span>
+              </button>
+              <span class="demo-trigger-hint">👆 Click video or button above to test the AI clipping & reframing engine</span>
+            </div>
+          </div>
+
+          <!-- Interactive Results & Reframe Studio Container (Revealed on click) -->
+          <div id="demoInteractiveContainer" class="demo-interactive-results" style="display: none;">
+            
+            <!-- AI Processing Badge Simulation -->
+            <div class="demo-status-banner" id="demoStatusBanner">
+              <div class="demo-status-icon">✓</div>
+              <div class="demo-status-info">
+                <strong>Multimodal AI Pipeline Executed</strong>
+                <span>3 high-energy viral moments detected • 9:16 portrait reframing active • Animated karaoke captions ready</span>
+              </div>
+            </div>
+
+            <!-- ── INTERACTIVE REFRAME & CROP PREVIEW WORKBENCH ── -->
+            <div class="demo-reframe-studio">
+              <div class="demo-studio-header">
+                <div class="demo-studio-title-box">
+                  <span class="demo-studio-badge">Live Interactive Tool</span>
+                  <h3 class="demo-studio-heading">Interactive AI Reframing Studio</h3>
+                  <p class="demo-studio-desc">Drag the 9:16 framing box or switch presets below to see how Atlantic AI centers gameplay, faces, and captions in real-time.</p>
+                </div>
+                <div class="demo-studio-actions">
+                  <button class="demo-studio-btn-fullscreen" onclick="openStudioModalForDemo()">
+                    🎬 Open Full Pro Editor
+                  </button>
+                </div>
+              </div>
+
+              <!-- Reframe Workbench Dual Panel -->
+              <div class="demo-workbench-grid">
+                
+                <!-- Left Panel: Source Video with Interactive Draggable Crop Box -->
+                <div class="demo-wb-card">
+                  <div class="demo-wb-card-header">
+                    <span>16:9 Raw Source Video</span>
+                    <span class="demo-wb-tag">Drag Box to Reposition</span>
+                  </div>
+                  <div class="demo-wb-stage" id="demoCropStage">
+                    <video id="demoWorkbenchVideo" src="demos/nvidia-demo-video.mp4" playsinline muted loop autoplay preload="auto"></video>
+                    <!-- Dark overlay mask -->
+                    <div class="demo-crop-mask" id="demoCropMask"></div>
+                    <!-- Draggable crop box -->
+                    <div class="demo-crop-box" id="demoCropBox" style="left: 35%; width: 31.6%; top: 0; bottom: 0;">
+                      <div class="demo-crop-box-border"></div>
+                      <div class="demo-crop-label">9:16 Subject Focus</div>
+                      <div class="demo-crop-handle handle-left"></div>
+                      <div class="demo-crop-handle handle-right"></div>
+                    </div>
+                  </div>
+                  <div class="demo-wb-video-controls">
+                    <button class="demo-wb-ctrl-btn" id="demoWbPlayBtn" onclick="toggleDemoWbPlay()">⏸ Pause</button>
+                    <span class="demo-wb-time" id="demoWbTime">00:15 / 02:30</span>
+                    <input type="range" class="demo-wb-scrubber" id="demoWbScrubber" min="0" max="100" value="10" oninput="seekDemoWb(this.value)">
+                  </div>
+                </div>
+
+                <!-- Right Panel: Live 9:16 Mobile Output Preview with Captions -->
+                <div class="demo-wb-card demo-wb-card-preview">
+                  <div class="demo-wb-card-header">
+                    <span>9:16 Live Output Preview</span>
+                    <span class="demo-wb-tag live">● Live Stream</span>
+                  </div>
+                  <div class="demo-wb-preview-stage">
+                    <div class="demo-phone-frame">
+                      <canvas id="demoLiveCanvas" width="540" height="960"></canvas>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Reframe Controls Bar -->
+              <div class="demo-reframe-toolbar">
+                <div class="demo-toolbar-group">
+                  <span class="demo-toolbar-label">Framing Presets:</span>
+                  <div class="demo-pill-group">
+                    <button class="demo-pill active" onclick="setDemoCropPreset('center', this)">🎯 Center Focus</button>
+                    <button class="demo-pill" onclick="setDemoCropPreset('left', this)">👤 Facecam (Left)</button>
+                    <button class="demo-pill" onclick="setDemoCropPreset('right', this)">🎮 Action (Right)</button>
+                    <button class="demo-pill" onclick="setDemoCropPreset('blur', this)">✨ Blurred Letterbox</button>
+                    <button class="demo-pill" onclick="setDemoCropPreset('split', this)">👥 Split Screen</button>
+                  </div>
+                </div>
+
+                <div class="demo-toolbar-group">
+                  <span class="demo-toolbar-label">Source Clip:</span>
+                  <div class="demo-pill-group">
+                    <button class="demo-pill active" onclick="loadDemoClipIntoStudio('demos/nvidia-demo-video.mp4', this, 'Full Stream')">Full Stream</button>
+                    <button class="demo-pill" onclick="loadDemoClipIntoStudio('demos/final-clip-1.mp4', this, 'Clip 01')">Clip 1</button>
+                    <button class="demo-pill" onclick="loadDemoClipIntoStudio('demos/final-clip-2.mp4', this, 'Clip 2')">Clip 2</button>
+                    <button class="demo-pill" onclick="loadDemoClipIntoStudio('demos/final-clip-3.mp4', this, 'Clip 3')">Clip 3</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── 3 AI-GENERATED OUTPUT CLIPS ── -->
+            <div class="demo-clips-header" style="margin-top: 50px;">
+              <div class="demo-clips-label">
+                <span class="demo-label-dot dot-green"></span>
+                <span>3 AI-Extracted Highlights</span>
+              </div>
+              <p class="demo-clips-sub">These clips were automatically extracted from the NVIDIA stream, reframed to 9:16, and subtitled with word-level AI timing.</p>
+            </div>
+
+            <div class="demo-clips-row">
+              <!-- Clip 01 -->
+              <div class="demo-clip-card">
+                <div class="demo-clip-number">01</div>
+                <div class="demo-video-wrapper demo-video-clip">
+                  <video id="demoFinalClip1" controls preload="metadata" playsinline>
+                    <source src="demos/final-clip-1.mp4" type="video/mp4">
+                  </video>
+                  <div class="demo-play-overlay" onclick="this.style.display='none'; document.getElementById('demoFinalClip1').play();">
+                    <div class="demo-play-btn small">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="#FFFFFF"><polygon points="6 3 20 12 6 21"></polygon></svg>
+                    </div>
+                  </div>
+                </div>
+                <div class="demo-clip-meta">
+                  <span class="demo-clip-tag">AI Highlight</span>
+                  <span class="demo-clip-tag">9:16 Reframe</span>
+                  <button class="demo-clip-edit-btn" onclick="loadDemoClipIntoStudio('demos/final-clip-1.mp4', null, 'Clip 01'); document.querySelector('.demo-reframe-studio').scrollIntoView({behavior:'smooth'});">✏️ Reframe This</button>
+                </div>
+              </div>
+
+              <!-- Clip 02 -->
+              <div class="demo-clip-card">
+                <div class="demo-clip-number">02</div>
+                <div class="demo-video-wrapper demo-video-clip">
+                  <video id="demoFinalClip2" controls preload="metadata" playsinline>
+                    <source src="demos/final-clip-2.mp4" type="video/mp4">
+                  </video>
+                  <div class="demo-play-overlay" onclick="this.style.display='none'; document.getElementById('demoFinalClip2').play();">
+                    <div class="demo-play-btn small">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="#FFFFFF"><polygon points="6 3 20 12 6 21"></polygon></svg>
+                    </div>
+                  </div>
+                </div>
+                <div class="demo-clip-meta">
+                  <span class="demo-clip-tag">AI Highlight</span>
+                  <span class="demo-clip-tag">Auto Captions</span>
+                  <button class="demo-clip-edit-btn" onclick="loadDemoClipIntoStudio('demos/final-clip-2.mp4', null, 'Clip 02'); document.querySelector('.demo-reframe-studio').scrollIntoView({behavior:'smooth'});">✏️ Reframe This</button>
+                </div>
+              </div>
+
+              <!-- Clip 03 -->
+              <div class="demo-clip-card">
+                <div class="demo-clip-number">03</div>
+                <div class="demo-video-wrapper demo-video-clip">
+                  <video id="demoFinalClip3" controls preload="metadata" playsinline>
+                    <source src="demos/final-clip-3.mp4" type="video/mp4">
+                  </video>
+                  <div class="demo-play-overlay" onclick="this.style.display='none'; document.getElementById('demoFinalClip3').play();">
+                    <div class="demo-play-btn small">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="#FFFFFF"><polygon points="6 3 20 12 6 21"></polygon></svg>
+                    </div>
+                  </div>
+                </div>
+                <div class="demo-clip-meta">
+                  <span class="demo-clip-tag">AI Highlight</span>
+                  <span class="demo-clip-tag">Watermark</span>
+                  <button class="demo-clip-edit-btn" onclick="loadDemoClipIntoStudio('demos/final-clip-3.mp4', null, 'Clip 03'); document.querySelector('.demo-reframe-studio').scrollIntoView({behavior:'smooth'});">✏️ Reframe This</button>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /demoInteractiveContainer -->
+
+        </div>
+      </section>
+
+      <!-- STREAMERS TICKER -->
+      <div class="kfs">
+        <p class="kfl">Streamers creating clips with Atlantic AI right now</p>
+        <div class="kft" id="kft"></div>
+      </div>
+
+      <!-- RECENT PROJECTS -->
+      <section class="recsec" id="recentSection">
+        <div class="siw">
+          <div class="rechd rv">
+            <h2 class="rectl">Recent Studio Projects</h2>
+          </div>
+          <div id="jobsList">
+            <div class="recemp">
+              <p class="recei">🎮</p>
+              <p>No clips extracted yet.</p>
+              <p style="margin-top:6px; font-size:12px; font-family:var(--fm); color:var(--ink-secondary);">Paste a YouTube URL or upload a file above to begin.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CINEMATIC BOTTOM CTA -->
+      <section class="bcta rv">
+        <div class="siw">
+          <h2 class="bctah">Stop scrubbing VODs.<br>Start going viral.</h2>
+          <p class="bctas">Your best highlight is already in your footage. Atlantic AI finds and shapes it in seconds.</p>
+          <button class="bctabtn" onclick="document.getElementById('hero').scrollIntoView({behavior:'smooth'})">
+            Extract Your First Clip
+          </button>
+        </div>
+      </section>
+
+    </div><!-- /input-section -->
+
+    <!-- PROGRESS SECTION -->
+    <div class="section" id="progress-section" style="padding: 120px 20px; text-align: center;">
+      <h2 style="font-family: var(--font-display); font-size: 2.5rem; color: var(--ink-primary); margin-bottom: 20px;">Forging Clips...</h2>
+      <div style="font-size: 3.5rem; font-weight: 700; color: var(--ink-primary);" id="progPct">0%</div>
+      <div style="color: var(--ink-secondary); margin-top: 10px; font-family: var(--font-sans);" id="progMsg">Initializing AI engine...</div>
+    </div>
+
+    <!-- RESULTS GALLERY SHOWCASE -->
+    <div class="cf-results section" id="results-section">
+      <div class="cf-results-inner">
+        <div class="cf-results-header">
+          <h2 class="cf-results-title">
+            <span id="clipCount">0</span> Clips Ready
+          </h2>
+          <button class="cf-results-back" onclick="resetToInput()">+ Process Another Video</button>
+        </div>
+        <div class="cf-clips-grid" id="clipsGrid"></div>
+      </div>
+    </div>
+
+    <!-- EDITORIAL FOOTER -->
+    <footer>
+      <span class="fl">Atlantic AI</span>
+      <span class="fn">Built with Gemini Multimodal Vision · Faster-Whisper · FFmpeg · yt-dlp</span>
+    </footer>
+
+  </div><!-- /pg -->
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast">Message</div>
+
+  <!-- ╒ ╒ ╒ ╒ ╒ ╒ ╒  VIDEO PREVIEW CONFIRM MODAL ╒ ╒ ╒ ╒ ╒ ╒ ╒  -->
+  <div id="previewModal" style="
+    position:fixed;inset:0;z-index:9990;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(17,24,39,0.6);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    opacity:0;pointer-events:none;transition:opacity .35s cubic-bezier(.16,1,.3,1);
+  ">
+    <div id="previewBox" style="
+      width:min(580px,94vw);background:#FFFFFF;
+      border:1px solid #E5E7EB;border-radius:24px;
+      padding:28px;position:relative;
+      transform:translateY(24px);transition:transform .35s cubic-bezier(.16,1,.3,1);
+      box-shadow:0 25px 60px rgba(0,0,0,0.15);
+    ">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+        <span style="font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--ink-primary)">Confirm Video</span>
+        <button onclick="closePreviewModal()" style="
+          background:#F3F4F6;border:1px solid #E5E7EB;border-radius:8px;
+          padding:6px 12px;color:var(--ink-secondary);cursor:pointer;font-size:13px;transition:all .2s;
+        ">✕ Cancel</button>
+      </div>
+      <div id="previewContent" style="width:100%;border-radius:14px;overflow:hidden;background:#000;min-height:220px;display:flex;align-items:center;justify-content:center;"></div>
+      <div id="previewTitle" style="margin-top:16px;font-family:var(--fm);font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-secondary)"></div>
+      <div id="previewClipInfo" style="margin-top:6px;font-size:14px;color:var(--ink-primary);font-weight:600"></div>
+      <div style="display:flex;gap:12px;margin-top:22px">
+        <button onclick="closePreviewModal()" style="
+          flex:1;padding:14px;border-radius:12px;border:1px solid #E5E7EB;
+          background:#FFFFFF;color:var(--ink-primary);font-family:var(--font-sans);
+          font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;
+        ">← Change URL</button>
+        <button id="previewFullVideoBtn" onclick="confirmAndProcess(true)" style="
+          flex:1;padding:14px;border-radius:12px;border:1px solid #E5E7EB;
+          background:#F9FAFB;color:var(--ink-primary);font-family:var(--font-display);font-size:14px;
+          font-weight:600;cursor:pointer;transition:all .2s;
+        ">🎥 Full Video</button>
+        <button id="previewConfirmBtn" onclick="confirmAndProcess(false)" style="
+          flex:2;padding:14px;border-radius:12px;border:none;
+          background:#111827;color:#FFFFFF;font-family:var(--font-display);font-size:15px;
+          font-weight:700;cursor:pointer;transition:all .2s;
+          box-shadow:0 4px 16px rgba(17,24,39,0.2);
+        ">Extract Clips</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ╒ ╒ ╒ ╒ ╒ ╒ ╒  CREATOR PROFILE DRAWER ╒ ╒ ╒ ╒ ╒ ╒ ╒  -->
+  <div class="profile-overlay" id="profileOverlay" onclick="if(event.target===this)toggleProfilePanel()" style="
+    position:fixed;inset:0;z-index:9980;background:rgba(0,0,0,0.4);backdrop-filter:blur(8px);
+    opacity:0;pointer-events:none;transition:opacity 0.4s var(--ease);
+  "></div>
+  <div class="profile-panel" id="profilePanel" style="
+    position:fixed;top:0;right:0;bottom:0;width:400px;max-width:92vw;z-index:9985;
+    padding:2rem;overflow-y:auto;transform:translateX(100%);
+    background:#FFFFFF;border-left:1px solid #E5E7EB;transition:transform 0.4s var(--ease);color:var(--ink-primary);
+  ">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.8rem">
+      <h2 style="font-size:1.3rem;font-weight:700;font-family:var(--font-display);color:var(--ink-primary);">⚙️ Creator Profile</h2>
+      <button onclick="toggleProfilePanel()" style="border-radius:50%;width:34px;height:34px;background:#F3F4F6;border:1px solid #E5E7EB;color:var(--ink-primary);cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+    </div>
+
+    <div class="pp-section" style="margin-bottom:1.2rem;">
+      <div class="pill-label" style="font-family:var(--fm);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px;">Content Type</div>
+      <div class="pill-row" id="ppContentType" style="display:flex;flex-wrap:wrap;gap:6px;">
+        <button class="clip-pill active" onclick="ppPick('ppContentType','gaming',this)">Gaming</button>
+        <button class="clip-pill" onclick="ppPick('ppContentType','cooking',this)">Cooking</button>
+        <button class="clip-pill" onclick="ppPick('ppContentType','vlog',this)">Vlog</button>
+        <button class="clip-pill" onclick="ppPick('ppContentType','education',this)">Education</button>
+        <button class="clip-pill" onclick="ppPick('ppContentType','comedy',this)">Comedy</button>
+        <button class="clip-pill" onclick="ppPick('ppContentType','other',this)">Other</button>
+      </div>
+    </div>
+
+    <div class="pp-section" style="margin-bottom:1.2rem;">
+      <div class="pill-label" style="font-family:var(--fm);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px;">Audience Age</div>
+      <div class="pill-row" id="ppAudienceAge" style="display:flex;flex-wrap:wrap;gap:6px;">
+        <button class="clip-pill active" onclick="ppPick('ppAudienceAge','13-18',this)">13-18</button>
+        <button class="clip-pill" onclick="ppPick('ppAudienceAge','18-25',this)">18-25</button>
+        <button class="clip-pill" onclick="ppPick('ppAudienceAge','25-35',this)">25-35</button>
+        <button class="clip-pill" onclick="ppPick('ppAudienceAge','35+',this)">35+</button>
+      </div>
+    </div>
+
+    <div class="pp-section" style="margin-bottom:1.2rem;">
+      <div class="pill-label" style="font-family:var(--fm);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px;">Editing Style</div>
+      <div class="pill-row" id="ppStyle" style="display:flex;flex-wrap:wrap;gap:6px;">
+        <button class="clip-pill active" onclick="ppPick('ppStyle','energetic',this)">Energetic</button>
+        <button class="clip-pill" onclick="ppPick('ppStyle','chill',this)">Chill</button>
+        <button class="clip-pill" onclick="ppPick('ppStyle','professional',this)">Professional</button>
+        <button class="clip-pill" onclick="ppPick('ppStyle','funny',this)">Funny</button>
+        <button class="clip-pill" onclick="ppPick('ppStyle','dramatic',this)">Dramatic</button>
+      </div>
+    </div>
+
+    <div class="pp-section" style="margin-bottom:1.2rem;">
+      <div class="pill-label" style="font-family:var(--fm);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px;">Clip Style Directive</div>
+      <textarea class="pp-textarea" id="ppClipStyle" rows="2" placeholder="How should clips start and feel?" style="width:100%;border:1px solid #E5E7EB;border-radius:8px;background:#F9FAFB;color:var(--ink-primary);font-family:var(--font-sans);font-size:13px;padding:10px 12px;outline:none;">start with action not buildup</textarea>
+    </div>
+
+    <div class="pp-section" style="margin-bottom:1.2rem;">
+      <div class="pill-label" style="font-family:var(--fm);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px;">Avoid In Cuts</div>
+      <textarea class="pp-textarea" id="ppAvoid" rows="2" placeholder="What should be avoided?" style="width:100%;border:1px solid #E5E7EB;border-radius:8px;background:#F9FAFB;color:var(--ink-primary);font-family:var(--font-sans);font-size:13px;padding:10px 12px;outline:none;">slow sections, long talking, boring intros</textarea>
+    </div>
+
+    <div class="pp-section" style="border-top:1px solid #E5E7EB;padding-top:1.2rem;margin-top:1rem">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.85rem">
+        <div class="pill-label" style="margin:0;font-family:var(--fm);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-secondary);">Default Watermark</div>
+        <label class="toggle-switch" style="position:relative;width:44px;height:24px;display:inline-block">
+          <input type="checkbox" id="wmEnabled" onchange="wmToggle()" style="opacity:0;width:0;height:0">
+          <span class="toggle-slider" style="position:absolute;inset:0;border-radius:12px;background:#E5E7EB;cursor:pointer;transition:background .3s;"></span>
+        </label>
+      </div>
+      <div id="wmSettings" style="display:none">
+        <div class="pill-row" style="margin-bottom:0.75rem" id="wmType">
+          <button class="clip-pill active" onclick="ppPick('wmType','text',this);wmTypeChange('text')">Text</button>
+          <button class="clip-pill" onclick="ppPick('wmType','image',this);wmTypeChange('image')">Image</button>
+        </div>
+        <div id="wmTextInputProfile"><input class="pp-textarea" id="wmText" style="padding:8px 12px;width:100%;border:1px solid #E5E7EB;border-radius:8px;background:#F9FAFB;color:var(--ink-primary);" placeholder="@yourchannel" value="@yourchannel" /></div>
+        <div id="wmImageInput" style="display:none"><input type="file" id="wmImageFile" accept="image/png" style="font-size:0.8rem;color:var(--ink-secondary)" />
+          <div style="font-size:0.65rem;color:var(--ink-muted);margin-top:4px">PNG with transparency recommended</div>
+        </div>
+        <div class="pill-label" style="margin-top:0.75rem;font-size:11px;color:var(--ink-secondary);">Position</div>
+        <div class="wm-grid" id="wmPosGrid" style="display:grid;grid-template-columns:repeat(3, 1fr);gap:4px;width:120px;"></div>
+        <div class="pill-label" style="margin-top:0.75rem;font-size:11px;color:var(--ink-secondary);">Opacity: <span id="wmOpacityVal">80%</span></div>
+        <input type="range" id="wmOpacity" min="10" max="100" value="80" class="pp-range" oninput="document.getElementById('wmOpacityVal').textContent=this.value+'%'" style="width:100%;accent-color:#111827;" />
+        <div class="pill-label" style="margin-top:0.75rem;font-size:11px;color:var(--ink-secondary);">Size (px)</div>
+        <input type="number" id="wmSize" min="10" max="150" value="36" class="pp-textarea" style="padding:8px 12px;width:100%;border:1px solid #E5E7EB;border-radius:8px;background:#F9FAFB;color:var(--ink-primary);" />
+      </div>
+    </div>
+
+    <button class="fbtn" style="padding:14px;margin-top:1.5rem;font-size:0.95rem;" onclick="saveProfile()">
+      💾 Save Profile Settings
+    </button>
+  </div>
+
+  <!-- ╒ ╒ ╒ ╒ ╒ ╒ ╒  CROP / REFRAME EDITOR OVERLAY ╒ ╒ ╒ ╒ ╒ ╒ ╒  -->
+  <div class="crop-editor-overlay" id="cropEditorOverlay">
+    <div class="crop-editor-header">
+      <div class="crop-header-left">
+        <button class="crop-back-btn" onclick="closeCropEditor()">← Back</button>
+        <div style="display: flex; flex-direction: column; justify-content: center;">
+          <span id="cropEditorTitle" style="font-size: 10px; color: #9CA3AF; margin-bottom: 2px;">Edit Framing</span>
+          <span class="crop-header-title" style="font-size: 15px; opacity: 1;"><strong>Position the Crop</strong></span>
+          <span style="font-size: 11px; color: #9CA3AF;">Click or drag to position. Drag edges to resize.</span>
+        </div>
+      </div>
+      <div class="crop-mode-tabs" style="display:flex; align-items:center; gap:4px;">
+        <button class="crop-mode-tab active" data-mode="vertical" onclick="setCropMode('vertical')">Vertical</button>
+        <button class="crop-mode-tab" data-mode="split" onclick="setCropMode('split')">Split</button>
+        <button class="crop-mode-tab" data-mode="trio" onclick="setCropMode('trio')">Trio</button>
+        <button class="crop-mode-tab" data-mode="spotlight" onclick="setCropMode('spotlight')">Spotlight</button>
+        <button class="crop-mode-tab" data-mode="centered" onclick="setCropMode('centered')">Centered</button>
+        <button class="crop-mode-tab" data-mode="horizontal" onclick="setCropMode('horizontal')">Horizontal</button>
+
+        <div class="crop-info-trigger" id="cropModeInfoBtn" style="margin-left:8px; cursor:help; color:#9CA3AF; display:flex; align-items:center;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+        </div>
+      </div>
+      <div class="crop-header-right">
+        <label style="color:#fff; font-size:14px; margin-right:16px; display:flex; align-items:center; gap:8px;">
+          <input type="checkbox" id="cropApproveToggle" checked style="width:18px;height:18px;accent-color:#FFFFFF;">
+          Approve Clip
+        </label>
+        <button class="crop-export-btn" id="cropExportBtn" onclick="exportJobClips()">⬇ Export Approved</button>
+      </div>
+    </div>
+
+    <!-- Main: Source video + Preview -->
+    <div class="crop-editor-main">
+      <div class="crop-source-panel">
+        <div class="crop-source-wrapper">
+          <video id="cropSourceVideo" preload="metadata" crossorigin="anonymous" disablepictureinpicture></video>
+          <div class="crop-dark-overlay" id="cropDarkOverlay"></div>
+          <div class="crop-regions-layer" id="cropRegionsLayer"></div>
+        </div>
+      </div>
+
+      <div class="crop-preview-panel">
+        <div class="crop-positions-section" style="margin-bottom: 24px; padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+          <div class="crop-positions-title" style="display:flex; justify-content:space-between; margin-bottom:12px;">
+            <span style="font-weight:600; font-size:13px;">Crop Positions</span>
+            <span style="background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px; font-size:11px;">1</span>
+          </div>
+          <div id="cropPositionsRow" style="display:flex; flex-direction:column; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:#9CA3AF;">
+              <div style="width:6px; height:6px; border-radius:50%; background:#FFFFFF;"></div>
+              <span id="cropPositionsTimeRange">0:00 - 0:00</span>
+              <span id="cropPositionsRatio" style="margin-left:auto; font-size:11px; opacity:0.6;"></span>
+            </div>
+            <div class="crop-positions-timeline" style="width:100%; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; position:relative;">
+              <div class="crop-positions-progress" id="cropPositionsProgress" style="height:100%; background:#FFFFFF; border-radius:2px; width:0%;"></div>
+              <div class="crop-positions-playhead" id="cropPositionsPlayhead" style="width:2px; height:8px; background:#fff; position:absolute; top:-2px; left:0%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="crop-preview-title">Preview (9:16)</div>
+        <div class="crop-preview-canvas-wrap">
+          <canvas id="cropPreviewCanvas"></canvas>
+          <div class="crop-preview-watermark">Atlantic AI</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Playback controls & Timeline -->
+    <div class="crop-playback-controls" style="flex-direction:column; padding: 10px 24px;">
+      <div style="width:100%; position:relative; height:40px; background:rgba(255,255,255,0.05); border-radius:8px; margin-bottom:10px;" id="cropClipsTimeline">
+        <div id="cropTimelinePlayhead" style="position:absolute; left:0; top:0; bottom:0; width:2px; background:#FFFFFF; z-index:10; pointer-events:none;"></div>
+      </div>
+
+      <div style="display:flex; width:100%; align-items:center; gap:16px;">
+        <button class="crop-step-btn" id="cropUndoBtn" title="Undo" style="display:flex; align-items:center; justify-content:center; background:transparent; border:none; color:#9CA3AF; cursor:pointer;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 7v6h6"></path><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"></path>
+          </svg>
+        </button>
+        <button class="crop-step-btn" id="cropRedoBtn" title="Redo" style="display:flex; align-items:center; justify-content:center; background:transparent; border:none; color:#9CA3AF; cursor:pointer;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 7v6h-6"></path><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"></path>
+          </svg>
+        </button>
+        <button class="crop-step-btn" id="cropStepBack" title="Step back">⏮</button>
+        <button class="crop-play-btn" id="cropPlayBtn" title="Play/Pause">▶</button>
+        <button class="crop-step-btn" id="cropStepFwd" title="Step forward">⏭</button>
+        <input type="range" class="crop-scrubber" id="cropScrubber" min="0" max="100" step="0.1" value="0" style="flex:1;">
+        <span class="crop-time-display" id="cropTimeDisplay">00:00 / 00:00</span>
+        <button class="crop-speed-btn" id="cropSpeedBtn" title="Playback speed">1x</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ╒ ╒ ╒ ╒ ╒ ╒ ╒  MODULAR FULL VIDEO EDITOR OVERLAY ╒ ╒ ╒ ╒ ╒ ╒ ╒  -->
+  <div class="crop-editor-overlay" id="newEditorOverlay" style="z-index: 1000; flex-direction: column; opacity: 0; pointer-events: none;">
+    <div class="crop-editor-header" style="justify-content: space-between;">
+      <div class="crop-header-left">
+        <button class="crop-back-btn" onclick="window.currentEditor?.close()">← Back</button>
+        <span class="crop-header-title">Full Video Editor</span>
+      </div>
+      <div class="crop-mode-tabs" style="gap: 16px;">
+        <button class="crop-mode-tab editor-tab active" data-tab="layout">Layout & Framing</button>
+        <button class="crop-mode-tab editor-tab" data-tab="captions">Captions & Style</button>
+        <button class="crop-mode-tab editor-tab" data-tab="export">Export Settings</button>
+      </div>
+      <div class="crop-header-right">
+        <button class="crop-export-btn" onclick="window.currentEditor?.saveAndExport()">⬇ Export Project</button>
+      </div>
+    </div>
+
+    <div class="crop-editor-main" style="display: flex; flex: 1; overflow: hidden; background: #0B0F19;">
+      <div id="editorSidebarPane" style="width: 320px; padding: 24px; background: #1F2937; border-right: 1px solid rgba(255,255,255,0.1); overflow-y: auto;">
+      </div>
+      <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; position: relative;">
+        <video id="newEditorVideo" style="display:none;" preload="auto" crossorigin="anonymous"></video>
+        <canvas id="newEditorPreview" width="1080" height="1920" style="max-height: 100%; object-fit: contain; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.8);"></canvas>
+      </div>
+    </div>
+
+    <div class="crop-playback-controls" style="flex-direction:column; padding: 10px 24px; background: #1F2937; border-top: 1px solid rgba(255,255,255,0.1);">
+      <div id="editorTimelineStrip" style="width:100%; position:relative; height:40px; background:rgba(255,255,255,0.05); border-radius:8px; margin-bottom:10px; overflow: hidden;">
+      </div>
+      <div style="display:flex; width:100%; align-items:center; gap:16px;">
+        <button class="crop-step-btn" onclick="window.currentEditor?.video.currentTime -= 0.1" title="Step back">⏮</button>
+        <button class="crop-play-btn" onclick="const v = window.currentEditor?.video; v.paused ? v.play() : v.pause()" title="Play/Pause">▶</button>
+        <button class="crop-step-btn" onclick="window.currentEditor?.video.currentTime += 0.1" title="Step forward">⏭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ╒ ╒ ╒ ╒ ╒ ╒ ╒  LEGACY SUBTITLE & STYLE EDITOR MODAL ╒ ╒ ╒ ╒ ╒ ╒ ╒  -->
+  <div class="editor-modal" id="editorModal">
+    <div class="editor-header">
+      <h2 style="font-family: var(--font-display);">Edit Clip: <span id="editorClipTitle"></span></h2>
+      <div>
+        <button class="btn btn-outline" onclick="closeEditor()">Cancel</button>
+        <button class="btn btn-pri" onclick="renderAndExport()" style="background:#111827; color:#FFFFFF; font-weight:700;">Render & Export</button>
+      </div>
+    </div>
+    <div class="editor-body">
+      <div class="editor-col col-left">
+        <div class="layout-section">
+          <h4>Layout Mode</h4>
+          <div class="layout-picker" id="layoutPicker">
+            <button class="layout-pill active" data-layout="blur-pad" onclick="setLayout('blur-pad', this)">
+              <svg viewBox="0 0 36 48" fill="none">
+                <rect x="1" y="1" width="34" height="46" rx="3" stroke="currentColor" stroke-width="1" opacity="0.3" />
+                <rect x="3" y="14" width="30" height="20" rx="2" fill="currentColor" opacity="0.3" />
+                <rect x="5" y="16" width="26" height="16" rx="1" fill="currentColor" opacity="0.6" />
+              </svg>
+              <span class="lp-label">Blur Pad</span>
+            </button>
+            <button class="layout-pill" data-layout="split-screen" onclick="setLayout('split-screen', this)">
+              <svg viewBox="0 0 36 48" fill="none">
+                <rect x="1" y="1" width="34" height="46" rx="3" stroke="currentColor" stroke-width="1" opacity="0.3" />
+                <rect x="3" y="3" width="30" height="20" rx="2" fill="currentColor" opacity="0.5" />
+                <line x1="3" y1="24" x2="33" y2="24" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                <rect x="3" y="25" width="30" height="20" rx="2" fill="currentColor" opacity="0.3" />
+              </svg>
+              <span class="lp-label">Split</span>
+            </button>
+            <button class="layout-pill" data-layout="focus-left" onclick="setLayout('focus-left', this)">
+              <svg viewBox="0 0 36 48" fill="none">
+                <rect x="1" y="1" width="34" height="46" rx="3" stroke="currentColor" stroke-width="1" opacity="0.3" />
+                <rect x="2" y="3" width="18" height="42" rx="2" fill="currentColor" opacity="0.5" />
+                <rect x="21" y="3" width="14" height="42" rx="2" fill="currentColor" opacity="0.15" />
+              </svg>
+              <span class="lp-label">Focus L</span>
+            </button>
+            <button class="layout-pill" data-layout="focus-center" onclick="setLayout('focus-center', this)">
+              <svg viewBox="0 0 36 48" fill="none">
+                <rect x="1" y="1" width="34" height="46" rx="3" stroke="currentColor" stroke-width="1" opacity="0.3" />
+                <rect x="5" y="3" width="26" height="42" rx="2" fill="currentColor" opacity="0.15" />
+                <rect x="9" y="3" width="18" height="42" rx="2" fill="currentColor" opacity="0.5" />
+              </svg>
+              <span class="lp-label">Focus C</span>
+            </button>
+            <button class="layout-pill" data-layout="focus-right" onclick="setLayout('focus-right', this)">
+              <svg viewBox="0 0 36 48" fill="none">
+                <rect x="1" y="1" width="34" height="46" rx="3" stroke="currentColor" stroke-width="1" opacity="0.3" />
+                <rect x="2" y="3" width="14" height="42" rx="2" fill="currentColor" opacity="0.15" />
+                <rect x="16" y="3" width="18" height="42" rx="2" fill="currentColor" opacity="0.5" />
+              </svg>
+              <span class="lp-label">Focus R</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="keyframe-section">
+          <h4>
+            Reframe Keyframes
+            <button class="btn-add-kf" onclick="addReframeKeyframe()">+ Add</button>
+          </h4>
+          <div class="keyframe-list" id="keyframeList">
+            <div class="keyframe-empty">No keyframes — static layout will be used</div>
+          </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #E5E7EB; margin: 1.5rem 0;">
+
+        <h3 style="margin-bottom: 1rem; color: var(--ink-primary);">Subtitles</h3>
+        <div id="subtitlesList" class="subtitles-list"></div>
+        <button class="btn btn-outline" style="width: 100%; margin-top: 1rem" onclick="addSubtitle()">+ Add Subtitle</button>
+      </div>
+      <div class="editor-col col-center">
+        <div class="video-container">
+          <video id="editorVideo" src="" crossorigin="anonymous" disablepictureinpicture></video>
+          <div id="videoOverlay" class="video-overlay"></div>
+          <div class="video-controls">
+            <button id="playPauseBtn" onclick="togglePlay()">Play</button>
+            <input type="range" id="videoScrubber" min="0" max="100" value="0" step="0.1">
+            <span id="videoTime">00:00 / 00:00</span>
+          </div>
+        </div>
+        <div class="waveform-container"><canvas id="waveformCanvas"></canvas></div>
+      </div>
+      <div class="editor-col col-right">
+        <h3 style="margin-bottom: 1rem; color: var(--ink-primary);">Styles & Watermark</h3>
+        <div class="control-group">
+          <label>Font</label>
+          <div class="font-pills" id="fontPills">
+            <button class="font-pill active" data-font="Impact" style="font-family: Impact">Impact</button>
+            <button class="font-pill" data-font="Bangers" style="font-family: 'Bangers', sans-serif">Bangers</button>
+            <button class="font-pill" data-font="Arial" style="font-family: Arial; font-weight: bold;">Arial Bold</button>
+            <button class="font-pill" data-font="Space Grotesk" style="font-family: 'Space Grotesk'">Space</button>
+            <button class="font-pill" data-font="Oswald" style="font-family: Oswald">Oswald</button>
+            <button class="font-pill" data-font="Courier New" style="font-family: 'Courier New'">Courier</button>
+          </div>
+        </div>
+        <div class="control-group">
+          <label>Colors</label>
+          <div class="color-swatches" id="colorSwatches">
+            <button class="color-swatch active" data-color="#ffffff" style="background: #ffffff; border:1px solid #D1D5DB;"></button>
+            <button class="color-swatch" data-color="#ffff00" style="background: #ffff00"></button>
+            <button class="color-swatch" data-color="#00ff00" style="background: #00ff00"></button>
+            <button class="color-swatch" data-color="#ff0000" style="background: #ff0000"></button>
+            <button class="color-swatch" data-color="#00ffff" style="background: #00ffff"></button>
+            <button class="color-swatch" data-color="#ff00ff" style="background: #ff00ff"></button>
+            <button class="color-swatch" data-color="#ffa500" style="background: #ffa500"></button>
+            <button class="color-swatch" data-color="#0000ff" style="background: #0000ff"></button>
+          </div>
+        </div>
+        <div class="control-group">
+          <label>Effects</label>
+          <div class="range-group"><span>Outline</span><input type="range" id="styleOutline" min="0" max="10" value="2"></div>
+          <div class="range-group"><span>Shadow</span><input type="range" id="styleShadow" min="0" max="20" value="5"></div>
+          <div class="range-group"><span>Size</span><input type="range" id="styleSize" min="10" max="100" value="48"></div>
+          <div class="range-group"><span>Position Y</span><input type="range" id="stylePosY" min="0" max="100" value="80"></div>
+        </div>
+        <div class="control-group">
+          <label>Animation Type</label>
+          <select id="styleAnimation" style="padding:6px; border:1px solid #E5E7EB; border-radius:6px; background:#FFFFFF;">
+            <option value="none">None</option>
+            <option value="pop">Pop</option>
+            <option value="slide">Slide</option>
+            <option value="fade">Fade</option>
+          </select>
+        </div>
+        <hr style="border: 0; border-top: 1px solid #E5E7EB; margin: 1.5rem 0;">
+        <div class="control-group">
+          <label>Watermark</label>
+          <input type="text" id="watermarkText" placeholder="Enter watermark text..." style="width: 100%; background: #FFFFFF; border: 1px solid #E5E7EB; padding: 0.8rem; border-radius: 8px; color: var(--ink-primary); margin-bottom: 0.5rem;">
+          <div style="display: flex; gap: 1rem;">
+            <div class="position-grid" id="watermarkGrid">
+              <button class="pos-btn" data-pos="tl"></button>
+              <button class="pos-btn" data-pos="tc"></button>
+              <button class="pos-btn" data-pos="tr"></button>
+              <button class="pos-btn" data-pos="ml"></button>
+              <button class="pos-btn" data-pos="mc"></button>
+              <button class="pos-btn" data-pos="mr"></button>
+              <button class="pos-btn" data-pos="bl"></button>
+              <button class="pos-btn" data-pos="bc"></button>
+              <button class="pos-btn active" data-pos="br"></button>
+            </div>
+            <div style="flex: 1;">
+              <div class="range-group"><span>Opacity</span><input type="range" id="watermarkOpacity" min="0" max="100" value="50"></div>
+              <div class="range-group"><span>Size</span><input type="range" id="watermarkSize" min="10" max="100" value="24"></div>
+            </div>
+          </div>
+        </div>
+        <hr style="border: 0; border-top: 1px solid #E5E7EB; margin: 1.5rem 0;">
+        <div class="control-group">
+          <label>AI Voiceover Script (ElevenLabs)</label>
+          <textarea id="voiceoverText" placeholder="Type a script here for ElevenLabs to read over this clip..." style="width: 100%; background: #FFFFFF; border: 1px solid #E5E7EB; padding: 0.8rem; border-radius: 8px; color: var(--ink-primary); resize: vertical; min-height: 80px;"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ╒ ╒ ╒ ╒ ╒ ╒ ╒  CORE SCRIPTS ╒ ╒ ╒ ╒ ╒ ╒ ╒  -->
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
+  <script src="app.js?v=5"></script>
+  <script src="cropEditor.js?v=5"></script>
+  <script src="editor.js?v=5"></script>
+  <script src="animations.js?v=5"></script>
+
+  <!-- Studio Dynamic Initializer -->
+  <script>
+    (function AtlanticStudioInit() {
+      'use strict';
+
+      // Waveform Equalizer simulation
+      const wh = [18, 24, 35, 52, 68, 74, 80, 90, 75, 62, 80, 88, 76, 58, 45, 60, 78, 90, 85, 70, 55, 42, 65, 80, 88, 76, 60, 72, 85, 90, 78, 60, 50, 68, 75, 58, 40, 30, 22, 16];
+      const wc = document.getElementById('wbs');
+      if (wc) {
+        wc.innerHTML = '';
+        wh.forEach((v, i) => {
+          const b = document.createElement('div');
+          b.className = 'wb' + (i % 4 === 0 ? ' a' : '');
+          b.style.height = v + 'px';
+          b.style.animationDelay = (i * 38) + 'ms';
+          wc.appendChild(b);
+        });
+      }
+
+      // Streamers Live Ticker
+      const kfItems = [
+        { n: 'xQc', a: 'clipped a 1v5 ace', v: '4.2M views' },
+        { n: 'shroud', a: 'went viral on Shorts', v: '2.8M in 6hrs' },
+        { n: 'Pokimane', a: 'exported 3 clips', v: 'Reels + Shorts + TikTok' },
+        { n: 'TimTheTatman', a: 'found 12 highlights', v: 'from a 4hr VOD' },
+        { n: 'Ninja', a: 'auto-captioned & posted', v: '8 clips in 45s' },
+        { n: 'HasanAbi', a: 'clipped a debate climax', v: '3.1M impressions' },
+        { n: 'Valkyrae', a: 'found a clutch scream', v: 'viral on X' },
+        { n: 'Sykkuno', a: 'exported a funny moment', v: '1.9M TikTok views' },
+        { n: 'Ludwig', a: 'detected 23 highlights', v: 'from 8hr stream' },
+      ];
+      const kfc = document.getElementById('kft');
+      if (kfc) {
+        kfc.innerHTML = '';
+        [...kfItems, ...kfItems].forEach(x => {
+          const el = document.createElement('div');
+          el.className = 'kfi';
+          el.innerHTML = `<span class="kfn">[${x.n}]</span><span class="kfa">${x.a}</span><span class="kfd"></span><span class="kfv">${x.v}</span>`;
+          kfc.appendChild(el);
+        });
+      }
+
+      // Animated Counter
+      let cFired = false;
+      const cEl = document.getElementById('cfCtr'), fEl = document.getElementById('cfFil');
+      if (cEl) {
+        new IntersectionObserver(e => {
+          if (e[0].isIntersecting && !cFired) {
+            cFired = true;
+            const st = performance.now();
+            (function step(now) {
+              const t = Math.min((now - st) / 1800, 1);
+              const ea = 1 - Math.pow(1 - t, 3);
+              cEl.textContent = Math.floor(ea * 847);
+              if (fEl) fEl.style.width = (ea * 85) + '%';
+              t < 1 ? requestAnimationFrame(step) : cEl.textContent = '847';
+            })(st);
+          }
+        }, { threshold: 0.3 }).observe(cEl);
+      }
+
+      // Drop Zone Binding
+      const dz = document.getElementById('input-file');
+      if (dz) {
+        dz.addEventListener('click', () => document.getElementById('dashFileInput').click());
+        dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+        dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+        dz.addEventListener('drop', e => {
+          e.preventDefault();
+          dz.classList.remove('dragover');
+          const f = e.dataTransfer.files[0];
+          if (f && f.type.startsWith('video/')) {
+            window.selectedFile = f;
+            document.getElementById('dashFileName').textContent = `${f.name} (${(f.size / 1048576).toFixed(1)} MB)`;
+          }
+        });
+      }
+
+      // Demo Showcase Video Controls
+      const demoVideos = document.querySelectorAll('.demo-showcase video');
+      demoVideos.forEach(vid => {
+        vid.addEventListener('play', () => {
+          demoVideos.forEach(otherVid => {
+            if (otherVid !== vid && !otherVid.paused) {
+              otherVid.pause();
+            }
+          });
+          const overlay = vid.parentElement.querySelector('.demo-play-overlay');
+          if (overlay) overlay.style.display = 'none';
+        });
+      });
+    })();
+
+    // ── Function Overrides for UI Integration ──
+    window.switchTab = function (mode) {
+      const urlWrap = document.getElementById('input-url');
+      const fileWrap = document.getElementById('input-file');
+      const tabUrl = document.getElementById('tab-url');
+      const tabFile = document.getElementById('tab-file');
+
+      if (mode === 'url') {
+        if (urlWrap) urlWrap.style.display = 'block';
+        if (fileWrap) fileWrap.classList.remove('show');
+        if (tabUrl) tabUrl.classList.add('on');
+        if (tabFile) tabFile.classList.remove('on');
+      } else {
+        if (urlWrap) urlWrap.style.display = 'none';
+        if (fileWrap) fileWrap.classList.add('show');
+        if (tabUrl) tabUrl.classList.remove('on');
+        if (tabFile) tabFile.classList.add('on');
+      }
+    };
+
+    window.handleSubmit = function () {
+      const isFile = document.getElementById('tab-file')?.classList.contains('on');
+      if (isFile) {
+        showFilePreview();
+      } else {
+        showUrlPreview();
+      }
+    };
+
+    window.showProgress = function () {
+      document.getElementById('input-section').style.display = 'none';
+      document.getElementById('results-section').classList.remove('active');
+      const ov = document.getElementById('forgeOverlay');
+      if (ov) ov.classList.add('active');
+      const btn = document.getElementById('dashProcessBtn');
+      if (btn) btn.classList.add('ld');
+      if (window.AtlanticAnim) AtlanticAnim.resetLoaderProgress();
+    };
+
+    window.showResults = function (job) {
+      const ov = document.getElementById('forgeOverlay');
+      if (ov) ov.classList.remove('active');
+      const btn = document.getElementById('dashProcessBtn');
+      if (btn) btn.classList.remove('ld');
+
+      document.getElementById('results-section').classList.add('active');
+      document.getElementById('clipCount').textContent = (job.clips || []).length;
+
+      const grid = document.getElementById('clipsGrid');
+      let html = '';
+      if (job.compilationUrl) {
+        html += `
+          <div style="grid-column: 1 / -1; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 20px; padding: 32px; text-align: center; margin-bottom: 24px; box-shadow: var(--shadow-card);">
+            <h3 style="font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 12px; color: var(--ink-primary);">🌟 15-Minute Compilation Master Reel Ready!</h3>
+            <p style="color: var(--ink-secondary); margin-bottom: 20px; max-width:600px; margin-left:auto; margin-right:auto;">All viral moments have been seamlessly stitched into a single highlight reel.</p>
+            <a href="${API}${job.compilationUrl}" download class="fbtn" style="display: inline-flex; width: auto; padding: 14px 36px; text-decoration: none;">
+              <span>⬇ Download Full Compilation</span>
+            </a>
+          </div>
+        `;
+      }
+
+      html += (job.clips || []).map((c, i) => {
+        const cid = c.clip_id || c.id || ('clip_' + i);
+        c.jobReframeMode = job.options?.reframeMode || 'blur-pad';
+        clipDataMap[cid] = c;
+        const title = c.title || 'Clip ' + (i + 1);
+        const safeTitle = title.replace(/'/g, "&apos;");
+        const clipDataJSON = encodeURIComponent(JSON.stringify({ title: c.title, score: c.score, start: c.start, end: c.end }));
+        return `
+        <div class="cf-clip-card">
+          <video src="${API}${c.url}" controls preload="metadata"></video>
+          <h3>${title}</h3>
+          <p class="cf-score">Score: ${c.score || 95}/100</p>
+          <div class="cf-clip-actions">
+            <button class="btn btn-pri" onclick="openEditor('${cid}', '${c.url}', '${safeTitle}')">Edit / Preview</button>
+            <button class="btn-reframe" onclick="openCropEditor('${job.id}', ${i}, '${job.videoUrl || c.url}', JSON.parse(decodeURIComponent('${clipDataJSON}')))">✏️ Edit Framing</button>
+            <a class="btn btn-out" href="${API}${c.url}" download>Download</a>
+          </div>
+        </div>`;
+      }).join('');
+      
+      grid.innerHTML = html;
+      if (window.AtlanticAnim) AtlanticAnim.staggerIn('#clipsGrid', '.cf-clip-card');
+    };
+
+    window.resetToInput = function () {
+      document.getElementById('input-section').style.display = '';
+      document.getElementById('results-section').classList.remove('active');
+      const ov = document.getElementById('forgeOverlay');
+      if (ov) ov.classList.remove('active');
+      const btn = document.getElementById('dashProcessBtn');
+      if (btn) btn.classList.remove('ld');
+      if (typeof setWorldState === 'function') setWorldState('idle');
+    };
+
+    window.pollJob = async function (id) {
+      try {
+        const res = await fetch(`${API}/api/status/${id}`);
+        const job = await res.json();
+
+        if (typeof setWorldState === 'function') {
+          if (job.status === 'processing') {
+            if (job.progress < 20) setWorldState('uploading');
+            else if (job.progress < 50) setWorldState('clipping');
+            else setWorldState('downloading');
+          } else if (job.status === 'queued') setWorldState('queued');
+        }
+
+        if (window.AtlanticAnim && job.progress !== undefined) {
+          AtlanticAnim.animateLoaderProgress(job.progress);
+        } else {
+          const pctEl = document.getElementById('forgePct');
+          if (pctEl && job.progress) pctEl.textContent = (job.progress || 0) + '%';
+        }
+
+        const ll = (job.logs || []).length ? job.logs[job.logs.length - 1].msg : '';
+        const subEl = document.getElementById('forgeSub');
+        if (subEl && ll) subEl.textContent = ll.slice(0, 90) || 'Processing video stream...';
+
+        if (job.status === 'completed' || job.status === 'failed') {
+          clearInterval(pollingIntervals[id]);
+          delete pollingIntervals[id];
+          if (job.status === 'completed') {
+            toast('✅ ' + (job.clips || []).length + ' clips ready!', 'success');
+            if (typeof setWorldState === 'function') setWorldState('complete');
+            if (id === activeJobId) showResults(job);
+          } else {
+            toast('❌ ' + (job.error || 'Processing Failed'), 'error');
+            if (typeof setWorldState === 'function') setWorldState('error');
+            if (id === activeJobId) resetToInput();
+          }
+        }
+      } catch (e) { }
+    };
+
+    window.loadJobs = async function () {
+      try {
+        const res = await fetch(`${API}/api/jobs`);
+        const jobs = await res.json();
+        const list = document.getElementById('jobsList');
+        if (!list) return;
+        list.innerHTML = '';
+        if (!jobs.length) {
+          list.innerHTML = '<div class="recemp"><p class="recei">🎮</p><p>No clips extracted yet.</p><p style="margin-top:6px;font-size:12px;font-family:var(--fm);color:var(--ink-secondary);">Paste a YouTube URL above to begin.</p></div>';
+          return;
+        }
+        jobs.forEach(job => {
+          const card = document.createElement('div');
+          card.className = 'job-card';
+          card.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <strong style="font-size:15px;color:var(--ink-primary);">${job.videoTitle || job.url || 'Video Upload'}</strong>
+              <span style="color:var(--ink-secondary);font-family:var(--fm);font-size:12px;font-weight:600;text-transform:uppercase;background:#F3F4F6;padding:4px 10px;border-radius:99px;border:1px solid #E5E7EB;">${job.status}</span>
+            </div>
+          `;
+          if (job.status === 'completed') card.onclick = () => showResults(job);
+          list.appendChild(card);
+          if (job.status === 'processing' || job.status === 'queued') startPolling(job.id);
+        });
+      } catch { }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => { setTimeout(loadJobs, 300); });
+  </script>
+
+  <!-- Creator Profile Management -->
+  <script>
+    let currentProfile = {};
+
+    async function loadProfile() {
+      try {
+        const res = await fetch('/api/profile');
+        const data = await res.json();
+        currentProfile = data;
+
+        selectPill('ppContentType', data.content_type || 'gaming');
+        selectPill('ppAudienceAge', data.audience_age || '13-25');
+        selectPill('ppStyle', data.style || 'energetic');
+        document.getElementById('ppClipStyle').value = data.clip_style || 'start with action not buildup';
+        document.getElementById('ppAvoid').value = data.avoid || 'slow sections, long talking, boring intros';
+
+        const wm = data.watermark || {};
+        document.getElementById('wmEnabled').checked = !!wm.enabled;
+        document.getElementById('wmText').value = wm.text || '@yourchannel';
+        document.getElementById('wmOpacity').value = (wm.opacity !== undefined) ? wm.opacity * 100 : 80;
+        document.getElementById('wmOpacityVal').textContent = Math.round((wm.opacity !== undefined) ? wm.opacity * 100 : 80) + '%';
+        document.getElementById('wmSize').value = wm.size || 36;
+
+        const isImage = !!wm.image_path;
+        selectPill('wmType', isImage ? 'image' : 'text');
+        wmTypeChange(isImage ? 'image' : 'text');
+
+        initWatermarkPosGrid(wm.position || 'bottom-right');
+        wmToggle();
+      } catch (err) {
+        console.error('Failed to load profile:', err);
+      }
+    }
+
+    function selectPill(rowId, val) {
+      const row = document.getElementById(rowId);
+      if (!row) return;
+      const btns = row.getElementsByTagName('button');
+      for (const btn of btns) {
+        const onclick = btn.getAttribute('onclick') || '';
+        const matches = onclick.match(/'([^']+)'/g);
+        if (matches && matches.length >= 2) {
+          const btnVal = matches[1].replace(/'/g, '');
+          if (btnVal === val) {
+            for (const b of btns) b.classList.remove('active');
+            btn.classList.add('active');
+            break;
+          }
+        }
+      }
+    }
+
+    function ppPick(rowId, val, btn) {
+      const row = document.getElementById(rowId);
+      if (!row) return;
+      const btns = row.getElementsByTagName('button');
+      for (const b of btns) b.classList.remove('active');
+      btn.classList.add('active');
+    }
+
+    function wmToggle() {
+      const enabled = document.getElementById('wmEnabled').checked;
+      const ws = document.getElementById('wmSettings');
+      if (ws) ws.style.display = enabled ? 'block' : 'none';
+    }
+
+    function wmTypeChange(type) {
+      const tp = document.getElementById('wmTextInputProfile');
+      const ip = document.getElementById('wmImageInput');
+      if (tp) tp.style.display = type === 'text' ? 'block' : 'none';
+      if (ip) ip.style.display = type === 'image' ? 'block' : 'none';
+    }
+
+    const posGridList = [
+      'top-left', 'top-center', 'top-right',
+      'center-left', 'center', 'center-right',
+      'bottom-left', 'bottom-center', 'bottom-right'
+    ];
+
+    function initWatermarkPosGrid(activePos) {
+      const grid = document.getElementById('wmPosGrid');
+      if (!grid) return;
+      grid.innerHTML = posGridList.map(pos => {
+        const isActive = pos === activePos;
+        const arrow = getArrow(pos);
+        return `<button class="clip-pill ${isActive ? 'active' : ''}" onclick="ppPick('wmPosGrid','${pos}',this)" title="${pos}">${arrow}</button>`;
+      }).join('');
+    }
+
+    function getArrow(pos) {
+      const map = {
+        'top-left': '↖', 'top-center': '↑', 'top-right': '↗',
+        'center-left': '←', 'center': '•', 'center-right': '→',
+        'bottom-left': '↙', 'bottom-center': '↓', 'bottom-right': '↘'
+      };
+      return map[pos] || '•';
+    }
+
+    function toggleProfilePanel() {
+      const overlay = document.getElementById('profileOverlay');
+      const panel = document.getElementById('profilePanel');
+      if (!overlay || !panel) return;
+      const isOpen = panel.classList.contains('open');
+      if (isOpen) {
+        overlay.classList.remove('open');
+        overlay.style.opacity = '0';
+        overlay.style.pointerEvents = 'none';
+        panel.classList.remove('open');
+        panel.style.transform = 'translateX(100%)';
+      } else {
+        loadProfile();
+        overlay.classList.add('open');
+        overlay.style.opacity = '1';
+        overlay.style.pointerEvents = 'auto';
+        panel.classList.add('open');
+        panel.style.transform = 'translateX(0)';
+      }
+    }
+
+    async function saveProfile() {
+      const contentType = getActivePillVal('ppContentType');
+      const audienceAge = getActivePillVal('ppAudienceAge');
+      const style = getActivePillVal('ppStyle');
+      const clipStyle = document.getElementById('ppClipStyle')?.value || '';
+      const avoid = document.getElementById('ppAvoid')?.value || '';
+
+      const wmEnabled = document.getElementById('wmEnabled')?.checked || false;
+      const wmType = getActivePillVal('wmType');
+      const wmText = document.getElementById('wmText')?.value || '';
+      const wmOpacity = parseFloat(document.getElementById('wmOpacity')?.value || 80) / 100;
+      const wmSize = parseInt(document.getElementById('wmSize')?.value) || 36;
+      const wmPosition = getActivePillVal('wmPosGrid') || 'bottom-right';
+
+      const profile = {
+        name: 'Creator',
+        content_type: contentType,
+        audience_age: audienceAge,
+        style: style,
+        clip_style: clipStyle,
+        avoid: avoid,
+        language: 'auto',
+        example_hooks: currentProfile.example_hooks || ["You won't believe what happened next...", "This is insane...", "Wait for it..."],
+        watermark: {
+          enabled: wmEnabled,
+          text: wmText,
+          image_path: currentProfile.watermark?.image_path || '',
+          position: wmPosition,
+          opacity: wmOpacity,
+          size: wmSize
+        }
+      };
+
+      const imageFileInp = document.getElementById('wmImageFile');
+      if (wmEnabled && wmType === 'image' && imageFileInp && imageFileInp.files[0]) {
+        const fd = new FormData();
+        fd.append('watermark', imageFileInp.files[0]);
+        try {
+          const res = await fetch('/api/profile/watermark-image', { method: 'POST', body: fd });
+          const data = await res.json();
+          if (data.success && data.path) {
+            profile.watermark.image_path = data.path;
+          }
+        } catch (err) {
+          toast('Failed to upload watermark image', 'error');
+          return;
+        }
+      }
+
+      try {
+        const res = await fetch('/api/profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(profile)
+        });
+        const data = await res.json();
+        if (data.success) {
+          toast('Profile saved successfully', 'success');
+          toggleProfilePanel();
+        } else {
+          toast('Failed to save profile', 'error');
+        }
+      } catch (err) {
+        toast('Error saving profile', 'error');
+      }
+    }
+
+    function getActivePillVal(rowId) {
+      const row = document.getElementById(rowId);
+      if (!row) return '';
+      const activeBtn = row.querySelector('button.active');
+      if (!activeBtn) return '';
+      const onclick = activeBtn.getAttribute('onclick') || '';
+      const m = onclick.match(/'([^']+)'/g);
+      if (m && m.length >= 2) {
+        return m[1].replace(/'/g, '');
+      }
+      return '';
+    }
+  </script>
+
+  <!-- ╒ ╒ ╒ ╒ ╒ ╒ ╒  INTERACTIVE DEMO & REFRAME STUDIO ENGINE ╒ ╒ ╒ ╒ ╒ ╒ ╒  -->
+  <script>
+    (function () {
+      let demoTriggered = false;
+      let demoCropX = 35; // percentage
+      let demoCropMode = 'center';
+      let demoCaptionStyle = 'tiktok';
+      let isDraggingCrop = false;
+      let dragStartX = 0;
+      let initialCropX = 35;
+      let animFrameId = null;
+
+      // ── Trigger Demo Experience ──
+      window.triggerDemoExperience = function (play) {
+        const overlay = document.getElementById('demoMainOverlay');
+        const mainVid = document.getElementById('demoMainVideo');
+        const container = document.getElementById('demoInteractiveContainer');
+        const triggerBtn = document.getElementById('demoProcessTriggerBtn');
+        const triggerText = document.getElementById('demoTriggerBtnText');
+
+        if (overlay) overlay.style.display = 'none';
+        if (play && mainVid && mainVid.paused) {
+          mainVid.play().catch(() => {});
+        }
+
+        if (triggerBtn) {
+          triggerBtn.classList.add('active-pipeline');
+          if (triggerText) triggerText.textContent = '✓ AI Clips Extracted & Reframe Workbench Active';
+        }
+
+        if (container) {
+          container.style.display = 'block';
+          container.classList.add('revealed');
+        }
+
+        if (!demoTriggered) {
+          demoTriggered = true;
+          initDemoWorkbench();
+          setTimeout(() => {
+            container?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 250);
+        }
+      };
+
+      // ── Initialize Workbench ──
+      function initDemoWorkbench() {
+        const wbVideo = document.getElementById('demoWorkbenchVideo');
+        const cropBox = document.getElementById('demoCropBox');
+        const cropStage = document.getElementById('demoCropStage');
+        const canvas = document.getElementById('demoLiveCanvas');
+
+        if (!wbVideo || !cropBox || !cropStage || !canvas) return;
+
+        // Video playback sync
+        wbVideo.addEventListener('timeupdate', updateWbTimeDisplay);
+        wbVideo.play().catch(() => {});
+
+        // Drag handlers for the crop box
+        const onPointerDown = (e) => {
+          isDraggingCrop = true;
+          dragStartX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+          initialCropX = demoCropX;
+          cropBox.classList.add('dragging');
+          e.preventDefault();
+        };
+
+        const onPointerMove = (e) => {
+          if (!isDraggingCrop) return;
+          const currentX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+          const deltaX = currentX - dragStartX;
+          const stageWidth = cropStage.getBoundingClientRect().width;
+          if (stageWidth > 0) {
+            const deltaPct = (deltaX / stageWidth) * 100;
+            const boxWidthPct = 31.6; // 9:16 aspect ratio relative to 16:9
+            const newX = Math.max(0, Math.min(100 - boxWidthPct, initialCropX + deltaPct));
+            demoCropX = newX;
+            cropBox.style.left = `${newX}%`;
+          }
+        };
+
+        const onPointerUp = () => {
+          if (isDraggingCrop) {
+            isDraggingCrop = false;
+            cropBox.classList.remove('dragging');
+          }
+        };
+
+        cropBox.addEventListener('mousedown', onPointerDown);
+        cropBox.addEventListener('touchstart', onPointerDown, { passive: false });
+        window.addEventListener('mousemove', onPointerMove);
+        window.addEventListener('touchmove', onPointerMove, { passive: false });
+        window.addEventListener('mouseup', onPointerUp);
+        window.addEventListener('touchend', onPointerUp);
+
+        // Start Live Canvas Render Loop
+        startDemoRenderLoop();
+      }
+
+      function updateWbTimeDisplay() {
+        const wbVideo = document.getElementById('demoWorkbenchVideo');
+        const timeEl = document.getElementById('demoWbTime');
+        const scrubber = document.getElementById('demoWbScrubber');
+        if (!wbVideo || !timeEl) return;
+
+        const cur = wbVideo.currentTime || 0;
+        const dur = wbVideo.duration || 1;
+        const fmt = (s) => {
+          const m = Math.floor(s / 60);
+          const sec = Math.floor(s % 60);
+          return `${m < 10 ? '0' : ''}${m}:${sec < 10 ? '0' : ''}${sec}`;
+        };
+        timeEl.textContent = `${fmt(cur)} / ${fmt(dur)}`;
+        if (scrubber && !isDraggingCrop) {
+          scrubber.value = (cur / dur) * 100;
+        }
+      }
+
+      // ── Live Render Loop ──
+      function startDemoRenderLoop() {
+        const wbVideo = document.getElementById('demoWorkbenchVideo');
+        const canvas = document.getElementById('demoLiveCanvas');
+        if (!canvas || !wbVideo) return;
+        const ctx = canvas.getContext('2d');
+
+        function render() {
+          if (wbVideo.readyState >= 2) {
+            const vw = wbVideo.videoWidth || 1920;
+            const vh = wbVideo.videoHeight || 1080;
+            const cw = canvas.width; // 540
+            const ch = canvas.height; // 960
+
+            ctx.clearRect(0, 0, cw, ch);
+
+            if (demoCropMode === 'blur') {
+              // Blurred Ambient Background Letterbox
+              ctx.save();
+              ctx.filter = 'blur(20px) brightness(0.6)';
+              ctx.drawImage(wbVideo, -50, 0, cw + 100, ch);
+              ctx.restore();
+
+              // Centered 16:9 main video
+              const fitH = (cw / 16) * 9;
+              const fitY = (ch - fitH) / 2;
+              ctx.drawImage(wbVideo, 0, fitY, cw, fitH);
+            } else if (demoCropMode === 'split') {
+              // Dual Split Screen: Top 50% Facecam + Bottom 50% Gameplay
+              const halfH = ch / 2;
+              // Top Facecam crop
+              const topSrcW = vh * (9 / 8);
+              ctx.drawImage(wbVideo, 50, 0, topSrcW, vh, 0, 0, cw, halfH);
+              // Bottom Gameplay crop
+              const btmSrcW = vh * (9 / 8);
+              ctx.drawImage(wbVideo, vw - btmSrcW - 50, 0, btmSrcW, vh, 0, halfH, cw, halfH);
+              // Dividing hairline
+              ctx.fillStyle = '#FFFFFF';
+              ctx.fillRect(0, halfH - 1, cw, 2);
+            } else {
+              // Standard Vertical 9:16 Crop based on demoCropX
+              const cropWInVideo = vh * (9 / 16);
+              const srcX = (demoCropX / 100) * vw;
+              const clampedX = Math.max(0, Math.min(vw - cropWInVideo, srcX));
+              ctx.drawImage(wbVideo, clampedX, 0, cropWInVideo, vh, 0, 0, cw, ch);
+            }
+          }
+          animFrameId = requestAnimationFrame(render);
+        }
+
+        if (animFrameId) cancelAnimationFrame(animFrameId);
+        render();
+      }
+
+      // ── Presets & Switchers ──
+      window.setDemoCropPreset = function (preset, btn) {
+        demoCropMode = preset;
+        const cropBox = document.getElementById('demoCropBox');
+        if (btn) {
+          const parent = btn.parentElement;
+          if (parent) parent.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        }
+
+        if (!cropBox) return;
+
+        if (preset === 'center') {
+          demoCropX = 34.2;
+          cropBox.style.display = 'block';
+          cropBox.style.left = '34.2%';
+          cropBox.style.width = '31.6%';
+        } else if (preset === 'left') {
+          demoCropX = 6;
+          cropBox.style.display = 'block';
+          cropBox.style.left = '6%';
+          cropBox.style.width = '31.6%';
+        } else if (preset === 'right') {
+          demoCropX = 62;
+          cropBox.style.display = 'block';
+          cropBox.style.left = '62%';
+          cropBox.style.width = '31.6%';
+        } else if (preset === 'blur') {
+          cropBox.style.display = 'none';
+        } else if (preset === 'split') {
+          cropBox.style.display = 'none';
+        }
+      };
+
+      window.setDemoCaptionStyle = function (style, btn) {
+        demoCaptionStyle = style;
+        if (btn) {
+          const parent = btn.parentElement;
+          if (parent) parent.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        }
+        const capEl = document.getElementById('demoLiveCaption');
+        if (capEl) {
+          capEl.className = `demo-live-caption-overlay style-${style}`;
+        }
+      };
+
+      window.loadDemoClipIntoStudio = function (src, btn, name) {
+        const wbVideo = document.getElementById('demoWorkbenchVideo');
+        if (btn) {
+          const parent = btn.parentElement;
+          if (parent) parent.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        }
+        if (wbVideo) {
+          wbVideo.src = src;
+          wbVideo.load();
+          wbVideo.play().catch(() => {});
+        }
+        if (typeof toast === 'function') {
+          toast(`Loaded ${name || 'Clip'} into Interactive Reframe Workbench`, 'success');
+        }
+      };
+
+      window.toggleDemoWbPlay = function () {
+        const wbVideo = document.getElementById('demoWorkbenchVideo');
+        const btn = document.getElementById('demoWbPlayBtn');
+        if (!wbVideo) return;
+        if (wbVideo.paused) {
+          wbVideo.play();
+          if (btn) btn.textContent = '⏸ Pause';
+        } else {
+          wbVideo.pause();
+          if (btn) btn.textContent = '▶ Play';
+        }
+      };
+
+      window.seekDemoWb = function (pct) {
+        const wbVideo = document.getElementById('demoWorkbenchVideo');
+        if (wbVideo && wbVideo.duration) {
+          wbVideo.currentTime = (pct / 100) * wbVideo.duration;
+        }
+      };
+
+      window.openStudioModalForDemo = function () {
+        if (typeof openCropEditorFullVideo === 'function') {
+          openCropEditorFullVideo('demo-nvidia', '/demos/nvidia-demo-video.mp4', [
+            { id: 1, title: 'Highlight 1 • RTX Gameplay', start: 10, end: 40, approved: true },
+            { id: 2, title: 'Highlight 2 • Clutch Moment', start: 55, end: 85, approved: true },
+            { id: 3, title: 'Highlight 3 • Final Boss', start: 100, end: 140, approved: true }
+          ]);
+        } else {
+          toast('Opening Crop & Reframe Studio...', 'info');
+        }
+      };
+    })();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,2367 @@
+
+
+// ===== package.json =====
+
+{
+  "name": "atlantic-ai-backend",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.0",
+    "express": "^4.19.0",
+    "googleapis": "^144.0.0",
+    "multer": "^1.4.5-lts.1",
+    "uuid": "^9.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+
+
+
+// ===== captionEngine.js =====
+
+/**
+ * Caption Engine v2 — Word-Timestamp SRT Builder
+ *
+ * Uses Gemini word-level timestamps (clip.words: [{word, t}]) to produce
+ * frame-accurate subtitles matching YouTube auto-caption timing. Falls
+ * back to a speech-rate heuristic (NOT even-distribution) when no word
+ * timestamps are available.
+ */
+import { buildStyleConfig, styleToFfmpegForceStyle } from './captionStyles.js';
+
+function formatSrtTime(sec) {
+  const s = Math.max(0, sec);
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const ss = Math.floor(s % 60);
+  const ms = Math.round((s % 1) * 1000);
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(ss).padStart(2, '0')},${String(ms).padStart(3, '0')}`;
+}
+
+/**
+ * Build cues from word-level timestamps (Gemini output).
+ * Words carry ABSOLUTE video timestamps; clipStart offsets them to
+ * clip-relative time so the SRT lines up with the trimmed clip.
+ */
+export function buildCuesFromWords(words, clipStart, clipDuration, options = {}) {
+  if (!words || !words.length) return [];
+
+  const clipEnd = clipStart + clipDuration;
+  const clipped = words
+    .filter(w => w.t >= clipStart - 0.5 && w.t <= clipEnd + 0.5)
+    .sort((a, b) => a.t - b.t);
+
+  if (!clipped.length) return [];
+
+  const wordsPerChunk = options.wordsPerChunk || 3;
+  const cues = [];
+
+  for (let i = 0; i < clipped.length; i += wordsPerChunk) {
+    const chunk = clipped.slice(i, i + wordsPerChunk);
+    const text = chunk.map(w => w.word).join(' ').toUpperCase();
+
+    const start = Math.max(0, chunk[0].t - clipStart);
+    const nextWord = clipped[i + wordsPerChunk];
+    const rawEnd = nextWord ? nextWord.t - clipStart : clipDuration;
+    const end = Math.min(rawEnd - 0.05, clipDuration - 0.02);
+
+    if (end > start && text.trim()) {
+      cues.push({
+        start: Math.round(start * 1000) / 1000,
+        end: Math.round(end * 1000) / 1000,
+        text
+      });
+    }
+  }
+
+  return cues;
+}
+
+/**
+ * Fallback: speech-rate heuristic SRT when no word timestamps exist.
+ * Assumes ~2.5 words/sec average speech rate — far more accurate than
+ * naive even-distribution across the full clip duration.
+ */
+export function buildCuesFromTranscript(transcript, clipDuration, options = {}) {
+  if (!transcript || !transcript.trim()) return [];
+
+  const words = transcript.trim().split(/\s+/).filter(Boolean);
+  if (!words.length) return [];
+
+  const wordsPerChunk = options.wordsPerChunk || 4;
+  const estimatedSpeechDuration = Math.min(words.length / 2.5, clipDuration * 0.9);
+  const speechStart = (clipDuration - estimatedSpeechDuration) * 0.1;
+  const secPerWord = estimatedSpeechDuration / words.length;
+
+  const cues = [];
+  for (let i = 0; i < words.length; i += wordsPerChunk) {
+    const chunk = words.slice(i, i + wordsPerChunk);
+    const start = speechStart + i * secPerWord;
+    const end = Math.min(speechStart + (i + wordsPerChunk) * secPerWord - 0.05, clipDuration - 0.02);
+    const text = chunk.join(' ').toUpperCase();
+    if (end > start && text.trim()) {
+      cues.push({
+        start: Math.round(start * 1000) / 1000,
+        end: Math.round(end * 1000) / 1000,
+        text
+      });
+    }
+  }
+
+  return cues;
+}
+
+/** Convert cue objects to an SRT file content string. */
+export function cuesToSRT(cues) {
+  if (!cues || !cues.length) return null;
+  return cues.map((cue, i) =>
+    `${i + 1}\n${formatSrtTime(cue.start)} --> ${formatSrtTime(cue.end)}\n${cue.text}`
+  ).join('\n\n');
+}
+
+/**
+ * Main entry point — build cues for a clip, preferring word timestamps,
+ * falling back to transcript heuristic, returning [] if nothing usable.
+ */
+export function buildClipCues(clip, options = {}) {
+  const duration = clip.end - clip.start;
+
+  if (clip.words && clip.words.length > 2) {
+    const cues = buildCuesFromWords(clip.words, clip.start, duration, options);
+    if (cues.length > 0) return cues;
+  }
+
+  return buildCuesFromTranscript(clip.transcript || '', duration, options);
+}
+
+export function getCaptionStyleConfig(style, options = {}, language = 'en') {
+  return buildStyleConfig(style, options, language);
+}
+
+/**
+ * Build FFmpeg subtitle filter with Windows-safe path escaping.
+ */
+export function buildSubtitleFilter(srtPath, styleConfig) {
+  const escapedPath = srtPath.replace(/\\/g, '/').replace(/^([A-Za-z]):/, '$1\\\\:');
+  const size = styleConfig?.size || 24;
+  const force = styleToFfmpegForceStyle({ ...styleConfig, size });
+  const base = `subtitles='${escapedPath}':force_style='${force}'`;
+  if (styleConfig?.dual) {
+    return `${base},subtitles='${escapedPath}':force_style='FontName=${styleConfig.font},FontSize=${size},PrimaryColour=&H00FFFF,OutlineColour=&HFF00FF,Bold=1,Outline=5,Shadow=0,Alignment=${styleConfig.alignment}'`;
+  }
+  return base;
+}
+
+/**
+ * Safe wrapper — returns null if the filter path looks broken,
+ * so the caller can fall back to no-caption output.
+ */
+export function buildSubtitleFilterSafe(srtPath, styleConfig) {
+  try {
+    const filter = buildSubtitleFilter(srtPath, styleConfig);
+    if (/(?<!\\)\\(?![:/\\])/.test(filter)) {
+      console.warn('[caption] Suspicious filter path — skipping captions:', filter);
+      return null;
+    }
+    return filter;
+  } catch (err) {
+    console.error('[caption] buildSubtitleFilter threw:', err.message);
+    return null;
+  }
+}
+
+export { CAPTION_STYLE_IDS } from './captionStyles.js';
+
+
+
+// ===== captionStyles.js =====
+
+/** Modular caption style registry — stream highlight presets */
+
+function pickFont(language, options = {}) {
+  const lang = (language || '').toLowerCase();
+  const indic = ['hi', 'mr', 'gu', 'bn', 'ta', 'te', 'kn', 'ml', 'pa', 'ur', 'hinglish'];
+  if (indic.some(c => lang.startsWith(c) || lang === c)) {
+    return options.hindiFont || 'Nirmala UI';
+  }
+  return options.font || 'Arial Black';
+}
+
+export const CAPTION_STYLE_IDS = [
+  'classic', 'tiktok', 'gaming', 'meme', 'karaoke', 'neon', 'viral'
+];
+
+export function buildStyleConfig(styleId, options = {}, language = 'en') {
+  const font = pickFont(language, options);
+  const scale = options.fontScale || 1;
+  const base = Math.round((options.fontSize || 26) * scale);
+  const alignment = { bottom: '2', center: '5', top: '8' }[options.captionPosition || 'center'] || '5';
+
+  const registry = {
+    classic: {
+      id: 'classic', font, size: base,
+      primary: '&HFFFFFF', outline: '&H000000', back: '&H80000000',
+      bold: '1', outlineW: '3', shadow: '2', alignment,
+      wordsPerLine: 4, emoji: false, wordPulse: false
+    },
+    tiktok: {
+      id: 'tiktok', font, size: base + 12,
+      primary: '&H00FFFF', outline: '&H000000', back: '&H80000000',
+      bold: '1', outlineW: '5', shadow: '3', alignment: '5',
+      wordsPerLine: 1, emoji: true, wordPulse: true, uppercase: true
+    },
+    gaming: {
+      id: 'gaming', font, size: base + 10,
+      primary: '&H00FF00', outline: '&H000000', back: '&HC0000000',
+      bold: '1', outlineW: '4', shadow: '2', alignment: '5',
+      wordsPerLine: 1, emoji: true, wordPulse: true, uppercase: true
+    },
+    meme: {
+      id: 'meme', font, size: base + 16,
+      primary: '&HFFFFFF', outline: '&H000000', back: '&H00000000',
+      bold: '1', outlineW: '7', shadow: '5', alignment: '5',
+      wordsPerLine: 1, emoji: true, wordPulse: true, uppercase: true
+    },
+    karaoke: {
+      id: 'karaoke', font, size: base + 8,
+      primary: '&HFFFFFF', outline: '&H000000', back: '&H80000000',
+      bold: '1', outlineW: '4', shadow: '2', alignment: '5',
+      wordsPerLine: 1, emoji: true, wordPulse: true, uppercase: true, karaoke: true
+    },
+    neon: {
+      id: 'neon', font, size: base + 8,
+      primary: '&HFF00FF', outline: '&H00FFFF', back: '&H00000000',
+      bold: '1', outlineW: '5', shadow: '2', alignment: '5', dual: true,
+      wordsPerLine: 1, emoji: false, wordPulse: true, uppercase: true
+    },
+    viral: {
+      id: 'viral', font, size: base + 14,
+      primary: '&HFFFFFF', outline: '&H000000', back: '&H80000000',
+      bold: '1', outlineW: '6', shadow: '4', alignment: '5',
+      wordsPerLine: 1, emoji: true, wordPulse: true, uppercase: true
+    }
+  };
+
+  return registry[styleId] || registry.gaming;
+}
+
+export function styleToFfmpegForceStyle(s) {
+  return `FontName=${s.font},FontSize=${s.size},PrimaryColour=${s.primary},OutlineColour=${s.outline},BackColour=${s.back},Bold=${s.bold},Outline=${s.outlineW},Shadow=${s.shadow},Alignment=${s.alignment},MarginV=40`;
+}
+
+
+
+
+
+// ===== chatPipeline.js =====
+
+/**
+ * Future-ready chat explosion detection (Twitch / Kick / YouTube Live)
+ * Stub pipeline — wire when chat logs are available per job.
+ */
+
+export const CHAT_SPAM_PATTERNS = {
+  w: /^w+$/i,
+  gg: /^gg+$/i,
+  lol: /^lol+$/i,
+  noway: /no\s*way|noway/i
+};
+
+export function analyzeChatWindow(messages = [], windowStart, windowEnd) {
+  const inWindow = messages.filter(m => m.t >= windowStart && m.t <= windowEnd);
+  if (!inWindow.length) return { spike: false, score: 0, dominant: null };
+
+  const counts = { w: 0, gg: 0, lol: 0, noway: 0, total: inWindow.length };
+  for (const m of inWindow) {
+    const text = (m.text || '').trim();
+    if (CHAT_SPAM_PATTERNS.w.test(text)) counts.w++;
+    else if (CHAT_SPAM_PATTERNS.gg.test(text)) counts.gg++;
+    else if (CHAT_SPAM_PATTERNS.lol.test(text)) counts.lol++;
+    else if (CHAT_SPAM_PATTERNS.noway.test(text)) counts.noway++;
+  }
+
+  const rate = inWindow.length / Math.max(1, windowEnd - windowStart);
+  const spike = rate > 2.5 || counts.w > 15 || counts.gg > 10;
+  let dominant = null;
+  let max = 0;
+  for (const k of ['w', 'gg', 'lol', 'noway']) {
+    if (counts[k] > max) { max = counts[k]; dominant = k; }
+  }
+
+  return {
+    spike,
+    score: Math.min(100, Math.round(rate * 12 + max * 2)),
+    dominant,
+    counts,
+    platform: 'generic'
+  };
+}
+
+export function createChatPipeline(job) {
+  return {
+    jobId: job.id,
+    status: 'ready',
+    platforms: ['twitch', 'kick', 'youtube_live'],
+    ingest(messages) {
+      job.chatMessages = job.chatMessages || [];
+      job.chatMessages.push(...messages);
+    },
+    scoreWindow(start, end) {
+      return analyzeChatWindow(job.chatMessages || [], start, end);
+    }
+  };
+}
+
+
+
+
+
+// ===== clipClassifier.js =====
+
+import { textInWindow } from './transcriptSchema.js';
+
+const RULES = [
+  { category: 'funny', re: /lol|lmao|funny|hilarious|हँस|मजाक|हा हा|rofl/i, weight: 1 },
+  { category: 'rage', re: /rage|angry|wtf|mad|गुस्सा|पागल|scream/i, weight: 1 },
+  { category: 'reaction', re: /react|omg|wow|no way|अरे|वाह|shocked/i, weight: 0.9 },
+  { category: 'clutch', re: /clutch|1v\d|ace|last second|किल|बचा/i, weight: 1 },
+  { category: 'win', re: /win|victory|champion|जीत|winner/i, weight: 0.9 },
+  { category: 'educational', re: /learn|tip|how to|tutorial|सीख|टिप/i, weight: 0.8 },
+  { category: 'most-viral', re: /.*/i, weight: 0.1 }
+];
+
+export const CLIP_CATEGORIES = [
+  'funny', 'rage', 'reaction', 'clutch', 'win', 'educational', 'most-viral'
+];
+
+export function classifyClip(seg, transcriptSegments = [], virality = {}) {
+  const text = `${seg.title || ''} ${seg.summary || ''} ${textInWindow(transcriptSegments, seg.start, seg.end)}`;
+  let best = { category: 'reaction', score: 0 };
+
+  for (const rule of RULES) {
+    if (rule.category === 'most-viral') continue;
+    if (rule.re.test(text)) {
+      const s = rule.weight * 100 + (virality.finalScore || 0) * 0.1;
+      if (s > best.score) best = { category: rule.category, score: s };
+    }
+  }
+
+  if ((virality.finalScore || seg.score || 0) >= 85) {
+    return { category: 'most-viral', ...virality };
+  }
+  return { category: best.category, categoryScore: best.score };
+}
+
+export function groupClipsByCategory(clips) {
+  const groups = {};
+  for (const c of CLIP_CATEGORIES) groups[c] = [];
+  for (const clip of clips) {
+    const cat = clip.category || 'reaction';
+    if (groups[cat]) groups[cat].push(clip);
+    else groups.reaction.push(clip);
+  }
+  return groups;
+}
+
+
+
+
+
+// ===== effectsEngine.js =====
+
+/** Auto effects for stream highlights — punch zoom, shake, impact */
+
+const EFFECT_BY_CATEGORY = {
+  clutch: 'punch',
+  win: 'impact',
+  rage: 'shake',
+  funny: 'punch',
+  reaction: 'faceZoom'
+};
+
+export function pickEffectType(virality = {}, category = '') {
+  if (category && EFFECT_BY_CATEGORY[category]) return EFFECT_BY_CATEGORY[category];
+  const r = virality.reactionScore || 0;
+  const s = virality.surpriseScore || 0;
+  const e = virality.emotionScore || 0;
+  if (r >= 82) return 'faceZoom';
+  if (s >= 80) return 'impact';
+  if (e >= 85) return 'punch';
+  if (r >= 70) return 'motion';
+  return null;
+}
+
+export function shouldApplyEffects(virality = {}, options = {}, category = '') {
+  if (options.autoEffects === false) return false;
+  const r = virality.reactionScore || 0;
+  const e = virality.emotionScore || 0;
+  const s = virality.surpriseScore || 0;
+  if (pickEffectType(virality, category)) return true;
+  return r >= 65 || e >= 72 || s >= 70;
+}
+
+/** Punch-in zoom for first ~0.8s (works on composed 9:16) */
+function punchZoomFilter() {
+  return `zoompan=z='if(lte(on,24),1+0.08*(on/24),1.08)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s=1080x1920:fps=30,scale=1080:1920,setsar=1`;
+}
+
+function impactZoomFilter() {
+  return `zoompan=z='if(lte(on,18),1.12-0.12*(on/18),1)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s=1080x1920:fps=30,scale=1080:1920,setsar=1`;
+}
+
+function subtleShakeFilter() {
+  return `crop=iw-2:ih-2:1+mod(n\\,4):1+mod(n+2\\,4),scale=1080:1920,setsar=1`;
+}
+
+function faceZoomFilter() {
+  return `zoompan=z='min(zoom+0.002,1.1)':x='iw/2-(iw/zoom/2)':y='ih/3-(ih/zoom/3)':d=1:s=1080x1920:fps=30,scale=1080:1920,setsar=1`;
+}
+
+function motionEmphasisFilter() {
+  return `scale=iw*1.04:ih*1.04,crop=1080:1920:(iw-1080)/2:(ih-1920)/2,setsar=1`;
+}
+
+export function buildEffectsFilter(virality = {}, duration = 60, category = '', options = {}) {
+  if (!shouldApplyEffects(virality, options, category)) return null;
+  const type = pickEffectType(virality, category);
+  switch (type) {
+    case 'punch': return punchZoomFilter();
+    case 'impact': return impactZoomFilter();
+    case 'shake': return subtleShakeFilter();
+    case 'faceZoom': return faceZoomFilter();
+    case 'motion': return motionEmphasisFilter();
+    default: return motionEmphasisFilter();
+  }
+}
+
+/** Append effects after layout in filter_complex: [v] in → [vout] out */
+export function chainEffectsInComplex(layoutFilter, virality, category, options = {}) {
+  const fx = buildEffectsFilter(virality, 60, category, options);
+  if (!fx) return layoutFilter;
+  if (!layoutFilter.includes('[v]')) return layoutFilter;
+  return layoutFilter.replace('[v]', `[vfx];[vfx]${fx}[v]`);
+}
+
+export function combineVideoFilters(...parts) {
+  return parts.filter(Boolean).join(',');
+}
+
+
+
+
+
+// ===== indianCreatorMode.js =====
+
+/** Indian creator optimizations — hooks, titles, caption hints */
+
+const HOOKS_HI = [
+  'ये देखो क्या हुआ...',
+  'कोई ये expect नहीं कर रहा था...',
+  'आगे देखो क्या होता है...',
+  'इसने सब कुछ बदल दिया...',
+  'Wait for the end...'
+];
+
+const HOOKS_HINGLISH = [
+  'Nobody expected this...',
+  'Bhai ye dekh...',
+  'Watch till the end...',
+  'This changed everything...',
+  'Full video mein ye best part hai...'
+];
+
+export function optimizeHooksForIndia(hooks = [], mode = {}) {
+  if (!mode.enabled) return hooks;
+  const pool = mode.language === 'hi' || mode.language === 'mr' ? HOOKS_HI : HOOKS_HINGLISH;
+  const out = [...hooks];
+  for (let i = 0; i < Math.min(5, pool.length); i++) {
+    if (!out[i] || out.length < 5) out[i] = out[i] || pool[i];
+  }
+  return out.slice(0, 5);
+}
+
+export function optimizeTitle(title, mode = {}) {
+  if (!mode.enabled || !title) return title;
+  if (mode.language === 'hi' && !/[\u0900-\u097F]/.test(title)) {
+    return `${title} | Shorts`;
+  }
+  return title;
+}
+
+export function captionOptionsForIndia(options = {}, mode = {}) {
+  if (!mode.enabled) return options;
+  return {
+    ...options,
+    fontScale: (options.fontScale || 1) * 1.05,
+    wordsPerLine: options.wordsPerLine || 4,
+    hindiFont: 'Nirmala UI'
+  };
+}
+
+
+
+
+
+// ===== mediaAnalysis.js =====
+
+/**
+ * Atlantic AI — Gemini 2.0 Flash Video Analysis
+ * Uses creator profile for dynamic prompt personalization.
+ */
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleAIFileManager } from '@google/generative-ai/server';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+import fs from 'fs';
+import path from 'path';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { buildClipCues } from './captionEngine.js';
+
+const execAsync = promisify(exec);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, '../.env') });
+
+/**
+ * Creates a heavily downsampled proxy video for Gemini analysis.
+ * Reduces token consumption by ~90% while preserving temporal content.
+ */
+async function createAnalysisProxy(inputPath) {
+  const proxyPath = inputPath.replace(/\.[^/.]+$/, "_proxy.mp4");
+  const cmd = [
+    "ffmpeg", "-y",
+    "-i", `"${inputPath}"`,
+    "-vf", "scale=640:360:force_original_aspect_ratio=decrease,pad=640:360:(ow-iw)/2:(oh-ih)/2",
+    "-r", "10",
+    "-c:v", "libx264", "-preset", "ultrafast", "-crf", "35", "-b:v", "300k",
+    "-c:a", "aac", "-b:a", "48k", "-ac", "1",
+    "-movflags", "+faststart",
+    `"${proxyPath}"`
+  ].join(" ");
+  await execAsync(cmd);
+  return proxyPath;
+}
+
+async function waitForFileActive(fileManager, uploadedFile, maxWaitMs = 300_000, logFn) {
+  const start = Date.now();
+  let delay = 5000;
+  let file = uploadedFile;
+
+  while (Date.now() - start < maxWaitMs) {
+    file = await fileManager.getFile(uploadedFile.name);
+    if (file.state === "ACTIVE") return file;
+    if (file.state === "FAILED") throw new Error(`Gemini file processing failed: ${file.name}`);
+
+    logFn(`[gemini] File state: ${file.state}. Waiting ${delay / 1000}s...`);
+    await new Promise(r => setTimeout(r, delay));
+    delay = Math.min(delay * 1.5, 30_000);
+  }
+  throw new Error("Gemini file took too long to become ACTIVE.");
+}
+
+async function generateWithRetry(model, content, maxRetries = 3, logFn) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await model.generateContent(content);
+    } catch (err) {
+      const is429 = err.message?.includes("429") || err.message?.includes("quota") || err.message?.includes("exceeded");
+      if (is429 && attempt < maxRetries) {
+        const waitMs = attempt * 15_000;
+        logFn(`[gemini] 429 received. Waiting ${waitMs / 1000}s before retry ${attempt + 1}/${maxRetries}...`);
+        await new Promise(r => setTimeout(r, waitMs));
+        continue;
+      }
+      throw err;
+    }
+  }
+}
+
+const DEFAULT_PROFILE = {
+  name: 'Creator', content_type: 'gaming', audience_age: '13-25',
+  style: 'energetic', clip_style: 'start with action not buildup',
+  avoid: 'slow sections, long talking, boring intros', language: 'auto',
+  example_hooks: ["You won't believe what happened next...", 'This is insane...', 'Wait for it...']
+};
+
+function buildPrompt(profile, numClips, clipLength) {
+  const p = { ...DEFAULT_PROFILE, ...profile };
+  return `You are an expert viral video editor working for a ${p.content_type} creator targeting ${p.audience_age} year olds with a ${p.style} style.
+
+CREATOR PREFERENCES:
+- Clip style: ${p.clip_style}
+- Avoid: ${p.avoid}
+- Example hooks they like: ${(p.example_hooks || []).join(', ')}
+
+Watch this entire video carefully. Find the ${numClips} best moments for YouTube Shorts/Reels.
+
+CLIP SELECTION RULES:
+- Each clip 30-${clipLength} seconds
+- ALWAYS start at a moment of action, emotion, or surprise — never in the middle of buildup
+- Never overlap clips
+- Prioritize: high energy moments, emotional peaks, surprising reveals, funny reactions, clutch moments
+- Avoid: slow intros, long pauses, technical explanations unless they build to a punchline
+
+For each clip return this exact JSON (no markdown, no explanation):
+{
+  "clips": [
+    {
+      "start": 12.5,
+      "end": 75.0,
+      "title": "Punchy title max 6 words",
+      "hook": "Opening line that grabs attention in 2 seconds",
+      "why_viral": "One sentence on virality potential",
+      "virality_score": 87,
+      "words": [
+        { "word": "This", "t": 12.5 },
+        { "word": "is", "t": 12.7 },
+        { "word": "insane", "t": 12.9 }
+      ],
+      "has_face": true,
+      "face_position": "top-left",
+      "emotion": "excited",
+      "category": "clutch",
+      "suggested_caption_style": "tiktok",
+      "best_thumbnail_second": 5.0
+    }
+  ],
+  "video_language": "en",
+  "overall_energy": "high"
+}
+
+CRITICAL — the "words" field is REQUIRED and powers the burned-in subtitles:
+- Transcribe EVERY spoken word in the clip's time range, verbatim
+- "t" is the word's start time in SECONDS from the START OF THE FULL VIDEO (not clip-relative)
+- Do not skip words, do not summarize, do not leave empty unless there is genuinely no speech
+- If no speech in a clip, return "words": []`;
+}
+
+function getMimeType(filePath) {
+  const ext = path.extname(filePath).toLowerCase();
+  const map = {
+    '.mp4': 'video/mp4', '.mkv': 'video/x-matroska', '.webm': 'video/webm',
+    '.avi': 'video/x-msvideo', '.mov': 'video/quicktime',
+  };
+  return map[ext] || 'video/mp4';
+}
+
+export async function analyzeWithGemini(videoPath, jobId, profile = {}, options = {}, logFn = console.log) {
+  const apiKey = process.env.GEMINI_API_KEY
+  if (!apiKey) {
+    throw new Error('GEMINI_API_KEY is missing from backend/.env');
+  }
+  console.log('[gemini] API key looks valid, starts with:', apiKey.substring(0, 8))
+
+  const numClips = options.maxClips || 3;
+  const clipLength = options.clipLength || 90;
+  const prompt = buildPrompt(profile, numClips, clipLength);
+  const mimeType = getMimeType(videoPath);
+
+  let responseText;
+  let proxyPath = null;
+  try {
+    console.log("[gemini] Creating analysis proxy (this reduces token usage)...");
+    proxyPath = await createAnalysisProxy(videoPath);
+    const proxyStats = fs.statSync(proxyPath);
+    console.log(`[gemini] Proxy created: ${(proxyStats.size / 1024 / 1024).toFixed(1)} MB`);
+
+    const fileManager = new GoogleAIFileManager(process.env.GEMINI_API_KEY)
+    console.log('[gemini] Uploading proxy to Files API...')
+    const uploadResult = await fileManager.uploadFile(proxyPath, {
+      mimeType: 'video/mp4',
+      displayName: path.basename(proxyPath)
+    })
+    
+    console.log('[gemini] Upload done, waiting for ACTIVE state...')
+    const file = await waitForFileActive(fileManager, uploadResult.file, 300_000, logFn);
+    
+    console.log('[gemini] File ACTIVE, sending to model...')
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+    
+    const result = await generateWithRetry(model, [
+      {
+        fileData: {
+          fileUri: file.uri,
+          mimeType: 'video/mp4'
+        }
+      },
+      { text: prompt }
+    ], 3, logFn);
+    
+    responseText = result.response.text()
+    console.log('[gemini] Raw response received, length:', responseText.length)
+    
+    try { await fileManager.deleteFile(file.name) } catch {}
+  } catch (err) {
+    console.error('[gemini] FULL ERROR:', err.message)
+    console.error('[gemini] Stack:', err.stack)
+    throw err
+  } finally {
+    if (proxyPath && fs.existsSync(proxyPath)) {
+      try { fs.unlinkSync(proxyPath); } catch (e) {}
+      console.log("[gemini] Proxy file cleaned up.");
+    }
+  }
+
+  // 3. Parse JSON response
+  let analysis;
+  try {
+    analysis = JSON.parse(responseText);
+  } catch {
+    const cleaned = responseText.replace(/^```(?:json)?\s*/i, '').replace(/\s*```[\s\S]*$/i, '').trim();
+    try { analysis = JSON.parse(cleaned); } catch {
+      logFn(`[gemini] Parse failed. Raw: ${responseText.slice(0, 300)}`);
+      throw new Error('Failed to parse Gemini JSON response');
+    }
+  }
+
+  // 4. Validate and normalize clips
+  let clips = (analysis.clips || []).map((c, i) => {
+    const words = (c.words || [])
+      .filter(w => w && typeof w.word === 'string' && typeof w.t === 'number')
+      .map(w => ({ word: w.word.trim(), t: parseFloat(w.t) }))
+      .filter(w => w.word.length > 0);
+
+    const clip = {
+      index: i,
+      start: parseFloat(c.start) || 0,
+      end: parseFloat(c.end) || 60,
+      title: c.title || `Clip ${i + 1}`,
+      hook: c.hook || c.title || 'Check this out!',
+      why_viral: c.why_viral || '',
+      score: Math.min(100, Math.max(0, parseInt(c.virality_score) || 70)),
+      words,
+      // Legacy flat transcript — joined from words, or fall back to a
+      // flat transcript field if Gemini returned one anyway.
+      transcript: words.length ? words.map(w => w.word).join(' ') : (c.transcript || ''),
+      has_face: c.has_face ?? false,
+      face_position: c.face_position || 'none',
+      emotion: c.emotion || 'neutral',
+      category: c.category || 'reaction',
+      suggested_caption_style: c.suggested_caption_style || 'tiktok',
+      best_thumbnail_second: parseFloat(c.best_thumbnail_second) || 3,
+    };
+
+    // Pre-build cues now so the frontend editor can load identical timing
+    // to what gets burned into the rendered video.
+    clip.cues = buildClipCues(clip, { wordsPerChunk: 3 });
+    return clip;
+  });
+
+  // Sort by start, filter valid, remove overlaps, ensure end > start + 15
+  clips = clips.filter(c => c.end > c.start + 15).sort((a, b) => a.start - b.start);
+  const deduped = [];
+  for (const c of clips) {
+    const last = deduped[deduped.length - 1];
+    if (!last || c.start >= last.end) deduped.push(c);
+    else if ((c.score || 0) > (last.score || 0)) deduped[deduped.length - 1] = c;
+  }
+  clips = deduped.map((c, i) => ({ ...c, index: i }));
+
+  logFn(`[gemini] Found ${clips.length} clips | language: ${analysis.video_language || '?'} | energy: ${analysis.overall_energy || '?'}`);
+
+  return {
+    clips,
+    video_language: analysis.video_language || 'unknown',
+    overall_energy: analysis.overall_energy || 'medium',
+  };
+}
+
+/** Fallback heuristic clips when Gemini fails */
+export function heuristicSegments(duration, maxClips, clipLength) {
+  const margin = 5;
+  const usable = Math.max(0, duration - margin * 2);
+  const count = Math.min(maxClips, Math.max(1, Math.floor(usable / (clipLength + 10))));
+  const step = usable / count;
+  return Array.from({ length: count }, (_, i) => {
+    const start = margin + i * step;
+    const len = Math.min(clipLength, duration - start - 1);
+    return {
+      index: i, start: Math.round(start), end: Math.round(start + len),
+      title: `Highlight ${i + 1}`, hook: `Highlight ${i + 1}`,
+      why_viral: 'Auto-selected segment', score: 70 - i * 3,
+      transcript: '', words: [], cues: [], has_face: false, face_position: 'none',
+      emotion: 'neutral', category: 'reaction',
+      suggested_caption_style: 'tiktok', best_thumbnail_second: 3,
+    };
+  });
+}
+
+
+// ===== processor.js =====
+
+/**
+ * Atlantic AI Processor v4 — Single-Pass FFmpeg Pipeline
+ *
+ * Each clip is processed in ONE FFmpeg command that handles:
+ *   Cut → Reframe 9:16 → Captions → Watermark
+ * all inside a single filter_complex graph.
+ *
+ * This eliminates sync drift, audio lag, and quality loss from multi-pass re-encodes.
+ * Zero Python. Node.js + FFmpeg + Gemini API only.
+ */
+import { exec, spawn } from 'child_process';
+import { promisify } from 'util';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+import { jobs } from './queue.js';
+import { analyzeWithGemini, heuristicSegments } from './mediaAnalysis.js';
+import { buildMasterCommand } from './videoLayout.js';
+import { generateASS } from './subtitleGenerator.js';
+import { buildClipCues, cuesToSRT } from './captionEngine.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, '../.env') });
+const execAsync = promisify(exec);
+const OUTPUT_DIR = path.join(__dirname, '../outputs');
+const UPLOAD_DIR = path.join(__dirname, '../uploads');
+[OUTPUT_DIR, UPLOAD_DIR].forEach(d => fs.mkdirSync(d, { recursive: true }));
+
+// ═══════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════
+
+function log(jobId, msg) {
+  const job = jobs.get(jobId);
+  if (!job) return;
+  job.logs.push({ time: new Date().toISOString(), msg });
+  console.log(`[${jobId.slice(0, 8)}] ${msg}`);
+}
+
+function setProgress(jobId, pct, status) {
+  const job = jobs.get(jobId);
+  if (!job) return;
+  job.progress = Math.round(pct);
+  if (status) job.status = status;
+}
+
+function safeUnlink(p) {
+  try { if (p && fs.existsSync(p)) fs.unlinkSync(p); } catch {}
+}
+
+function loadProfile() {
+  const profilePath = path.join(__dirname, '../creator_profile.json');
+  const defaults = {
+    name: 'Creator', content_type: 'gaming', audience_age: '13-25',
+    style: 'energetic', clip_style: 'start with action not buildup',
+    avoid: 'slow sections, long talking, boring intros', language: 'auto',
+    example_hooks: ["You won't believe what happened next...", 'This is insane...', 'Wait for it...'],
+    watermark: { enabled: false, text: '@yourchannel', image_path: '', position: 'bottom-right', opacity: 0.8, size: 36 }
+  };
+  try {
+    if (fs.existsSync(profilePath)) {
+      return { ...defaults, ...JSON.parse(fs.readFileSync(profilePath, 'utf8')) };
+    }
+  } catch {}
+  return defaults;
+}
+
+// ═══════════════════════════════════════
+//  SRT CAPTION BUILDER
+// ═══════════════════════════════════════
+
+function formatSrtTime(sec) {
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = Math.floor(sec % 60);
+  const ms = Math.round((sec % 1) * 1000);
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')},${String(ms).padStart(3, '0')}`;
+}
+
+/**
+ * Build SRT content from a transcript string, save to disk, return path.
+ * Returns null if transcript is empty (captions will be skipped, no crash).
+ */
+function buildSRT(clip, clipId) {
+  const cues = buildClipCues(clip, { wordsPerChunk: 3 });
+  if (!cues.length) return null;
+
+  const srtContent = cuesToSRT(cues);
+  if (!srtContent) return null;
+
+  const srtPath = path.join(UPLOAD_DIR, `${clipId}.srt`);
+  fs.writeFileSync(srtPath, srtContent, 'utf8');
+  console.log(`[caption] ${cues.length} cues written for clip ${clipId}`);
+  return srtPath;
+}
+
+// ═══════════════════════════════════════
+//  FFMPEG PROGRESS RUNNER
+// ═══════════════════════════════════════
+
+/**
+ * Spawn FFmpeg, stream stderr for progress, resolve on success, reject on error.
+ * Parses "time=HH:MM:SS.ms" from stderr to compute encode progress.
+ */
+function runFFmpegWithProgress(args, duration, jobId, clipIndex, totalClips) {
+  return new Promise((resolve, reject) => {
+    const child = spawn('ffmpeg', args, {
+      windowsHide: true,
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+
+    let stderrBuf = '';
+    const stderrLines = [];
+
+    child.stderr.on('data', (chunk) => {
+      const text = chunk.toString();
+      stderrBuf += text;
+      stderrLines.push(text);
+      // Keep last 30 lines for error reporting
+      if (stderrLines.length > 30) stderrLines.shift();
+
+      // Parse time= for progress
+      const m = text.match(/time=(\d+):(\d+):(\d+)\.(\d+)/);
+      if (m && duration > 0) {
+        const currentSec = parseInt(m[1]) * 3600 + parseInt(m[2]) * 60 + parseInt(m[3]) + parseInt(m[4]) / 100;
+        const clipProgress = Math.min(1, currentSec / duration);
+        // Map to job progress: clips occupy 45%-90% of overall progress
+        const perClipRange = 45 / totalClips;
+        const overallPct = 45 + clipIndex * perClipRange + clipProgress * perClipRange;
+        setProgress(jobId, overallPct);
+      }
+    });
+
+    child.stdout.on('data', () => {}); // drain
+
+    child.on('close', (code) => {
+      if (code === 0) {
+        resolve();
+      } else {
+        const lastLines = stderrLines.join('').split('\n').slice(-10).join('\n');
+        reject(new Error(`FFmpeg exited with code ${code}\n${lastLines}`));
+      }
+    });
+
+    child.on('error', (err) => {
+      reject(new Error(`FFmpeg spawn error: ${err.message}`));
+    });
+  });
+}
+
+// ═══════════════════════════════════════
+//  PROCESS SINGLE CLIP
+// ═══════════════════════════════════════
+
+/**
+ * Process one clip using a single FFmpeg command.
+ * If the command fails with captions, retries without captions.
+ * If it fails with watermark, retries without watermark.
+ * If it fails completely, returns null (does not crash the job).
+ */
+function sanitizePathForFilter(filePath) {
+  return filePath
+    .replace(/\\/g, "/")
+    .replace(/:/g, "\\:")
+    .replace(/'/g, "\\'");
+}
+
+async function processClip(clip, sourcePath, jobId, index, total, profile, reframeMode = 'blur-pad') {
+  const clipId = `${jobId}_clip${index + 1}`;
+  const outputPath = path.join(OUTPUT_DIR, `${clipId}.mp4`);
+  const duration = clip.end - clip.start;
+  const captionStyle = clip.suggested_caption_style || 'tiktok';
+
+  let srtPath = buildSRT(clip, clipId);
+  const watermark = profile.watermark || {};
+
+  const ffmpegArgs = buildMasterCommand({
+    inputPath: sourcePath,
+    outputPath,
+    start: clip.start,
+    duration,
+    srtPath,
+    captionStyle,
+    watermark,
+    reframeMode,
+  });
+
+  try {
+    log(jobId, `  Running single-pass FFmpeg (${reframeMode})...`);
+    await runFFmpegWithProgress(ffmpegArgs, duration, jobId, index, total);
+  } catch (err1) {
+    log(jobId, `[warn] Full pipeline failed: ${err1.message.split('\n')[0]}`);
+    log(jobId, `  Retrying bare reframe (no captions, no watermark)...`);
+    safeUnlink(outputPath);
+    const fallbackArgs = buildMasterCommand({
+      inputPath: sourcePath,
+      outputPath,
+      start: clip.start,
+      duration,
+      srtPath: null,
+      watermark: {},
+      reframeMode,
+    });
+    try {
+      await runFFmpegWithProgress(fallbackArgs, duration, jobId, index, total);
+    } catch (err2) {
+      log(jobId, `[error] Clip ${index + 1} failed completely: ${err2.message.split('\n')[0]}`);
+      safeUnlink(outputPath);
+      safeUnlink(srtPath);
+      return null;
+    }
+  }
+
+  safeUnlink(srtPath);
+
+  // 6. Verify output exists
+  if (!fs.existsSync(outputPath)) {
+    log(jobId, `[error] Clip ${index + 1}: output file missing after FFmpeg`);
+    return null;
+  }
+
+  const stats = fs.statSync(outputPath);
+  log(jobId, `✅ Clip ${index + 1} done (${Math.round(duration)}s, ${(stats.size / 1048576).toFixed(1)} MB)`);
+
+  return {
+    clip_id: clipId,
+    filename: `${clipId}.mp4`,
+    url: `/outputs/${clipId}.mp4`,
+    duration: Math.round(duration),
+    title: clip.title,
+    hook: clip.hook,
+    summary: clip.why_viral,
+    why_viral: clip.why_viral,
+    score: clip.score,
+    virality_score: clip.score,
+    category: clip.category,
+    emotion: clip.emotion,
+    thumbnail_second: clip.best_thumbnail_second,
+    has_watermark: !!(watermark.enabled),
+    start: clip.start,
+    end: clip.end,
+    size: stats.size,
+    createdAt: new Date().toISOString(),
+    words: clip.words || [],
+    cues: clip.cues || [],
+    transcript: clip.transcript || '',
+  };
+}
+
+// ═══════════════════════════════════════
+//  MAIN PIPELINE
+// ═══════════════════════════════════════
+
+export async function processVideo(jobId) {
+  const job = jobs.get(jobId);
+  if (!job) throw new Error('Job not found');
+  const profile = loadProfile();
+
+  try {
+    job.status = 'processing';
+    let videoPath;
+
+    // ── STEP 1: Download / Get video (0-15%) ──
+    if (job.type === 'youtube') {
+      log(jobId, 'Fetching video info...');
+      const meta = await fetchYouTubeMeta(jobId, job.url);
+      job.videoId = meta.id;
+      job.videoTitle = meta.title;
+      job.videoMeta = meta;
+      log(jobId, `Source: "${meta.title || 'Unknown'}"`);
+
+      videoPath = path.join(UPLOAD_DIR, `${jobId}.mp4`);
+      await downloadYouTube(jobId, job.url, videoPath);
+    } else {
+      videoPath = job.filePath;
+      log(jobId, 'Using uploaded file');
+      setProgress(jobId, 15);
+    }
+
+    // ── STEP 2: Get video metadata ──
+    const metadata = await getVideoMetadata(videoPath);
+    job.metadata = metadata;
+    log(jobId, `Video: ${Math.round(metadata.duration)}s, ${metadata.width}x${metadata.height}`);
+
+    // ── STEP 3: Gemini AI analysis (15-45%) ──
+    log(jobId, 'Gemini 2.5 Flash analyzing video...');
+    setProgress(jobId, 15);
+    let analysis;
+    try {
+      analysis = await analyzeWithGemini(videoPath, jobId, profile, job.options, msg => log(jobId, msg));
+    } catch (err) {
+      log(jobId, `[warn] Gemini failed: ${err.message}`);
+      log(jobId, 'Using heuristic clip selection...');
+      analysis = {
+        clips: heuristicSegments(metadata.duration, job.options?.maxClips || 3, job.options?.clipLength || 60),
+        video_language: 'unknown',
+        overall_energy: 'medium',
+      };
+    }
+    setProgress(jobId, 45);
+
+    // Validate clips
+    let clips = analysis.clips.filter(c => c.start >= 0 && c.end <= metadata.duration + 2 && c.end > c.start + 10);
+    if (!clips.length) {
+      log(jobId, 'No valid clips — using heuristic fallback');
+      clips = heuristicSegments(metadata.duration, job.options?.maxClips || 3, job.options?.clipLength || 60);
+    }
+    log(jobId, `${clips.length} clips queued for single-pass processing`);
+
+    // ── STEP 4: Process each clip (45-90%) ──
+    const finalClips = [];
+    const total = clips.length;
+
+    for (let i = 0; i < total; i++) {
+      const clip = clips[i];
+      const dur = clip.end - clip.start;
+      log(jobId, `Processing clip ${i + 1}/${total}: "${clip.title}" (${Math.round(dur)}s)`);
+
+      const reframeMode = job.options?.reframeMode === 'split-screen' ? 'split-screen' : 'blur-pad';
+      const result = await processClip(clip, videoPath, jobId, i, total, profile, reframeMode);
+      if (result) {
+        finalClips.push(result);
+      }
+    }
+
+    // ── STEP 5: Done (100%) ──
+    job.clips = finalClips;
+    job.progress = 100;
+
+    if (finalClips.length > 0) {
+      job.status = 'completed';
+      log(jobId, `✅ Done! ${finalClips.length}/${total} clips for "${job.videoTitle || job.url || 'upload'}".`);
+    } else {
+      job.status = 'failed';
+      job.error = `All ${total} clips failed to process. Check logs for FFmpeg errors.`;
+      log(jobId, `❌ All clips failed.`);
+    }
+
+  } catch (err) {
+    job.error = err.stack || err.message || String(err);
+    job.status = 'failed';
+    log(jobId, `[FATAL] ${job.error}`);
+    throw err;
+  }
+}
+
+// ═══════════════════════════════════════
+//  YOUTUBE DOWNLOAD
+// ═══════════════════════════════════════
+
+function extractYouTubeId(url) {
+  if (!url) return null;
+  const m = String(url).match(/(?:v=|\/|youtu\.be\/)([\w-]{11})/);
+  return m ? m[1] : null;
+}
+
+async function fetchYouTubeMeta(jobId, url) {
+  try {
+    const { stdout } = await execAsync(
+      `yt-dlp --dump-json --no-playlist "${url}"`,
+      { maxBuffer: 15 * 1024 * 1024 }
+    );
+    const info = JSON.parse(stdout);
+    return {
+      id: info.id || extractYouTubeId(url),
+      title: info.title || '',
+      description: (info.description || '').slice(0, 2500),
+      channel: info.channel || info.uploader || '',
+      duration: info.duration,
+    };
+  } catch (err) {
+    log(jobId, `Could not fetch video info: ${String(err.message).slice(0, 80)}`);
+    return { id: extractYouTubeId(url), title: '', description: '', channel: '' };
+  }
+}
+
+async function downloadYouTube(jobId, url, outPath) {
+  log(jobId, 'Downloading video...');
+  if (fs.existsSync(outPath)) fs.unlinkSync(outPath);
+  await new Promise((resolve, reject) => {
+    const proc = spawn('yt-dlp', [
+      '-f', 'bestvideo+bestaudio/best',
+      '--merge-output-format', 'mp4',
+      '-o', outPath,
+      '--no-playlist',
+      '--force-overwrites',
+      '--no-continue',
+      '--concurrent-fragments', '4',
+      url,
+    ]);
+    proc.stdout.on('data', d => {
+      const line = d.toString().trim();
+      if (!line) return;
+      log(jobId, line);
+      const m = line.match(/\[download\]\s+([\d.]+)%/);
+      if (m) setProgress(jobId, Math.min(14, parseFloat(m[1]) * 0.14));
+    });
+    proc.stderr.on('data', d => {
+      const line = d.toString().trim();
+      if (line) log(jobId, line);
+    });
+    proc.on('close', code => code === 0 ? resolve() : reject(new Error(`yt-dlp exited ${code}`)));
+  });
+  log(jobId, 'Download complete');
+}
+
+// ═══════════════════════════════════════
+//  VIDEO METADATA
+// ═══════════════════════════════════════
+
+async function getVideoMetadata(videoPath) {
+  const { stdout } = await execAsync(
+    `ffprobe -v quiet -print_format json -show_streams -show_format "${videoPath}"`
+  );
+  const info = JSON.parse(stdout);
+  const vs = info.streams.find(s => s.codec_type === 'video') || {};
+  const fmt = info.format || {};
+  const fpsStr = vs.r_frame_rate || '30/1';
+  const fpsParts = fpsStr.split('/');
+  const fps = fpsParts.length === 2
+    ? parseFloat(fpsParts[0]) / (parseFloat(fpsParts[1]) || 1)
+    : parseFloat(fpsStr) || 30;
+  return {
+    duration: parseFloat(fmt.duration || 0),
+    width: vs.width || 1920,
+    height: vs.height || 1080,
+    fps,
+    bitrate: parseInt(fmt.bit_rate || 0),
+    codec: vs.codec_name || 'h264',
+  };
+}
+
+// ═══════════════════════════════════════
+//  RENDER EDITED CLIP
+// ═══════════════════════════════════════
+
+export async function renderClipWithEdits({ job, clip, subtitles, style, watermark }) {
+  const sourcePath = job.filePath;
+  if (!sourcePath || !fs.existsSync(sourcePath)) {
+    throw new Error('Source video file not found');
+  }
+
+  // Generate ASS file
+  const assContent = generateASS(subtitles, style);
+  const clipId = `${job.id}-edited-${clip.index}`;
+  const assPath = path.join(OUTPUT_DIR, `${clipId}.ass`);
+  fs.writeFileSync(assPath, assContent);
+
+  const outPath = path.join(OUTPUT_DIR, `${clipId}.mp4`);
+  safeUnlink(outPath);
+
+  // We are processing a clip from the source video, so we use clip.start and clip.end
+  const start = clip.start;
+  const duration = clip.end - clip.start;
+
+  const args = buildMasterCommand({
+    inputPath: sourcePath,
+    outputPath: outPath,
+    start,
+    duration,
+    srtPath: assPath,
+    watermark,
+    reframeMode: job.options?.reframeMode === 'split-screen' ? 'split-screen' : 'blur-pad',
+  });
+
+  log(job.id, `Rendering edited clip ${clip.index} with FFmpeg...`);
+  
+  await runFFmpegWithProgress(args, duration, job.id, clip.index, 1);
+  
+  log(job.id, `Rendered edited clip ${clip.index} successfully.`);
+  
+  // Safe cleanup of ASS
+  safeUnlink(assPath);
+
+  return { url: `/outputs/${clipId}.mp4` };
+}
+
+
+
+
+
+// ===== queue.js =====
+
+// Simple in-memory job store and queue
+export const jobs = new Map();
+export const jobQueue = [];
+
+
+
+
+
+// ===== searchEngine.js =====
+
+import { chunkTranscriptForSearch } from './transcriptSchema.js';
+
+const QUERY_PATTERNS = {
+  funny: /funny|hilarious|lol|joke|हँस|मजाक/i,
+  rage: /rage|angry|mad|wtf|गुस्सा/i,
+  clutch: /clutch|ace|1v|kill|किल/i,
+  money: /money|paisa|rupee|salary|earn|पैसा|कमाई/i,
+  sponsor: /sponsor|promo|code|discount|brand deal/i,
+  reaction: /react|omg|wow|shock|अरे/i,
+  win: /win|victory|जीत/i
+};
+
+function tokenize(s) {
+  return String(s).toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(t => t.length > 1);
+}
+
+function scoreOverlap(queryTokens, text) {
+  const docTokens = new Set(tokenize(text));
+  let hit = 0;
+  for (const t of queryTokens) if (docTokens.has(t)) hit++;
+  return queryTokens.length ? hit / queryTokens.length : 0;
+}
+
+export function buildSearchIndex(jobId, segments) {
+  const chunks = chunkTranscriptForSearch(segments, 10);
+  return {
+    jobId,
+    builtAt: new Date().toISOString(),
+    chunks: chunks.map((c, i) => ({
+      id: i,
+      start: c.start,
+      end: c.end,
+      text: c.text,
+      tokens: tokenize(c.text)
+    }))
+  };
+}
+
+export function searchMoments(index, query, limit = 12) {
+  if (!index?.chunks?.length) return [];
+  const q = String(query || '').trim();
+  if (!q) return [];
+
+  let patternBoost = null;
+  for (const [key, re] of Object.entries(QUERY_PATTERNS)) {
+    if (re.test(q) || q.toLowerCase().includes(key)) {
+      patternBoost = key;
+      break;
+    }
+  }
+
+  const queryTokens = tokenize(q);
+  const results = index.chunks.map(chunk => {
+    let score = scoreOverlap(queryTokens, chunk.text) * 100;
+    if (patternBoost && QUERY_PATTERNS[patternBoost]?.test(chunk.text)) score += 35;
+    return { ...chunk, score: Math.round(score) };
+  }).filter(r => r.score > 8)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit);
+
+  return results;
+}
+
+
+
+
+
+// ===== server.js =====
+
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, '../.env') });
+
+import express from 'express';
+import cors from 'cors';
+import multer from 'multer';
+import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs';
+import { jobQueue, jobs } from './queue.js';
+import { processVideo, renderClipWithEdits } from './processor.js';
+import { searchMoments } from './searchEngine.js';
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+const UPLOAD_DIR = path.join(__dirname, '../uploads');
+const OUTPUT_DIR = path.join(__dirname, '../outputs');
+const FRONTEND_DIR = path.join(__dirname, '../../frontend/public');
+[UPLOAD_DIR, OUTPUT_DIR].forEach(d => fs.mkdirSync(d, { recursive: true }));
+
+const storage = multer.diskStorage({
+  destination: UPLOAD_DIR,
+  filename: (req, file, cb) => cb(null, `${uuidv4()}${path.extname(file.originalname)}`)
+});
+const upload = multer({ storage, limits: { fileSize: 2 * 1024 * 1024 * 1024 } });
+
+app.use(cors());
+app.use(express.json({ limit: '50mb' }));
+app.use('/outputs', express.static(OUTPUT_DIR));
+
+// ── Concurrent job limiter ──
+const MAX_CONCURRENT_JOBS = 2;
+
+function activeJobCount() {
+  let count = 0;
+  for (const job of jobs.values()) {
+    if (job.status === 'processing') count++;
+  }
+  return count;
+}
+
+function scheduleNextJob() {
+  while (activeJobCount() < MAX_CONCURRENT_JOBS && jobQueue.length > 0) {
+    const nextId = jobQueue.shift();
+    const nextJob = jobs.get(nextId);
+    if (!nextJob) continue; // job was deleted
+    processVideo(nextId)
+      .catch(err => {
+        const j = jobs.get(nextId);
+        if (j) { j.status = 'failed'; j.error = err.message; }
+      })
+      .finally(() => scheduleNextJob()); // free slot → try next queued job
+  }
+}
+
+app.post('/api/process-yt', async (req, res) => {
+  const { url, mode = 'auto', options = {}, source = 'youtube' } = req.body;
+  if (!url) return res.status(400).json({ error: 'url is required' });
+
+  const jobId = uuidv4();
+  const job = {
+    id: jobId, type: 'youtube', status: 'queued', progress: 0,
+    url, source, mode, options,
+    clips: [], createdAt: new Date().toISOString(), logs: []
+  };
+  jobs.set(jobId, job);
+  jobQueue.push(jobId);
+  scheduleNextJob();
+  res.json({ jobId, message: 'Processing started' });
+});
+
+app.post('/api/process-file', upload.single('video'), async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+
+  const { mode = 'auto', options = '{}' } = req.body;
+  const jobId = uuidv4();
+  const job = {
+    id: jobId, type: 'upload', status: 'queued', progress: 0,
+    filePath: req.file.path, mode, options: JSON.parse(options),
+    clips: [], createdAt: new Date().toISOString(), logs: []
+  };
+  jobs.set(jobId, job);
+  jobQueue.push(jobId);
+  scheduleNextJob();
+  res.json({ jobId, message: 'File processing started' });
+});
+
+// ── New mode routes ──
+
+function scheduleNewModeJob(jobId, processFn) {
+  const run = () => processFn(jobId)
+    .catch(err => {
+      const j = jobs.get(jobId);
+      if (j) { j.status = 'failed'; j.error = err.message; }
+    })
+    .finally(() => scheduleNextJob());
+
+  if (activeJobCount() < MAX_CONCURRENT_JOBS) {
+    run();
+  } else {
+    jobQueue.push(jobId);
+  }
+}
+
+
+app.get('/api/status/:jobId', (req, res) => {
+  const job = jobs.get(req.params.jobId);
+  if (!job) return res.status(404).json({ error: 'Job not found' });
+  res.json(job);
+});
+
+app.get('/api/jobs', (req, res) => {
+  const list = Array.from(jobs.values())
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 50);
+  res.json(list);
+});
+
+app.post('/api/render/clip', async (req, res) => {
+  const { clip_id, subtitles, style, watermark, trimStart, trimEnd } = req.body;
+  if (!clip_id || !subtitles || !style) {
+    return res.status(400).json({ error: 'Missing required parameters' });
+  }
+  
+  // Find the job that contains this clip_id
+  let targetJob = null;
+  let targetClip = null;
+  for (const job of jobs.values()) {
+    const cIndex = (job.clips || []).findIndex(c => `${job.id}-${c.index}` === clip_id || `${job.id}-edited-${c.index}` === clip_id || c.clip_id === clip_id);
+    if (cIndex !== -1) {
+      targetJob = job;
+      targetClip = job.clips[cIndex];
+      break;
+    }
+  }
+
+  if (!targetJob || !targetClip) {
+    return res.status(404).json({ error: 'Clip not found in any job' });
+  }
+
+  try {
+    const result = await renderClipWithEdits({
+      job: targetJob,
+      clip: targetClip,
+      subtitles,
+      style,
+      watermark,
+      trimStart,
+      trimEnd
+    });
+    res.json(result);
+  } catch (error) {
+    console.error(`[renderClipWithEdits] Failed:`, error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/upload-to-youtube', async (req, res) => {
+  const { jobId, clipIndex, title, description, tags = [] } = req.body;
+  const job = jobs.get(jobId);
+  if (!job) return res.status(404).json({ error: 'Job not found' });
+  if (!job.clips[clipIndex]) return res.status(404).json({ error: 'Clip not found' });
+
+  try {
+    const { uploadToYouTube } = await import('./uploader.js');
+    const clip = job.clips[clipIndex];
+    const result = await uploadToYouTube({
+      filePath: path.join(OUTPUT_DIR, clip.filename),
+      title: title || clip.title || `Clip ${clipIndex + 1}`,
+      description: description || clip.summary || '',
+      tags, categoryId: '22', privacyStatus: 'public'
+    });
+    clip.youtubeUrl = result.url;
+    clip.youtubeId = result.id;
+    res.json({ success: true, url: result.url, id: result.id });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/upload-to-tiktok', async (req, res) => {
+  res.json({ error: 'TikTok integration coming soon' });
+});
+
+app.post('/api/upload-to-instagram', async (req, res) => {
+  res.json({ error: 'Instagram integration coming soon' });
+});
+
+app.post('/api/save-brand-kit', async (req, res) => {
+  const { colors, watermark, intro, outro } = req.body;
+  const brandKit = { colors, watermark, intro, outro, updatedAt: new Date().toISOString() };
+  fs.writeFileSync(path.join(__dirname, '../brand-kit.json'), JSON.stringify(brandKit, null, 2));
+  res.json({ success: true });
+});
+
+app.get('/api/brand-kit', (req, res) => {
+  const p = path.join(__dirname, '../brand-kit.json');
+  if (fs.existsSync(p)) {
+    res.json(JSON.parse(fs.readFileSync(p, 'utf8')));
+  } else {
+    res.json({ colors: ['#7c3aed', '#a855f7', '#c084fc'], watermark: null });
+  }
+});
+
+app.post('/api/save-schedule', async (req, res) => {
+  const schedule = { ...req.body, updatedAt: new Date().toISOString() };
+  fs.writeFileSync(path.join(__dirname, '../schedule.json'), JSON.stringify(schedule, null, 2));
+  res.json({ success: true });
+});
+
+app.get('/api/auth/youtube', async (req, res) => {
+  const { getAuthUrl } = await import('./uploader.js');
+  res.json({ url: getAuthUrl() });
+});
+
+app.get('/api/auth/youtube/callback', async (req, res) => {
+  const { handleCallback } = await import('./uploader.js');
+  await handleCallback(req.query.code);
+  res.send('<script>window.close()</script><p>Authenticated! You can close this tab.</p>');
+});
+
+app.get('/api/auth/status', (req, res) => {
+  const tokenPath = path.join(__dirname, '../youtube_token.json');
+  if (fs.existsSync(tokenPath)) {
+    res.json({ connected: true });
+  } else {
+    res.status(401).json({ connected: false });
+  }
+});
+
+app.delete('/api/job/:jobId', (req, res) => {
+  const job = jobs.get(req.params.jobId);
+  if (!job) return res.status(404).json({ error: 'Job not found' });
+  job.clips.forEach(clip => {
+    const p = path.join(OUTPUT_DIR, clip.filename);
+    if (fs.existsSync(p)) fs.unlinkSync(p);
+  });
+  if (job.filePath && fs.existsSync(job.filePath)) fs.unlinkSync(job.filePath);
+  jobs.delete(req.params.jobId);
+  res.json({ success: true });
+});
+
+app.post('/api/search/:jobId', (req, res) => {
+  const job = jobs.get(req.params.jobId);
+  if (!job) return res.status(404).json({ error: 'Job not found' });
+  const query = req.body?.query || req.query?.q || '';
+  if (!query.trim()) return res.status(400).json({ error: 'query is required' });
+  const index = job.searchIndex;
+  if (!index) return res.json({ results: [], message: 'No transcript index for this job' });
+  const results = searchMoments(index, query, 15);
+  res.json({ query, results, count: results.length });
+});
+
+// ── Creator Profile ──
+const PROFILE_PATH = path.join(__dirname, '../creator_profile.json');
+
+app.get('/api/profile', (req, res) => {
+  try {
+    if (fs.existsSync(PROFILE_PATH)) {
+      res.json(JSON.parse(fs.readFileSync(PROFILE_PATH, 'utf8')));
+    } else {
+      const defaults = {
+        name: 'Creator',
+        content_type: 'gaming',
+        audience_age: '13-25',
+        style: 'energetic',
+        clip_style: 'start with action not buildup',
+        avoid: 'slow sections, long talking, boring intros',
+        language: 'auto',
+        example_hooks: ["You won't believe what happened next...", "This is insane...", "Wait for it..."],
+        watermark: {
+          enabled: false,
+          text: '@yourchannel',
+          image_path: '',
+          position: 'bottom-right',
+          opacity: 0.8,
+          size: 36
+        }
+      };
+      res.json(defaults);
+    }
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/profile', (req, res) => {
+  try {
+    fs.writeFileSync(PROFILE_PATH, JSON.stringify(req.body, null, 2));
+    res.json({ success: true });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/profile/watermark-image', upload.single('watermark'), (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+  const dest = path.join(UPLOAD_DIR, 'watermark.png');
+  try {
+    fs.copyFileSync(req.file.path, dest);
+    let profile = {};
+    if (fs.existsSync(PROFILE_PATH)) profile = JSON.parse(fs.readFileSync(PROFILE_PATH, 'utf8'));
+    if (!profile.watermark) profile.watermark = {};
+    profile.watermark.image_path = dest;
+    fs.writeFileSync(PROFILE_PATH, JSON.stringify(profile, null, 2));
+    res.json({ success: true, path: dest });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    uptime: process.uptime(),
+    jobsCount: jobs.size,
+    features: {
+      fasterWhisper: true,
+      whisperLargeV3: process.env.WHISPER_MODEL === 'large-v3',
+      facecamDetection: true,
+      faceReactions: true,
+      sceneDetection: true,
+      semanticSearch: true,
+      chatPipeline: true,
+      indianCreatorMode: true,
+      captionStyles: ['classic', 'tiktok', 'gaming', 'meme', 'karaoke', 'neon', 'viral'],
+      contentTypes: ['auto', 'gaming', 'podcast', 'commentary', 'education', 'finance'],
+      layoutModes: ['auto', 'top', 'bottom', 'left', 'right'],
+      streamLayouts: ['stream-top', 'stream-bottom', 'stream-left', 'stream-right'],
+      editorMode: 'stream-highlight',
+      clipCategories: ['funny', 'rage', 'reaction', 'clutch', 'win', 'educational', 'most-viral'],
+      variantDurations: [15, 30, 45, 60]
+    }
+  });
+});
+
+// Serve frontend (open http://localhost:3000 in browser)
+app.use(express.static(FRONTEND_DIR));
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api') || req.path.startsWith('/outputs')) return next();
+  res.sendFile(path.join(FRONTEND_DIR, 'index.html'));
+});
+
+async function checkDependencies() {
+  const { exec } = await import('child_process');
+  const { promisify } = await import('util');
+  const run = promisify(exec);
+  const need = ['ffmpeg', 'yt-dlp'];
+  for (const cmd of need) {
+    try {
+      await run(process.platform === 'win32' ? `where ${cmd}` : `which ${cmd}`);
+    } catch {
+      console.warn(`⚠️  Missing ${cmd} — install via winget or add to PATH`);
+    }
+  }
+  if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY.includes('paste_your')) {
+    console.warn('⚠️  GEMINI_API_KEY missing in backend/.env — AI clip detection will fail');
+  }
+}
+
+const server = app.listen(PORT, async () => {
+  console.log(`⚡ Atlantic AI running at http://localhost:${PORT}`);
+  console.log(`   Open that URL in your browser — do not type a folder path in the address bar.`);
+  await checkDependencies();
+});
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`\n❌ Port ${PORT} is already in use. Close the other Atlantic AI window or run:`);
+    console.error(`   npx kill-port ${PORT}\n`);
+    process.exit(1);
+  }
+  throw err;
+});
+
+
+
+
+
+// ===== subtitleGenerator.js =====
+
+export function generateASS(subtitles, style) {
+  const formatTime = (sec) => {
+    const h = Math.floor(sec / 3600);
+    const m = Math.floor((sec % 3600) / 60);
+    const s = Math.floor(sec % 60);
+    const ms = Math.floor((sec % 1) * 100); // ASS uses centiseconds
+    return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(ms).padStart(2,'0')}`;
+  };
+
+  const toAssColor = (hex) => {
+    // hex is #RRGGBB -> ASS is &HAABBGGRR
+    if (!hex || !hex.startsWith('#')) return '&H00FFFFFF';
+    const r = hex.substring(1, 3);
+    const g = hex.substring(3, 5);
+    const b = hex.substring(5, 7);
+    return `&H00${b}${g}${r}`;
+  };
+
+  const fontName = style.font || 'Arial';
+  const fontSize = style.size || 80;
+  const primary = toAssColor(style.primaryColor || '#ffffff');
+  const outlineC = toAssColor(style.outlineColor || '#000000');
+  const shadowC = toAssColor(style.shadow?.color || '#000000');
+  const outW = style.outlineWidth ?? 3;
+  const shadW = style.shadow?.enabled ? 2 : 0;
+  
+  // Alignment: 1=BottomLeft, 2=BottomCenter, 3=BottomRight
+  // 4=MidLeft, 5=MidCenter, 6=MidRight
+  // 7=TopLeft, 8=TopCenter, 9=TopRight
+  let align = 2;
+  if (style.position === 'top') align = 8;
+  if (style.position === 'middle') align = 5;
+
+  let ass = `[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,${fontName},${fontSize},${primary},&H000000FF,${outlineC},${shadowC},0,0,0,0,100,100,0,0,1,${outW},${shadW},${align},20,20,100,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+`;
+
+  for (const sub of subtitles) {
+    const start = formatTime(sub.start);
+    const end = formatTime(sub.end);
+    let text = (sub.text || '').replace(/\n/g, '\\N');
+    
+    // Animations
+    if (style.animation === 'pop-in') {
+      text = `{\\fscx50\\fscy50\\t(0,200,\\fscx100\\fscy100)}${text}`;
+    } else if (style.animation === 'fade-in') {
+      text = `{\\fad(200,0)}${text}`;
+    }
+
+    ass += `Dialogue: 0,${start},${end},Default,,0,0,0,,${text}\n`;
+  }
+
+  return ass;
+}
+
+
+
+
+
+// ===== transcriptSchema.js =====
+
+/** Normalized word-level transcript schema for all pipelines */
+
+export function normalizeWord(w) {
+  const word = (w.word ?? w.text ?? '').trim();
+  if (!word) return null;
+  return {
+    word,
+    start: Number(w.start) || 0,
+    end: Number(w.end) || 0,
+    probability: w.probability != null ? Number(w.probability) : undefined
+  };
+}
+
+export function normalizeSegment(seg) {
+  const words = (seg.words || [])
+    .map(normalizeWord)
+    .filter(Boolean);
+  const text = (seg.text || words.map(w => w.word).join(' ')).trim();
+  return {
+    start: Number(seg.start) || 0,
+    end: Number(seg.end) || 0,
+    text,
+    words
+  };
+}
+
+export function normalizeTranscript(segments = []) {
+  return segments.map(normalizeSegment).filter(s => s.text || s.words.length);
+}
+
+export function wordsInWindow(segments, start, end) {
+  const out = [];
+  for (const seg of segments) {
+    if (seg.end <= start || seg.start >= end) continue;
+    if (seg.words?.length) {
+      for (const w of seg.words) {
+        if (w.end > start && w.start < end) out.push(w);
+      }
+    } else if (seg.text) {
+      out.push({ word: seg.text, start: Math.max(seg.start, start), end: Math.min(seg.end, end) });
+    }
+  }
+  return out;
+}
+
+export function textInWindow(segments, start, end) {
+  return wordsInWindow(segments, start, end).map(w => w.word).join(' ');
+}
+
+export function chunkTranscriptForSearch(segments, chunkSec = 12) {
+  if (!segments.length) return [];
+  const end = segments[segments.length - 1].end;
+  const chunks = [];
+  for (let t = 0; t < end; t += chunkSec) {
+    const text = textInWindow(segments, t, t + chunkSec);
+    if (text.trim().length > 8) {
+      chunks.push({ start: t, end: t + chunkSec, text: text.trim() });
+    }
+  }
+  return chunks;
+}
+
+export const SUPPORTED_LANGUAGES = [
+  'hi', 'en', 'hinglish', 'mr', 'gu', 'bn', 'ta', 'te'
+];
+
+export function detectIndianCreatorMode(language, segments = []) {
+  const lang = (language || '').toLowerCase();
+  const sample = segments.slice(0, 30).map(s => s.text).join(' ');
+  const hinglish = /(yaar|bhai|kya|hai|nahi|acha|matlab|bro|arre)/i.test(sample);
+  if (['hi', 'mr', 'gu', 'bn', 'ta', 'te', 'hinglish'].includes(lang) || hinglish) {
+    return { enabled: true, language: lang === 'en' && hinglish ? 'hinglish' : lang };
+  }
+  return { enabled: false, language: lang || 'en' };
+}
+
+
+
+
+
+// ===== uploader.js =====
+
+import { google } from 'googleapis';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const TOKEN_PATH = path.join(__dirname, '../youtube_token.json');
+
+const oauth2Client = new google.auth.OAuth2(
+  process.env.YOUTUBE_CLIENT_ID,
+  process.env.YOUTUBE_CLIENT_SECRET,
+  process.env.YOUTUBE_REDIRECT_URI || 'http://localhost:3000/api/auth/youtube/callback'
+);
+
+const SCOPES = ['https://www.googleapis.com/auth/youtube.upload'];
+
+if (fs.existsSync(TOKEN_PATH)) {
+  const token = JSON.parse(fs.readFileSync(TOKEN_PATH, 'utf8'));
+  oauth2Client.setCredentials(token);
+}
+
+export function getAuthUrl() {
+  return oauth2Client.generateAuthUrl({ access_type: 'offline', scope: SCOPES });
+}
+
+export async function handleCallback(code) {
+  const { tokens } = await oauth2Client.getToken(code);
+  oauth2Client.setCredentials(tokens);
+  fs.writeFileSync(TOKEN_PATH, JSON.stringify(tokens));
+  return tokens;
+}
+
+export async function uploadToYouTube({ filePath, title, description, tags, categoryId = '22', privacyStatus = 'public' }) {
+  if (!fs.existsSync(TOKEN_PATH)) {
+    throw new Error('YouTube not authenticated. Visit /api/auth/youtube first.');
+  }
+
+  const youtube = google.youtube({ version: 'v3', auth: oauth2Client });
+  const fileSize = fs.statSync(filePath).size;
+
+  const res = await youtube.videos.insert({
+    part: ['snippet', 'status'],
+    requestBody: {
+      snippet: {
+        title: title.slice(0, 100),
+        description,
+        tags,
+        categoryId,
+        defaultLanguage: 'en',
+      },
+      status: { privacyStatus, selfDeclaredMadeForKids: false }
+    },
+    media: {
+      body: fs.createReadStream(filePath)
+    }
+  }, {
+    onUploadProgress: evt => {
+      const pct = Math.round((evt.bytesRead / fileSize) * 100);
+      console.log(`Upload progress: ${pct}%`);
+    }
+  });
+
+  return {
+    id: res.data.id,
+    url: `https://www.youtube.com/shorts/${res.data.id}`
+  };
+}
+
+// TikTok upload (placeholder - requires TikTok API integration)
+export async function uploadToTikTok({ filePath, title, tags }) {
+  // TikTok API requires developer account and app approval
+  // https://developers.tiktok.com/
+  throw new Error('TikTok integration: Set TIKTOK_CLIENT_ID and TIKTOK_CLIENT_SECRET in .env');
+}
+
+// Instagram upload (placeholder - requires Graph API)
+export async function uploadToInstagram({ filePath, caption, tags }) {
+  // Instagram Graph API requires Facebook Developer account
+  // https://developers.facebook.com/docs/instagram-api/
+  throw new Error('Instagram integration: Set INSTAGRAM_CLIENT_ID and INSTAGRAM_CLIENT_SECRET in .env');
+}
+
+
+
+
+
+// ===== variantsEngine.js =====
+
+import path from 'path';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+
+const execAsync = promisify(exec);
+
+export const VARIANT_DURATIONS = [15, 30, 45, 60];
+
+/** Trim composed highlight (keeps layout + captions + effects) */
+export async function generateVariantsFromFinal(jobId, clipIndex, finalPath, outputDir) {
+  const variants = [];
+  for (const dur of VARIANT_DURATIONS) {
+    const filename = `${jobId}_v${dur}_${clipIndex}.mp4`;
+    const outPath = path.join(outputDir, filename);
+    try {
+      await execAsync(
+        `ffmpeg -y -i "${finalPath}" -t ${dur} -c:v libx264 -c:a aac -b:a 128k -preset fast -crf 22 -avoid_negative_ts make_zero -async 1 -vsync cfr -movflags +faststart "${outPath}"`
+      );
+      variants.push({ duration: dur, filename, url: `/outputs/${filename}` });
+    } catch { /* skip if shorter than dur */ }
+  }
+  return variants;
+}
+
+export function planVariantsFromSegment(seg) {
+  const dur = seg.end - seg.start;
+  return VARIANT_DURATIONS.filter(d => d <= dur + 2).map(d => ({ duration: d }));
+}
+
+
+
+
+
+// ===== videoLayout.js =====
+
+/**
+ * Atlantic AI — Video Layout & Single-Pass FFmpeg Command Builder
+ *
+ * Builds ONE master FFmpeg command per clip that handles:
+ *   Cut → Reframe 9:16 → Captions → Watermark
+ * in a single filter_complex graph. Zero intermediate files.
+ */
+
+// ═══════════════════════════════════════
+//  PATH ESCAPING (critical on Windows)
+// ═══════════════════════════════════════
+
+/**
+ * Escape a file path for use INSIDE FFmpeg -filter_complex strings.
+ * Do NOT use this on -i or -o arguments — those just need double-quoting.
+ */
+export function escapeFFmpegPath(p) {
+  return p
+    .replace(/\\/g, '/')
+    .replace(/^([A-Za-z]):\//, '$1:/')
+    .replace(/'/g, '');
+}
+
+// ═══════════════════════════════════════
+//  WATERMARK POSITION
+// ═══════════════════════════════════════
+
+/**
+ * Returns { x, y } expressions for FFmpeg overlay/drawtext filters.
+ * bottom positions use H-h-80 to sit above the caption zone.
+ */
+export function getWatermarkPosition(position) {
+  const map = {
+    'top-left':      { x: '30',       y: '30' },
+    'top-center':    { x: '(W-w)/2',  y: '30' },
+    'top-right':     { x: 'W-w-30',   y: '30' },
+    'center-left':   { x: '30',       y: '(H-h)/2' },
+    'center':        { x: '(W-w)/2',  y: '(H-h)/2' },
+    'center-right':  { x: 'W-w-30',   y: '(H-h)/2' },
+    'bottom-left':   { x: '30',       y: 'H-h-80' },
+    'bottom-center': { x: '(W-w)/2',  y: 'H-h-80' },
+    'bottom-right':  { x: 'W-w-30',   y: 'H-h-80' },
+  };
+  return map[position] || map['bottom-right'];
+}
+
+// ═══════════════════════════════════════
+//  CAPTION STYLE
+// ═══════════════════════════════════════
+
+export function getCaptionStyle(styleName) {
+  const styles = {
+    tiktok:  { size: 52, primary: '&Hffffff', outline: '&H000000', outlineW: 3, shadow: 1, align: 2, marginV: 60 },
+    gaming:  { size: 56, primary: '&H00ffff', outline: '&H0000ff', outlineW: 4, shadow: 2, align: 2, marginV: 50 },
+    viral:   { size: 48, primary: '&Hffffff', outline: '&H333333', outlineW: 2, shadow: 3, align: 2, marginV: 70 },
+    classic: { size: 44, primary: '&Hffffff', outline: '&H000000', outlineW: 2, shadow: 1, align: 2, marginV: 60 },
+  };
+  return styles[styleName] || styles.tiktok;
+}
+
+// ═══════════════════════════════════════
+//  MASTER COMMAND BUILDER
+// ═══════════════════════════════════════
+
+/**
+ * Build a single FFmpeg command that does everything in one pass:
+ *   1. Input-seek & trim
+ *   2. Reframe to 9:16 with blurred background
+ *   3. Burn SRT captions (optional)
+ *   4. Add watermark — text or image (optional)
+ *
+ * @param {Object} opts
+ * @param {string} opts.inputPath     Source video file
+ * @param {string} opts.outputPath    Final output file
+ * @param {number} opts.start         Clip start in seconds
+ * @param {number} opts.duration      Clip duration in seconds
+ * @param {string|null} opts.srtPath  Path to SRT file, or null
+ * @param {string} opts.captionStyle  'tiktok' | 'gaming' | 'viral' | 'classic'
+ * @param {Object} opts.watermark     { enabled, text, image_path, position, opacity, size }
+ * @returns {string} The full FFmpeg command string
+ */
+export function buildMasterCommand({
+  inputPath,
+  outputPath,
+  start,
+  duration,
+  srtPath = null,
+  captionStyle = 'tiktok',
+  watermark = {},
+  reframeMode = 'blur-pad', // 'blur-pad' | 'split-screen'
+}) {
+  const hasCaptions = !!srtPath;
+  const wmEnabled = watermark?.enabled;
+  const wmHasImage = wmEnabled && watermark.image_path;
+  const wmHasText = wmEnabled && watermark.text && !wmHasImage;
+
+  // ── Input arguments ──
+  const inputArgs = [
+    '-ss', start.toString(),
+    '-i', inputPath
+  ];
+  if (wmHasImage) {
+    inputArgs.push('-i', watermark.image_path);
+  }
+
+  // ── Build filter_complex graph ──
+  const filters = [];
+
+  // Stage 1: Reframe 9:16. Two modes:
+  //
+  // 'blur-pad' (default) — the full original frame is preserved and
+  //   letterboxed, never cropped. bg: source scaled up to fill the entire
+  //   1080x1920 canvas, then blurred. fg: source scaled to fit the FULL
+  //   width (1080px) at its OWN aspect ratio — no forced square, no
+  //   cropping. A 16:9 source becomes a 1080x607 strip; a 9:16 source
+  //   becomes nearly full-height. Either way the entire original frame is
+  //   visible, centered over the blur.
+  //
+  // 'split-screen' — fixed 50/50 vertical split, no face detection. Top
+  //   half shows the UPPER portion of the source (where face-cams usually
+  //   sit in gaming/streaming layouts), cropped to fill 1080x960. Bottom
+  //   half shows the FULL source frame letterboxed to fit 1080x960 (same
+  //   "never crop the gameplay" principle as blur-pad, just confined to
+  //   half the canvas). This is a fixed layout, not a smart/detected crop.
+  if (reframeMode === 'split-screen') {
+    // Top half (0,0)-(1080,960): crop-fill from the upper-center portion
+    // of the source — a reasonable fixed guess at face-cam placement
+    // without running any actual face detection.
+    filters.push(
+      '[0:v]scale=1080:960:force_original_aspect_ratio=increase,crop=1080:960:(iw-1080)/2:0[top]'
+    );
+    // Bottom half (0,960)-(1080,1920): full source frame, letterboxed to
+    // fit width, never cropped, centered with blur filling any gap.
+    filters.push(
+      '[0:v]scale=1080:960:force_original_aspect_ratio=increase,crop=1080:960,boxblur=20:4[botbg]'
+    );
+    filters.push(
+      '[0:v]scale=1080:-2:force_original_aspect_ratio=decrease[botfg]'
+    );
+    filters.push(
+      '[botbg][botfg]overlay=(W-w)/2:(H-h)/2:format=auto[bottom]'
+    );
+    filters.push(
+      '[top][bottom]vstack=inputs=2,format=yuv420p[reframed]'
+    );
+  } else {
+    filters.push(
+      '[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=25:5[bg]'
+    );
+    filters.push(
+      '[0:v]scale=1080:-2:force_original_aspect_ratio=decrease[fg]'
+    );
+    filters.push(
+      '[bg][fg]overlay=(W-w)/2:(H-h)/2:format=auto,format=yuv420p[reframed]'
+    );
+  }
+
+  // Determine what the current output label is after each stage
+  let currentLabel = 'reframed';
+
+  // Stage 2: Captions (optional)
+  if (hasCaptions) {
+    const srtEscaped = escapeFFmpegPath(srtPath);
+    if (srtPath.toLowerCase().endsWith('.ass')) {
+      filters.push(
+        `[${currentLabel}]subtitles='${srtEscaped}'[captioned]`
+      );
+    } else {
+      const style = getCaptionStyle(captionStyle);
+      const forceStyle = [
+        `FontName=Arial`,
+        `FontSize=${style.size}`,
+        `PrimaryColour=${style.primary}`,
+        `OutlineColour=${style.outline}`,
+        `Outline=${style.outlineW}`,
+        `Shadow=${style.shadow}`,
+        `Alignment=${style.align}`,
+        `MarginV=${style.marginV}`,
+      ].join(',');
+
+      filters.push(
+        `[${currentLabel}]subtitles='${srtEscaped}':force_style='${forceStyle}'[captioned]`
+      );
+    }
+    currentLabel = 'captioned';
+  }
+
+  // Stage 3: Watermark (optional)
+  if (wmHasText) {
+    const pos = getWatermarkPosition(watermark.position || 'bottom-right');
+    const opacity = watermark.opacity ?? 0.8;
+    const fontSize = typeof watermark.size === 'number' ? watermark.size : 36;
+    const safeText = String(watermark.text).replace(/'/g, "\\\\'").replace(/:/g, '\\\\:');
+    const fontPath = escapeFFmpegPath('C:/Windows/Fonts/arial.ttf');
+
+    filters.push(
+      `[${currentLabel}]drawtext=text='${safeText}':fontfile='${fontPath}':fontsize=${fontSize}:fontcolor=white@${opacity}:x=${pos.x}:y=${pos.y}:shadowcolor=black@0.8:shadowx=2:shadowy=2[final]`
+    );
+    currentLabel = 'final';
+  } else if (wmHasImage) {
+    const pos = getWatermarkPosition(watermark.position || 'bottom-right');
+    const opacity = watermark.opacity ?? 0.8;
+    const wmWidth = typeof watermark.size === 'number' && watermark.size > 10 ? watermark.size : 200;
+
+    filters.push(
+      `[1:v]scale=${wmWidth}:-1,format=rgba,colorchannelmixer=aa=${opacity}[wm]`
+    );
+    filters.push(
+      `[${currentLabel}][wm]overlay=${pos.x}:${pos.y}:format=auto[final]`
+    );
+    currentLabel = 'final';
+  }
+
+  // ── Assemble command ──
+  const filterStr = filters.join(';');
+  const args = [
+    '-y',
+    ...inputArgs,
+    '-t', duration.toString(),
+    '-filter_complex', filterStr,
+    '-map', `[${currentLabel}]`,
+    '-map', '0:a?',
+    '-c:v', 'libx264',
+    '-preset', 'fast',
+    '-crf', '22',
+    '-c:a', 'aac',
+    '-b:a', '192k',
+    '-avoid_negative_ts', 'make_zero',
+    '-async', '1',
+    '-vsync', '1',
+    '-movflags', '+faststart',
+    '-pix_fmt', 'yuv420p',
+    outputPath
+  ];
+  return args;
+}
+
+// ═══════════════════════════════════════
+//  LEGACY EXPORTS (backward compat)
+// ═══════════════════════════════════════
+
+export const STREAM_LAYOUTS = {
+  'stream-top': 'Blurred BG + centered',
+  'stream-bottom': 'Blurred BG + centered',
+  'stream-left': 'Blurred BG + centered',
+  'stream-right': 'Blurred BG + centered',
+};
+
+export function isStreamLayout(layoutId) {
+  return String(layoutId || '').startsWith('stream-');
+}
+
+export function resolveStreamLayout() { return 'stream-top'; }
+export function buildStreamLayoutFilter() { return null; }
+export function buildPortraitFilter() { return null; }
+export function buildPortraitFilterComplex() { return null; }
+export function buildLayoutFilterComplex() { return null; }
+export function buildLayoutFilterSimple() { return null; }
+export function buildLayoutFilter() { return null; }
+export function normalizeWebcamRegion() { return 'top'; }
+export function inferReframeV2(metadata, segments) { return segments; }
+export function shouldUseStackedLayout() { return false; }
+export function usesFilterComplex() { return false; }
+
+export const LAYOUT_MODES = ['auto', 'top', 'bottom', 'left', 'right', ...Object.keys(STREAM_LAYOUTS)];
+
+
+
+
+
+// ===== viralityEngine.js =====
+
+import { getSignalBoostForWindow } from './mediaAnalysis.js';
+import { textInWindow } from './transcriptSchema.js';
+
+const HUMOR_RE = /lol|lmao|funny|hilarious|joke|हँस|मजाक|हा हा/i;
+const RAGE_RE = /rage|angry|wtf|mad|गुस्सा|पागल/i;
+const CLUTCH_RE = /clutch|1v|ace|clutch|किल/i;
+
+export function computeViralityV3(seg, ctx = {}) {
+  const boost = getSignalBoostForWindow(seg.start, seg.end, ctx);
+  const reactionScore = Math.min(100, Math.round(
+    (seg.faceReactionScore || 0) * 0.6 + boost * 1.2 + (ctx.audioPeaks?.filter(p =>
+      p.start >= seg.start - 2 && p.start <= seg.end && p.type === 'scream'
+    ).length || 0) * 8
+  ));
+  const base = seg.score || 70;
+  const dur = seg.end - seg.start;
+  const transcript = ctx.transcriptSegments
+    ? textInWindow(ctx.transcriptSegments, seg.start, seg.end)
+    : '';
+  const text = `${seg.title || ''} ${seg.summary || ''} ${transcript}`;
+
+  const hookScore = Math.min(100, Math.round(base * 0.32 + boost + (seg.hook?.length > 12 ? 14 : 0)));
+  const emotionScore = Math.min(100, Math.round(base * 0.28 + boost * 0.85 + reactionScore * 0.15));
+  const surpriseScore = Math.min(100, Math.round(boost * 1.05 + (/shock|unexpected|plot|twist|अचानक/i.test(text) ? 18 : 0)));
+  const humorScore = Math.min(100, Math.round(35 + (HUMOR_RE.test(text) ? 40 : 0) + (seg.category === 'funny' ? 25 : 0)));
+  const retentionScore = Math.min(100, Math.round(88 - Math.abs(dur - 45) * 0.45));
+  const conflictScore = Math.min(100, Math.round(38 + (/vs|fight|debate|wrong|गलत/i.test(text) ? 32 : 0)));
+
+  const finalScore = Math.round(
+    hookScore * 0.22 +
+    emotionScore * 0.18 +
+    surpriseScore * 0.14 +
+    humorScore * 0.12 +
+    retentionScore * 0.14 +
+    reactionScore * 0.12 +
+    conflictScore * 0.08
+  );
+
+  return {
+    hookScore,
+    emotionScore,
+    surpriseScore,
+    humorScore,
+    retentionScore,
+    reactionScore,
+    conflictScore,
+    finalScore
+  };
+}
+
+export function scoreCandidateWindows(windows, ctx) {
+  return windows.map(w => {
+    const v = computeViralityV3(w, ctx);
+    return { ...w, ...v, score: v.finalScore, viralityAnalysis: v };
+  }).sort((a, b) => b.finalScore - a.finalScore);
+}
+
+export function gamingBoost(seg, ctx) {
+  if (ctx.contentType !== 'gaming') return 0;
+  const transcript = ctx.transcriptSegments
+    ? textInWindow(ctx.transcriptSegments, seg.start, seg.end)
+    : '';
+  const text = `${seg.title} ${seg.summary} ${transcript}`.toLowerCase();
+  let b = 0;
+  if (/kill|ace|clutch|1v\d|headshot|no scope/i.test(text)) b += 18;
+  if (/win|victory|gg|champion/i.test(text)) b += 14;
+  if (/fail|rage|death|lost|noob/i.test(text)) b += 10;
+  if (/scream|insane|crazy|wtf|omg|bhai|op/i.test(text)) b += 8;
+  for (const p of ctx.audioPeaks || []) {
+    if (p.start >= seg.start - 2 && p.start <= seg.end) b += p.type === 'scream' ? 10 : 5;
+  }
+  return Math.min(30, b);
+}
+
+
+

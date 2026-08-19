@@ -1,0 +1,34 @@
+# Git
+.git
+.gitignore
+.github
+
+# Local/editor files
+.aider*
+.vscode
+.idea
+*.log
+
+# Local secrets
+**/.env
+**/.env.*
+!**/.env.example
+
+# Local dependencies
+**/node_modules
+**/__pycache__
+**/*.pyc
+
+# Runtime-generated media/state
+backend/uploads
+backend/outputs
+backend/youtube_token.json
+backend/brand-kit.json
+backend/schedule.json
+
+# Landing build artifacts
+landing/dist
+
+# OS junk
+.DS_Store
+Thumbs.db

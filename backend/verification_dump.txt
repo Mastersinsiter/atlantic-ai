@@ -1,0 +1,115 @@
+ATLANTIC-AI RERUN VERIFICATION DUMP
+Job ID: 5396ac9c-16f9-474c-88ef-a2989b7e92fa
+Generated: 2026-08-02
+================================================================
+
+SECTION 1: [align] LOG LINES (VERBATIM)
+----------------------------------------------------------------
+Clip 1:
+[align] Extracting audio for alignment (18.0s, 57.0s)...
+[align] Running stable-ts alignment...
+[align] Alignment successful! Found 198 words.
+
+Clip 2:
+[align] Extracting audio for alignment (449.0s, 60.0s)...
+[align] Running stable-ts alignment...
+[align] Alignment successful! Found 510 words.
+
+================================================================
+SECTION 2: CORRELATION FORMULA (SAME AT ALL STEP SIZES)
+----------------------------------------------------------------
+The SAME normalized cross-correlation was used at every step size.
+Only the OFFSET being evaluated changed, never the formula.
+
+Formula (identical in all three runs):
+    corr(off) = dot(src[off : off+n], clip) / (||src[off : off+n]|| * ||clip||)
+
+  where:
+    src   = source audio, 8000 Hz mono int16 -> float64
+    clip  = clip2 audio,   8000 Hz mono int16 -> float64
+    n     = len(clip) = 200704 samples (25.088 s)
+    dot   = sum of element-wise product over the full window
+    ||x|| = L2 norm (Euclidean length)
+
+This is the cosine similarity between the clip and the source
+window starting at `off`. It is bounded in [-1, 1]. 1.0 = perfect
+match. There is NO sub-sampling inside the window at any step size;
+every one of the 200704 samples is used in the dot product.
+
+The ONLY difference between the three runs is the spacing of the
+candidate offsets that were evaluated:
+
+  Run A (0.5 s steps):  off = center + k*4000 samples
+  Run B (0.25 s steps): off = center + k*2000 samples
+  Run C (sample steps): off = center + k*1 sample  (every sample)
+
+WHY THE NUMBERS DIFFER (0.197 vs 0.1967 vs 0.9552):
+The true peak is at sample 1063821 = 132.97763 s.
+  - Run A evaluated 132.97800 s (sample 1063824) -> 0.1967
+  - Run B evaluated 132.97800 s (sample 1063824) -> 0.1967  (same point)
+  - Run C evaluated 132.97763 s (sample 1063821) -> 0.9552  (true peak)
+
+0.197 and 0.1967 are the SAME offset (132.978 s) computed by the same
+formula; the tiny print difference is rounding in my earlier message
+(0.197 vs 0.1967 are the same value to 3 vs 4 decimals).
+
+The jump from 0.1967 to 0.9552 is NOT a formula change. It is because
+the peak is narrower than the 0.25 s / 0.5 s sampling grid. The grid
+points at 132.978 s sit 3 samples (0.375 ms) away from the true peak,
+and the correlation falls from 0.9552 to 0.1967 within those 3 samples.
+That is exactly what a sub-millisecond-sharp peak looks like. The
+sample-level sweep (Run C) resolves it.
+
+================================================================
+SECTION 3: CLIP 2 CORRELATION - SAMPLE-LEVEL NEIGHBOR TABLE
+----------------------------------------------------------------
+Exact argmax: sample 1063821 = 132.9776 s, norm-corr = 0.9552
+
+Full-resolution norm-corr (formula above), one row per sample:
+
+  offset(s)     samples    norm-corr
+  132.97725     1063818    0.0525
+  132.97738     1063819    0.2803
+  132.97750     1063820    0.6022
+  132.97763     1063821    0.9552   <== PEAK
+  132.97775     1063822    0.8632
+  132.97788     1063823    0.4791
+  132.97800     1063824    0.1967
+
+Wider context, 0.25 s steps (same formula), +/-2 s around peak:
+
+  130.978  -0.0016
+  131.228   0.0013
+  131.478  -0.0015
+  131.728   0.0004
+  131.978  -0.0057
+  132.228  -0.0029
+  132.478   0.0105
+  132.728  -0.0028
+  132.978   0.1967   <- grid point 3 samples off the true peak
+  133.228   0.0003
+  133.478  -0.0015
+  133.728  -0.0088
+  133.978  -0.0065
+  134.228  -0.0040
+  134.478   0.0025
+  134.728  -0.0035
+  134.978   0.0010
+
+Interpretation: the peak is globally unique (next-best global candidate
+anywhere in the file = 0.0309) AND locally sharp (drops to <=0.01 within
+a quarter-second, and to 0.20 within 3 samples). Not a near-tie.
+
+================================================================
+SECTION 4: FILE PATHS (ONE PER LINE, LABELED)
+----------------------------------------------------------------
+clip1-original-frame: C:\Users\ASUS\Downloads\atlantic-ai\atlantic-ai\backend\orig_clip1_frame.png
+clip1-new-frame:      C:\Users\ASUS\Downloads\atlantic-ai\atlantic-ai\backend\new_clip1_caption.png
+clip2-original-frame: C:\Users\ASUS\Downloads\atlantic-ai\atlantic-ai\backend\orig_clip2_frame.png
+clip2-new-frame:      C:\Users\ASUS\Downloads\atlantic-ai\atlantic-ai\backend\new_clip2_caption.png
+clip1-ass-file:       C:\Users\ASUS\Downloads\atlantic-ai\atlantic-ai\backend\uploads\b17b9a26-7ab7-4a58-8a74-fc3577ce83c6_clip1.ass
+clip2-ass-file:       C:\Users\ASUS\Downloads\atlantic-ai\atlantic-ai\backend\uploads\b17b9a26-7ab7-4a58-8a74-fc3577ce83c6_clip2.ass
+
+Additional new-run frames (20 s in, captions clearly up):
+clip1-new-frame-20s:  C:\Users\ASUS\Downloads\atlantic-ai\atlantic-ai\backend\new_clip1_caption20.png
+clip2-new-frame-20s:  C:\Users\ASUS\Downloads\atlantic-ai\atlantic-ai\backend\new_clip2_caption20.png

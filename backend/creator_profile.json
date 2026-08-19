@@ -1,0 +1,22 @@
+{
+  "name": "Creator",
+  "content_type": "gaming",
+  "audience_age": "18-25",
+  "style": "funny",
+  "clip_style": "sad clips\n",
+  "avoid": "slow sections, long talking, boring intros",
+  "language": "auto",
+  "example_hooks": [
+    "You won't believe what happened next...",
+    "This is insane...",
+    "Wait for it..."
+  ],
+  "watermark": {
+    "enabled": true,
+    "text": "@streamuniversity.clipss",
+    "image_path": "C:\\Users\\ASUS\\Downloads\\atlantic-ai\\atlantic-ai\\backend\\uploads\\watermark.png",
+    "position": "bottom-center",
+    "opacity": 0.72,
+    "size": 36
+  }
+}
