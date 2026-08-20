@@ -147,11 +147,14 @@ async function uploadWmImage(event) {
 /* ── Process Options ── */
 function getProcessOptions() {
   const reframeToggle = document.querySelector('input[name="reframeMode"]:checked');
+  const qualityToggle = document.querySelector('input[name="renderQuality"]:checked');
   const compilationEnabled = document.getElementById('compilationToggle')?.checked || false;
   const maxClips = compilationEnabled ? 15 : (selectedClipCount === 'auto' ? 3 : parseInt(selectedClipCount) || 3);
   const wmEnabled = document.getElementById('wmEnableToggle')?.checked ?? true;
   const wmText = document.getElementById('wmTextInput')?.value?.trim() || '';
   const wmPosition = document.getElementById('wmPositionSelect')?.value || 'bottom-center';
+  const resolution = qualityToggle ? qualityToggle.value : '4k';
+  const enhance4k = resolution === '4k';
 
   return {
     compilation: compilationEnabled,
@@ -162,6 +165,8 @@ function getProcessOptions() {
     language: selectedLanguage,
     layoutMode: 'auto',
     reframeMode: reframeToggle ? reframeToggle.value : 'blur-pad',
+    resolution,
+    enhance4k,
     watermark: {
       enabled: wmEnabled && !!(wmText || window.uploadedWatermarkPath),
       text: wmText,

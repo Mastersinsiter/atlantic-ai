@@ -14,7 +14,7 @@ import dotenv from 'dotenv';
 import { jobs } from './queue.js';
 import { analyzeWithGemini, heuristicSegments, detectSplitScreenFraming } from './mediaAnalysis.js';
 import { transcribeVideo } from './transcription.js';
-import { buildMasterCommand, buildCustomCropFilter } from './videoLayout.js';
+import { buildMasterCommand, buildCustomCropFilter, getResolutionDims } from './videoLayout.js';
 import { generateASS } from './subtitleGenerator.js';
 import { buildClipCuesWithSTT, buildClipCues, cuesToASS, getCaptionStyleConfig } from './captionEngine.js';
 import { scoreSubtitles } from './subtitleQuality.js';
@@ -223,6 +223,8 @@ async function processClip(clip, sourcePath, jobId, slotIndex, totalSlots, profi
 
   const srtPath = await buildASS(clip, clipId, sourcePath, jobId, captionStyle, options, language);
   const watermark = (options.watermark && typeof options.watermark.enabled === 'boolean') ? options.watermark : (profile.watermark || {});
+  const resolution = options.resolution || clip.customFraming?.resolution || (options.enhance4k ? '4k' : '1080p');
+  const enhance4k = Boolean(options.enhance4k || clip.customFraming?.enhance4k || resolution === '4k');
 
   const ffmpegArgs = buildMasterCommand({
     inputPath: sourcePath,
@@ -239,6 +241,10 @@ async function processClip(clip, sourcePath, jobId, slotIndex, totalSlots, profi
     words: clip.words || [],
     cues: clip.cues || [],
     virality: clip.virality || null,
+    resolution,
+    outputWidth: options.outputWidth || clip.customFraming?.outputWidth,
+    outputHeight: options.outputHeight || clip.customFraming?.outputHeight,
+    enhance4k,
   });
 
   try {
@@ -943,14 +949,25 @@ export async function reframeClip(jobId, clipIndex, cropConfig) {
     throw new Error(`Source video not found at ${sourcePath}`);
   }
 
-  const { mode, regions, outputWidth = 1080, outputHeight = 1920 } = cropConfig;
+  const {
+    mode,
+    regions,
+    outputWidth,
+    outputHeight,
+    resolution = '1080p',
+    enhance4k = false,
+    watermark = {}
+  } = cropConfig;
+
   if (!regions || !regions.length) {
     throw new Error('No crop regions provided');
   }
 
-  // Build the FFmpeg filter graph
-  const { filters, mapLabel } = buildCustomCropFilter(mode, regions, outputWidth, outputHeight);
-  const filterStr = filters.join(';');
+  const is4K = resolution === '4k' || enhance4k || (outputWidth && outputWidth >= 2160);
+  const targetDims = getResolutionDims(is4K ? '4k' : resolution, outputWidth || 1080, outputHeight || 1920);
+  const targetW = outputWidth || targetDims.width;
+  const targetH = outputHeight || targetDims.height;
+  const isEnhanced = Boolean(enhance4k || is4K);
 
   const outputFilename = `${jobId}_clip${clipIndex + 1}_reframed.mp4`;
   const outputPath = path.join(OUTPUT_DIR, outputFilename);
@@ -959,28 +976,21 @@ export async function reframeClip(jobId, clipIndex, cropConfig) {
   // Get clip duration for progress tracking
   const duration = clip.duration || (clip.end - clip.start) || 30;
 
-  // We MUST process from the original video so we have the full 16:9 frame.
-  const inputPath = sourcePath;
-
-  const args = [
-    '-y',
-    '-ss', String(clip.start),
-    '-t', String(duration),
-    '-i', inputPath,
-    '-filter_complex', filterStr,
-    '-map', `[${mapLabel}]`,
-    '-map', '0:a?',
-    '-c:v', 'libx264',
-    '-preset', 'veryfast',
-    '-crf', '22',
-    '-c:a', 'aac',
-    '-b:a', '192k',
-    '-movflags', '+faststart',
-    '-pix_fmt', 'yuv420p',
+  const args = buildMasterCommand({
+    inputPath: sourcePath,
     outputPath,
-  ];
+    start: clip.start,
+    duration,
+    srtPath: null,
+    watermark,
+    customFraming: { mode, regions, outputWidth: targetW, outputHeight: targetH },
+    resolution: is4K ? '4k' : resolution,
+    outputWidth: targetW,
+    outputHeight: targetH,
+    enhance4k: isEnhanced,
+  });
 
-  log(jobId, `Reframing clip ${clipIndex + 1} with custom crop (mode: ${mode}, ${regions.length} regions)...`);
+  log(jobId, `Reframing clip ${clipIndex + 1} with custom crop (mode: ${mode}, ${regions.length} regions, resolution: ${targetW}x${targetH}, 4K enhanced: ${isEnhanced})...`);
 
   try {
     await runFFmpegWithProgress(args, duration, jobId, 0, 1);
@@ -1001,5 +1011,7 @@ export async function reframeClip(jobId, clipIndex, cropConfig) {
     success: true,
     url: `/outputs/${outputFilename}`,
     size: stats.size,
+    resolution: `${targetW}x${targetH}`,
+    enhance4k: isEnhanced,
   };
 }

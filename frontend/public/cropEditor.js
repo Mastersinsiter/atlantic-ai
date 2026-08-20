@@ -60,7 +60,98 @@ class CropEditor {
     this.srcW = 1920;
     this.srcH = 1080;
 
+    // Watermark configuration
+    this.watermark = {
+      enabled: true,
+      text: 'Atlantic AI',
+      position: 'bottom-right'
+    };
+
+    // Quality & 4K AI Enhancer configuration
+    this.resolution = '4k'; // default to 4k Ultra HD
+    this.enhance4k = true;  // default to AI Enhanced
+
     this._bindPlaybackControls();
+  }
+
+  setWatermarkPosition(pos) {
+    this.watermark.position = pos;
+    this.watermark.enabled = (pos !== 'none');
+    this._updateWatermarkUI();
+  }
+
+  setWatermarkText(text) {
+    this.watermark.text = text;
+    this._updateWatermarkUI();
+  }
+
+  toggleWatermark(enabled) {
+    this.watermark.enabled = enabled !== undefined ? enabled : !this.watermark.enabled;
+    this._updateWatermarkUI();
+  }
+
+  setResolution(res) {
+    this.resolution = res;
+    if (res === '4k') {
+      this.enhance4k = true;
+    }
+    this._updateResolutionUI();
+  }
+
+  toggleEnhancer(enabled) {
+    this.enhance4k = enabled !== undefined ? enabled : !this.enhance4k;
+    if (this.enhance4k && this.resolution !== '4k') {
+      this.resolution = '4k';
+    }
+    this._updateResolutionUI();
+  }
+
+  _updateResolutionUI() {
+    document.querySelectorAll('.crop-quality-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.res === this.resolution);
+    });
+    const toggle = document.getElementById('cropEnhancerToggle');
+    if (toggle) toggle.checked = this.enhance4k;
+    const badge = document.getElementById('cropPreviewQualityBadge');
+    if (badge) {
+      if (this.resolution === '4k' && this.enhance4k) {
+        badge.textContent = '⚡ 4K Ultra-HD Enhanced (2160×3840)';
+        badge.className = 'crop-preview-quality-badge badge-4k-enhanced';
+      } else if (this.resolution === '4k') {
+        badge.textContent = '4K Ultra-HD (2160×3840)';
+        badge.className = 'crop-preview-quality-badge badge-4k';
+      } else if (this.resolution === '2k') {
+        badge.textContent = '2K Quad-HD (1440×2560)';
+        badge.className = 'crop-preview-quality-badge badge-2k';
+      } else {
+        badge.textContent = '1080p Full-HD (1080×1920)';
+        badge.className = 'crop-preview-quality-badge badge-1080p';
+      }
+    }
+  }
+
+  _updateWatermarkUI() {
+    const wmEl = document.getElementById('cropPreviewWatermark');
+    const labelEl = document.getElementById('cropWmActiveLabel');
+    if (wmEl) {
+      wmEl.className = `crop-preview-watermark pos-${this.watermark.position}`;
+      wmEl.textContent = this.watermark.text || 'Atlantic AI';
+      if (!this.watermark.enabled || this.watermark.position === 'none') {
+        wmEl.style.display = 'none';
+      } else {
+        wmEl.style.display = 'block';
+      }
+    }
+    if (labelEl) {
+      labelEl.textContent = this.watermark.position === 'none' ? 'Disabled' : this.watermark.position.replace('-', ' ');
+    }
+    document.querySelectorAll('.crop-wm-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.pos === this.watermark.position);
+    });
+    const textInp = document.getElementById('cropWatermarkTextInput');
+    if (textInp && textInp !== document.activeElement) {
+      textInp.value = this.watermark.text || '';
+    }
   }
 
   // ── Open the editor for a specific clip ──
@@ -88,6 +179,8 @@ class CropEditor {
         this.video.currentTime = this.clipData.start;
       }
       
+      this._updateWatermarkUI();
+      this._updateResolutionUI();
       this._startPreviewLoop();
     }, { once: true });
 
@@ -183,6 +276,7 @@ class CropEditor {
         aspectRatio: def.aspectRatio,
         color: REGION_COLORS[i % REGION_COLORS.length],
         label: def.label,
+        lockedCenter: !!def.lockedCenter,
         containerEl: this.regionsLayer,
         onUpdate: () => {
           this._updateDarkOverlay();
@@ -243,7 +337,7 @@ class CropEditor {
       case 'centered': {
         const cropWPct = (this.srcH * (9 / 16)) / this.srcW * 100;
         const x = (100 - cropWPct) / 2;
-        return [{ x, y: 0, w: cropWPct, h: 100, aspectRatio: 9 / 16, label: 'Center' }];
+        return [{ x, y: 0, w: cropWPct, h: 100, aspectRatio: 9 / 16, label: 'Center (Locked)', lockedCenter: true }];
       }
 
       case 'horizontal': {
@@ -538,11 +632,18 @@ class CropEditor {
       return { x: src.x, y: src.y, width: src.w, height: src.h, sourceWidth: this.srcW, sourceHeight: this.srcH };
     });
 
+    const is4K = this.resolution === '4k' || this.enhance4k;
+    const targetW = is4K ? 2160 : (this.resolution === '2k' ? 1440 : 1080);
+    const targetH = is4K ? 3840 : (this.resolution === '2k' ? 2560 : 1920);
+
     const payload = {
       mode: this.currentMode,
       regions: regionsData,
-      outputWidth: 1080,
-      outputHeight: 1920,
+      resolution: this.resolution,
+      outputWidth: targetW,
+      outputHeight: targetH,
+      enhance4k: this.enhance4k,
+      watermark: this.watermark,
     };
 
     try {
@@ -554,7 +655,7 @@ class CropEditor {
       const data = await res.json();
 
       if (data.success && data.url) {
-        toast('\u2705 Custom framing exported! Downloading...', 'success');
+        toast(`\u2705 ${is4K ? '⚡ 4K Ultra-HD' : 'Custom framing'} exported! Downloading...`, 'success');
         const a = document.createElement('a');
         a.href = CROP_API + data.url;
         a.download = '';
@@ -582,20 +683,21 @@ class CropEditor {
 // ═══════════════════════════════════════
 
 class CropRegionBox {
-  constructor({ index, x, y, width, height, aspectRatio, color, label, containerEl, onUpdate, onDragEnd }) {
+  constructor({ index, x, y, width, height, aspectRatio, color, label, lockedCenter = false, containerEl, onUpdate, onDragEnd }) {
     this.index = index;
     this.color = color;
     this.label = label;
     this.aspectRatio = aspectRatio;
+    this.lockedCenter = !!lockedCenter;
     this.containerEl = containerEl;
     this.onUpdate = onUpdate;
     this.onDragEnd = onDragEnd;
 
     // Crop state in percentages (0-100)
-    this.pctX = x;
-    this.pctY = y;
     this.pctW = width;
     this.pctH = height;
+    this.pctX = this.lockedCenter ? (100 - width) / 2 : x;
+    this.pctY = y;
 
     this._buildDOM();
     this._bindDrag();
@@ -604,8 +706,11 @@ class CropRegionBox {
 
   _buildDOM() {
     this.el = document.createElement('div');
-    this.el.className = 'crop-region';
+    this.el.className = 'crop-region' + (this.lockedCenter ? ' locked-center' : '');
     this.el.dataset.color = this.color;
+
+    const hintText = this.lockedCenter ? '🔒 Locked in Center' : '↔ Drag to reposition';
+    const labelText = this.label || (this.lockedCenter ? 'Center (Locked)' : '');
 
     this.el.innerHTML = `
       <div class="crop-region-border"></div>
@@ -619,10 +724,10 @@ class CropRegionBox {
         <div class="crop-safe-action"></div>
         <div class="crop-safe-title"></div>
       </div>
-      <div class="crop-region-label">\</div>
-      <div class="crop-aspect-badge">\</div>
-      <div class="crop-info-badge">\</div>
-      <div class="crop-adjust-hint">\u2194 Drag to reposition</div>
+      <div class="crop-region-label">${labelText}</div>
+      <div class="crop-aspect-badge"></div>
+      <div class="crop-info-badge"></div>
+      <div class="crop-adjust-hint">${hintText}</div>
       <div class="crop-edge-bar top"></div>
       <div class="crop-edge-bar bottom"></div>
       <div class="crop-edge-bar left"></div>
@@ -678,8 +783,13 @@ class CropRegionBox {
       this.pctH = newH;
       
       // Center the zoom position and clamp
-      this.pctX = Math.max(0, Math.min(100 - newW, this.pctX - (newW - oldW) / 2));
-      this.pctY = Math.max(0, Math.min(100 - newH, this.pctY - (newH - oldH) / 2));
+      if (this.lockedCenter) {
+        this.pctX = (100 - newW) / 2;
+        this.pctY = Math.max(0, Math.min(100 - newH, this.pctY - (newH - oldH) / 2));
+      } else {
+        this.pctX = Math.max(0, Math.min(100 - newW, this.pctX - (newW - oldW) / 2));
+        this.pctY = Math.max(0, Math.min(100 - newH, this.pctY - (newH - oldH) / 2));
+      }
       
       this._updatePosition();
       
@@ -707,6 +817,9 @@ class CropRegionBox {
   }
 
   _updatePosition() {
+    if (this.lockedCenter) {
+      this.pctX = (100 - this.pctW) / 2;
+    }
     this.el.style.left = this.pctX + '%';
     this.el.style.top = this.pctY + '%';
     this.el.style.width = this.pctW + '%';
@@ -729,16 +842,21 @@ class CropRegionBox {
 
   setCropState(state) {
     if (!state) return;
-    this.pctX = state.x || this.pctX;
-    this.pctY = state.y || this.pctY;
     this.pctW = state.width || state.w || this.pctW;
     this.pctH = state.height || state.h || this.pctH;
+    if (this.lockedCenter) {
+      this.pctX = (100 - this.pctW) / 2;
+      this.pctY = state.y !== undefined ? state.y : this.pctY;
+    } else {
+      this.pctX = state.x !== undefined ? state.x : this.pctX;
+      this.pctY = state.y !== undefined ? state.y : this.pctY;
+    }
     this._updatePosition();
   }
 
   resetToCenter() {
-    this.pctX = 50 - (this.pctW / 2);
-    this.pctY = 50 - (this.pctH / 2);
+    this.pctX = (100 - this.pctW) / 2;
+    this.pctY = (100 - this.pctH) / 2;
     this._updatePosition();
   }
 
@@ -814,6 +932,9 @@ class CropRegionBox {
     // Keyboard nudging
     this.el.setAttribute('tabindex', '0'); // make focusable
     this.el.addEventListener('keydown', (e) => {
+      if (this.lockedCenter && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+        return;
+      }
       const step = e.shiftKey ? 2 : 0.2;
       let moved = false;
       if (e.key === 'ArrowLeft') { this.pctX -= step; moved = true; }
@@ -823,7 +944,11 @@ class CropRegionBox {
       
       if (moved) {
         e.preventDefault();
-        this.pctX = Math.max(0, Math.min(100 - this.pctW, this.pctX));
+        if (this.lockedCenter) {
+          this.pctX = (100 - this.pctW) / 2;
+        } else {
+          this.pctX = Math.max(0, Math.min(100 - this.pctW, this.pctX));
+        }
         this.pctY = Math.max(0, Math.min(100 - this.pctH, this.pctY));
         this._updatePosition();
       }
@@ -872,7 +997,29 @@ class CropRegionBox {
           dy *= 1.5;
         }
 
-        if (mode === 'move') {
+        if (this.lockedCenter) {
+          this.pctX = (100 - this.pctW) / 2;
+          if (mode !== 'move') {
+            let ny = startPctY, nh = startPctH;
+            if (mode.includes('n')) {
+              ny = Math.max(0, startPctY + dy);
+              nh = startPctH - (ny - startPctY);
+            }
+            if (mode.includes('s')) {
+              nh = Math.max(MIN_SIZE_PCT, startPctH + dy);
+              if (ny + nh > 100) nh = 100 - ny;
+            }
+            if (this.aspectRatio) {
+              const containerRect = this.containerEl.getBoundingClientRect();
+              const containerAspect = containerRect.width / containerRect.height;
+              const nw = this.aspectRatio * nh / containerAspect;
+              this.pctW = Math.min(100, nw);
+              this.pctH = nh;
+              this.pctX = (100 - this.pctW) / 2;
+              this.pctY = ny;
+            }
+          }
+        } else if (mode === 'move') {
           this.pctX = Math.max(0, Math.min(100 - this.pctW, startPctX + dx));
           this.pctY = Math.max(0, Math.min(100 - this.pctH, startPctY + dy));
           updateSnapGuides();
@@ -956,12 +1103,12 @@ function getCropEditor() {
   return cropEditorInstance;
 }
 
-function openCropEditor(jobId, clipIndex, clipUrl, clipData) {
-  getCropEditor().open(jobId, clipIndex, clipUrl, clipData);
+function openCropEditor(jobId, clipIndex, clipUrl, clipData, initialMode = null) {
+  getCropEditor().open(jobId, clipIndex, clipUrl, clipData, initialMode);
 }
 
-function openCropEditorFullVideo(jobId, videoUrl, clips) {
-  getCropEditor().openFullVideo(jobId, videoUrl, clips);
+function openCropEditorFullVideo(jobId, videoUrl, clips, initialClipIndex = 0, initialMode = null) {
+  getCropEditor().openFullVideo(jobId, videoUrl, clips, initialClipIndex, initialMode);
 }
 
 function closeCropEditor() {
@@ -970,6 +1117,26 @@ function closeCropEditor() {
 
 function setCropMode(mode) {
   getCropEditor().setMode(mode);
+}
+
+function setCropWatermarkPosition(pos) {
+  getCropEditor().setWatermarkPosition(pos);
+}
+
+function setCropWatermarkText(text) {
+  getCropEditor().setWatermarkText(text);
+}
+
+function toggleCropWatermark(enabled) {
+  getCropEditor().toggleWatermark(enabled);
+}
+
+function setCropResolution(res) {
+  getCropEditor().setResolution(res);
+}
+
+function toggleCropEnhancer(enabled) {
+  getCropEditor().toggleEnhancer(enabled);
 }
 
 function exportCropReframe() {
@@ -985,16 +1152,16 @@ function exportJobClips() {
 //  FULL-VIDEO MODE (Phase 2)
 // ═══════════════════════════════════════
 
-CropEditor.prototype.openFullVideo = function(jobId, videoUrl, clips) {
+CropEditor.prototype.openFullVideo = function(jobId, videoUrl, clips, initialClipIndex = 0, initialMode = null) {
   this.jobId = jobId;
   this.isFullVideoMode = true;
   this.clips = clips || [];
-  this.activeClipIndex = 0;
+  this.activeClipIndex = initialClipIndex || 0;
   
   this.clips.forEach(c => {
     if (c.approved === undefined) c.approved = true;
     if (!c.framingConfig) {
-      c.framingConfig = { mode: 'vertical', regions: [] };
+      c.framingConfig = { mode: initialMode || 'vertical', regions: [] };
     }
   });
 
@@ -1010,7 +1177,12 @@ CropEditor.prototype.openFullVideo = function(jobId, videoUrl, clips) {
     this.srcH = this.video.videoHeight || 1080;
     
     this._renderTimelineClips();
-    this.selectClip(0);
+    this.selectClip(this.activeClipIndex);
+    if (initialMode) {
+      this.setMode(initialMode);
+    }
+    this._updateWatermarkUI();
+    this._updateResolutionUI();
     this._startPreviewLoop();
   }, { once: true });
 
@@ -1117,12 +1289,21 @@ CropEditor.prototype.exportJobClips = function() {
     };
   }
 
+  const is4K = this.resolution === '4k' || this.enhance4k;
+  const targetW = is4K ? 2160 : (this.resolution === '2k' ? 1440 : 1080);
+  const targetH = is4K ? 3840 : (this.resolution === '2k' ? 2560 : 1920);
+
   const approvedClips = this.clips
     .map((c, idx) => ({
       index: idx,
       approved: c.approved,
       mode: c.framingConfig.mode,
-      regions: c.framingConfig.regions
+      regions: c.framingConfig.regions,
+      resolution: this.resolution,
+      outputWidth: targetW,
+      outputHeight: targetH,
+      enhance4k: this.enhance4k,
+      watermark: c.framingConfig.watermark || this.watermark
     }))
     .filter(c => c.approved);
 
@@ -1140,7 +1321,12 @@ CropEditor.prototype.exportJobClips = function() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       jobId: this.jobId,
-      approvedClips: approvedClips
+      approvedClips: approvedClips,
+      resolution: this.resolution,
+      outputWidth: targetW,
+      outputHeight: targetH,
+      enhance4k: this.enhance4k,
+      watermark: this.watermark
     })
   }).then(res => res.json())
   .then(data => {
@@ -1152,7 +1338,7 @@ CropEditor.prototype.exportJobClips = function() {
     alert('Export failed');
   }).finally(() => {
     btn.disabled = false;
-    btn.textContent = '\u2B07 Export Approved';
+    btn.textContent = '⬇ Export Approved';
   });
 };
 
@@ -1171,7 +1357,7 @@ CropEditor.prototype._updateTimeline = function() {
 };
 
 // ═══════════════════════════════════════
-//  TOOLTIP INIT
+//  TOOLTIP INIT & GLOBAL ATTACHMENTS
 // ═══════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
   const infoBtn = document.getElementById('cropModeInfoBtn');
@@ -1203,6 +1389,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tooltip) tooltip.style.display = 'none';
   });
 });
+
+// Attach helpers to window
+window.setCropResolution = setCropResolution;
+window.toggleCropEnhancer = toggleCropEnhancer;
+window.openCropEditor = openCropEditor;
+window.openCropEditorFullVideo = openCropEditorFullVideo;
+window.closeCropEditor = closeCropEditor;
+window.setCropMode = setCropMode;
+window.setCropWatermarkPosition = setCropWatermarkPosition;
+window.setCropWatermarkText = setCropWatermarkText;
+window.toggleCropWatermark = toggleCropWatermark;
+window.exportCropReframe = exportCropReframe;
+window.exportJobClips = exportJobClips;
+
 
 
 

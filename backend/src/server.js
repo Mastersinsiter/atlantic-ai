@@ -14,7 +14,7 @@ import { processVideo, renderClipWithEdits, reframeClip, renderJobClips } from '
 import { searchMoments } from './searchEngine.js';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 const UPLOAD_DIR = path.join(__dirname, '../uploads');
 const OUTPUT_DIR = path.join(__dirname, '../outputs');
@@ -426,8 +426,8 @@ async function checkDependencies() {
   }
 }
 
-const server = app.listen(PORT, async () => {
-  console.log(`⚡ Atlantic AI running at http://localhost:${PORT}`);
+const server = app.listen(PORT, '0.0.0.0', async () => {
+  console.log(`⚡ Atlantic AI running at http://0.0.0.0:${PORT} (local: http://localhost:${PORT})`);
   console.log(`   Open that URL in your browser — do not type a folder path in the address bar.`);
   await checkDependencies();
 });

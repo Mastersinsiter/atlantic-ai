@@ -148,6 +148,27 @@
               </label>
             </div>
 
+            <!-- Output Resolution & Detail Enhancer Option -->
+            <div class="reframe-toggle" style="margin-top: 10px;">
+              <label class="reframe-option">
+                <input type="radio" name="renderQuality" value="4k" checked style="accent-color: #B9FF66;" />
+                <div>
+                  <span class="reframe-title" style="display:flex; align-items:center; gap:6px;">
+                    ⚡ 4K Ultra-HD Export
+                    <span style="background: rgba(185,255,102,0.2); color:#B9FF66; font-size:9px; padding:2px 6px; border-radius:4px; font-weight:700;">RECOMMENDED</span>
+                  </span>
+                  <span class="reframe-sub">2160×3840 Ultra-HD, Lanczos edge sharpening & clarity boost</span>
+                </div>
+              </label>
+              <label class="reframe-option">
+                <input type="radio" name="renderQuality" value="1080p" style="accent-color: var(--ink-primary);" />
+                <div>
+                  <span class="reframe-title">1080p Standard</span>
+                  <span class="reframe-sub">1080×1920 Full-HD (Fastest rendering speed)</span>
+                </div>
+              </label>
+            </div>
+
             <!-- Language selector -->
             <div class="lang-box">
               <div style="font-family:var(--fm); font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--ink-secondary); margin-bottom:10px; display:flex; justify-content:space-between;">
@@ -827,10 +848,52 @@
           </div>
         </div>
 
+        <!-- Watermark Position Control Section -->
+        <div class="crop-watermark-section">
+          <div class="crop-watermark-header">
+            <span class="crop-watermark-title">🏷️ Watermark Position</span>
+            <span id="cropWmActiveLabel" class="crop-watermark-badge">Bottom Right</span>
+          </div>
+          <div class="crop-wm-grid">
+            <button type="button" class="crop-wm-btn" data-pos="top-left" onclick="setCropWatermarkPosition('top-left')" title="Top Left">↖ TL</button>
+            <button type="button" class="crop-wm-btn" data-pos="center" onclick="setCropWatermarkPosition('center')" title="Center">✛ Center</button>
+            <button type="button" class="crop-wm-btn" data-pos="top-right" onclick="setCropWatermarkPosition('top-right')" title="Top Right">↗ TR</button>
+            <button type="button" class="crop-wm-btn" data-pos="bottom-left" onclick="setCropWatermarkPosition('bottom-left')" title="Bottom Left">↙ BL</button>
+            <button type="button" class="crop-wm-btn" data-pos="none" onclick="setCropWatermarkPosition('none')" title="No Watermark">⊘ None</button>
+            <button type="button" class="crop-wm-btn active" data-pos="bottom-right" onclick="setCropWatermarkPosition('bottom-right')" title="Bottom Right">↘ BR</button>
+          </div>
+          <div class="crop-watermark-input-wrap">
+            <input type="text" id="cropWatermarkTextInput" value="Atlantic AI" placeholder="Watermark text..." oninput="setCropWatermarkText(this.value)">
+          </div>
+        </div>
+
+        <!-- Output Quality & Detail Boost Section -->
+        <div class="crop-quality-section">
+          <div class="crop-quality-header">
+            <span class="crop-quality-title">⚡ Output Quality & Detail Boost</span>
+            <span id="cropPreviewQualityBadge" class="crop-preview-quality-badge badge-4k-enhanced">⚡ 4K Ultra-HD Enhanced (2160×3840)</span>
+          </div>
+          <div class="crop-quality-grid">
+            <button type="button" class="crop-quality-btn" data-res="1080p" onclick="setCropResolution('1080p')">1080p FHD</button>
+            <button type="button" class="crop-quality-btn" data-res="2k" onclick="setCropResolution('2k')">2K QHD</button>
+            <button type="button" class="crop-quality-btn active" data-res="4k" onclick="setCropResolution('4k')">⚡ 4K UHD</button>
+          </div>
+          <div class="crop-enhancer-toggle-wrap">
+            <label class="crop-enhancer-label">
+              <input type="checkbox" id="cropEnhancerToggle" checked onchange="toggleCropEnhancer(this.checked)">
+              <span class="crop-enhancer-switch"></span>
+              <span class="crop-enhancer-text">
+                <strong>HD Detail & Clarity Boost</strong>
+                <small>Lanczos 4K upscale, edge sharpening & dynamic contrast pop</small>
+              </span>
+            </label>
+          </div>
+        </div>
+
         <div class="crop-preview-title">Preview (9:16)</div>
         <div class="crop-preview-canvas-wrap">
           <canvas id="cropPreviewCanvas"></canvas>
-          <div class="crop-preview-watermark">Atlantic AI</div>
+          <div class="crop-preview-watermark pos-bottom-right" id="cropPreviewWatermark">Atlantic AI</div>
         </div>
       </div>
     </div>
@@ -1742,7 +1805,18 @@
         }
       };
 
+      let currentDemoClipSrc = 'demos/nvidia-demo-video.mp4';
+      let currentDemoClipName = 'Full Stream';
+      let currentDemoClipIndex = 0;
+
       window.loadDemoClipIntoStudio = function (src, btn, name) {
+        currentDemoClipSrc = src;
+        currentDemoClipName = name || 'Clip';
+        if (name === 'Clip 01' || name === 'Clip 1') currentDemoClipIndex = 0;
+        else if (name === 'Clip 2') currentDemoClipIndex = 1;
+        else if (name === 'Clip 3') currentDemoClipIndex = 2;
+        else currentDemoClipIndex = 0;
+
         const wbVideo = document.getElementById('demoWorkbenchVideo');
         if (btn) {
           const parent = btn.parentElement;
@@ -1781,11 +1855,19 @@
 
       window.openStudioModalForDemo = function () {
         if (typeof openCropEditorFullVideo === 'function') {
-          openCropEditorFullVideo('demo-nvidia', '/demos/nvidia-demo-video.mp4', [
-            { id: 1, title: 'Highlight 1 • RTX Gameplay', start: 10, end: 40, approved: true },
-            { id: 2, title: 'Highlight 2 • Clutch Moment', start: 55, end: 85, approved: true },
-            { id: 3, title: 'Highlight 3 • Final Boss', start: 100, end: 140, approved: true }
-          ]);
+          let editorMode = 'vertical';
+          if (demoCropMode === 'center') editorMode = 'centered';
+          else if (demoCropMode === 'split') editorMode = 'split';
+          else if (demoCropMode === 'blur') editorMode = 'horizontal';
+
+          const demoClips = [
+            { id: 1, title: 'Highlight 1 • RTX Gameplay', start: 10, end: 40, approved: true, url: 'demos/final-clip-1.mp4' },
+            { id: 2, title: 'Highlight 2 • Clutch Moment', start: 55, end: 85, approved: true, url: 'demos/final-clip-2.mp4' },
+            { id: 3, title: 'Highlight 3 • Final Boss', start: 100, end: 140, approved: true, url: 'demos/final-clip-3.mp4' }
+          ];
+
+          const targetIndex = currentDemoClipName.includes('Clip') ? currentDemoClipIndex : 0;
+          openCropEditorFullVideo('demo-nvidia', 'demos/nvidia-demo-video.mp4', demoClips, targetIndex, editorMode);
         } else {
           toast('Opening Crop & Reframe Studio...', 'info');
         }

@@ -152,6 +152,47 @@ export function findSafeClipEnd({ targetEnd, words = [], maxLookahead = 0.8, min
 }
 
 // ═══════════════════════════════════════
+// ═══════════════════════════════════════
+//  RESOLUTION PRESETS & AI ENHANCER
+// ═══════════════════════════════════════
+
+export const RESOLUTION_PRESETS = {
+  '4k': { width: 2160, height: 3840, label: '4K Ultra HD', scaleFactor: 2.0 },
+  '2k': { width: 1440, height: 2560, label: '2K Quad HD', scaleFactor: 1.333 },
+  '1080p': { width: 1080, height: 1920, label: '1080p Full HD', scaleFactor: 1.0 },
+};
+
+export function getResolutionDims(resolution = '1080p', defaultW = 1080, defaultH = 1920) {
+  if (RESOLUTION_PRESETS[resolution]) {
+    return {
+      width: RESOLUTION_PRESETS[resolution].width,
+      height: RESOLUTION_PRESETS[resolution].height,
+      scaleFactor: RESOLUTION_PRESETS[resolution].scaleFactor,
+    };
+  }
+  return { width: defaultW, height: defaultH, scaleFactor: defaultW / 1080 };
+}
+
+export function buildPreScaleEnhancerFilter() {
+  return 'hqdn3d=1.2:1.2:2:2';
+}
+
+export function buildPostScaleEnhancerFilter() {
+  return 'unsharp=5:5:0.8:5:5:0.4,eq=contrast=1.04:brightness=0.01:saturation=1.06';
+}
+
+/**
+ * Video Detail & Clarity Enhancement filter chain for FFmpeg:
+ * 1. hqdn3d (Pre-Scale): High Quality 3D Denoising to clean compression noise and macroblocks before scaling
+ * 2. lanczos (Scaling): Sharp sinc interpolation
+ * 3. unsharp (Post-Scale): Advanced unsharp masking for sharp edge, contour, and facial definition
+ * 4. eq (Post-Scale): Subtle contrast, brightness, and color saturation calibration for social media pop
+ */
+export function buildEnhancerFilter(scaleFactor = 1.0) {
+  return `${buildPreScaleEnhancerFilter()},${buildPostScaleEnhancerFilter()}`;
+}
+
+// ═══════════════════════════════════════
 //  WATERMARK POSITION
 // ═══════════════════════════════════════
 
@@ -159,17 +200,20 @@ export function findSafeClipEnd({ targetEnd, words = [], maxLookahead = 0.8, min
  * Returns { x, y } expressions for FFmpeg overlay/drawtext filters.
  * bottom positions use H-h-80 to sit above the caption zone.
  */
-export function getWatermarkPosition(position, isDrawText = false) {
+export function getWatermarkPosition(position, isDrawText = false, scaleFactor = 1) {
+  const m30 = Math.round(30 * scaleFactor);
+  const m140 = Math.round(140 * scaleFactor);
+  const m160 = Math.round(160 * scaleFactor);
   const map = {
-    'top-left':      { x: '30',                   y: '30' },
-    'top-center':    { x: isDrawText ? '(w-tw)/2' : '(W-w)/2',  y: '30' },
-    'top-right':     { x: isDrawText ? 'w-tw-30'  : 'W-w-30',   y: '30' },
-    'center-left':   { x: '30',                   y: '(H-h)/2' },
-    'center':        { x: isDrawText ? '(w-tw)/2' : '(W-w)/2',  y: '(H-h)/2' },
-    'center-right':  { x: isDrawText ? 'w-tw-30'  : 'W-w-30',   y: '(H-h)/2' },
-    'bottom-left':   { x: '30',                   y: isDrawText ? 'h-th-140' : 'H-h-140' },
-    'bottom-center': { x: isDrawText ? '(w-tw)/2' : '(W-w)/2',  y: isDrawText ? 'h-th-160' : 'H-h-160' },
-    'bottom-right':  { x: isDrawText ? 'w-tw-30'  : 'W-w-30',   y: isDrawText ? 'h-th-140' : 'H-h-140' },
+    'top-left':      { x: `${m30}`,                               y: `${m30}` },
+    'top-center':    { x: isDrawText ? '(w-tw)/2' : '(W-w)/2',    y: `${m30}` },
+    'top-right':     { x: isDrawText ? `w-tw-${m30}` : `W-w-${m30}`, y: `${m30}` },
+    'center-left':   { x: `${m30}`,                               y: '(H-h)/2' },
+    'center':        { x: isDrawText ? '(w-tw)/2' : '(W-w)/2',    y: '(H-h)/2' },
+    'center-right':  { x: isDrawText ? `w-tw-${m30}` : `W-w-${m30}`, y: '(H-h)/2' },
+    'bottom-left':   { x: `${m30}`,                               y: isDrawText ? `h-th-${m140}` : `H-h-${m140}` },
+    'bottom-center': { x: isDrawText ? '(w-tw)/2' : '(W-w)/2',    y: isDrawText ? `h-th-${m160}` : `H-h-${m160}` },
+    'bottom-right':  { x: isDrawText ? `w-tw-${m30}` : `W-w-${m30}`, y: isDrawText ? `h-th-${m140}` : `H-h-${m140}` },
   };
   return map[position] || map['bottom-center'];
 }
@@ -208,48 +252,52 @@ export function getCaptionStyle(styleName) {
 /**
  * Returns a static crop X expression for the named focus mode.
  * @param {'focus-left'|'focus-center'|'focus-right'} mode
+ * @param {number} targetWidth
  * @returns {string} FFmpeg expression
  */
-export function getFocusCropX(mode) {
+export function getFocusCropX(mode, targetWidth = 1080) {
   switch (mode) {
     case 'focus-left':   return '0';
-    case 'focus-right':  return 'iw-1080';
+    case 'focus-right':  return `iw-${targetWidth}`;
     case 'focus-center':
-    default:             return '(iw-1080)/2';
+    default:             return `(iw-${targetWidth})/2`;
   }
 }
 
-function buildReframeFilters(inputLabel, reframeMode, reframeKeyframes, outputLabel = 'reframed') {
+function buildReframeFilters(inputLabel, reframeMode, reframeKeyframes, outputLabel = 'reframed', targetW = 1080, targetH = 1920, enhance4k = false) {
   const filters = [];
   const isFocusMode = reframeMode.startsWith('focus-');
   const hasKeyframes = Array.isArray(reframeKeyframes) && reframeKeyframes.length > 0;
+  const panelH = Math.round(targetH / 2);
+  const scaleFlags = enhance4k ? ':flags=lanczos+accurate_rnd' : '';
+  const enhancer = enhance4k ? `,${buildEnhancerFilter(targetW / 1080)}` : '';
 
   if (reframeMode === 'split-screen') {
-    let topCropX = '(iw-1080)/2';
+    let topCropX = `(iw-${targetW})/2`;
     if (hasKeyframes) {
       const sortedKF = [...reframeKeyframes].sort((a, b) => a.time - b.time);
-      topCropX = buildKeyframedCropExpr(sortedKF, 1080);
+      topCropX = buildKeyframedCropExpr(sortedKF, targetW);
     }
     filters.push(`[${inputLabel}]split=3[in0][in1][in2]`);
-    filters.push(`[in0]scale=1080:960:force_original_aspect_ratio=increase,crop=1080:960:${topCropX}:0[top]`);
-    filters.push(`[in1]scale=1080:960:force_original_aspect_ratio=increase,crop=1080:960,boxblur=20:4[botbg]`);
-    filters.push(`[in2]scale=1080:-2:force_original_aspect_ratio=decrease[botfg]`);
+    filters.push(`[in0]scale=${targetW}:${panelH}:force_original_aspect_ratio=increase${scaleFlags},crop=${targetW}:${panelH}:${topCropX}:0[top]`);
+    filters.push(`[in1]scale=${targetW}:${panelH}:force_original_aspect_ratio=increase,crop=${targetW}:${panelH},boxblur=20:4[botbg]`);
+    filters.push(`[in2]scale=${targetW}:-2:force_original_aspect_ratio=decrease${scaleFlags}[botfg]`);
     filters.push(`[botbg][botfg]overlay=(W-w)/2:(H-h)/2:format=auto:eof_action=repeat[bottom]`);
-    filters.push(`[top][bottom]vstack=inputs=2,format=yuv420p[${outputLabel}]`);
+    filters.push(`[top][bottom]vstack=inputs=2${enhancer},format=yuv420p[${outputLabel}]`);
   } else if (isFocusMode) {
-    let cropX = getFocusCropX(reframeMode);
+    let cropX = getFocusCropX(reframeMode, targetW);
     if (hasKeyframes) {
       const sortedKF = [...reframeKeyframes].sort((a, b) => a.time - b.time);
-      cropX = buildKeyframedCropExpr(sortedKF, 1080);
+      cropX = buildKeyframedCropExpr(sortedKF, targetW);
     }
     filters.push(
-      `[${inputLabel}]scale=-2:1920:force_original_aspect_ratio=increase,crop=1080:1920:${cropX}:0,format=yuv420p[${outputLabel}]`
+      `[${inputLabel}]scale=-2:${targetH}:force_original_aspect_ratio=increase${scaleFlags},crop=${targetW}:${targetH}:${cropX}:0${enhancer},format=yuv420p[${outputLabel}]`
     );
   } else {
     filters.push(`[${inputLabel}]split=2[in0][in1]`);
-    filters.push(`[in0]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=25:5[bg]`);
-    filters.push(`[in1]scale=1080:-2:force_original_aspect_ratio=decrease[fg]`);
-    filters.push(`[bg][fg]overlay=(W-w)/2:(H-h)/2:format=auto:eof_action=repeat,format=yuv420p[${outputLabel}]`);
+    filters.push(`[in0]scale=${targetW}:${targetH}:force_original_aspect_ratio=increase,crop=${targetW}:${targetH},boxblur=25:5[bg]`);
+    filters.push(`[in1]scale=${targetW}:-2:force_original_aspect_ratio=decrease${scaleFlags}[fg]`);
+    filters.push(`[bg][fg]overlay=(W-w)/2:(H-h)/2:format=auto:eof_action=repeat${enhancer},format=yuv420p[${outputLabel}]`);
   }
 
   return { filters, outputLabel };
@@ -293,11 +341,23 @@ export function buildMasterCommand({
   words = null,
   cues = [],
   virality = null,
+  resolution = '1080p',
+  outputWidth = null,
+  outputHeight = null,
+  enhance4k = false,
 }) {
   const hasCaptions = !!srtPath;
   const wmEnabled = watermark?.enabled;
   const wmHasImage = wmEnabled && watermark.image_path;
   const wmHasText = wmEnabled && Boolean(watermark.text && String(watermark.text).trim().length > 0) && !wmHasImage;
+
+  // Determine output canvas resolution & scaling
+  const is4K = resolution === '4k' || enhance4k || (outputWidth && outputWidth >= 2160);
+  const targetDims = getResolutionDims(is4K ? '4k' : resolution, outputWidth || 1080, outputHeight || 1920);
+  const targetW = outputWidth || customFraming?.outputWidth || targetDims.width;
+  const targetH = outputHeight || customFraming?.outputHeight || targetDims.height;
+  const scaleFactor = targetW / 1080;
+  const isEnhanced = Boolean(enhance4k || is4K);
 
   // ── Input arguments ──
   const inputArgs = [];
@@ -322,9 +382,6 @@ export function buildMasterCommand({
     }
   } else {
     // Frame-accurate seeking via trim/atrim filters instead of input-seeking.
-    // -ss before -i is keyframe-based (±2s accuracy) which causes A/V sync
-    // offset and subtitle drift. trim/atrim decode from the nearest keyframe
-    // but output only the exact requested range.
     inputArgs.push('-i', inputPath);
     const trimEnd = start + duration;
     const safeEnd = findSafeClipEnd({ targetEnd: trimEnd, words, maxLookahead: 0.8, minGap: 0.2 });
@@ -348,9 +405,10 @@ export function buildMasterCommand({
     const cropResult = buildCustomCropFilter(
       customFraming.mode,
       customFraming.regions,
-      customFraming.outputWidth || 1080,
-      customFraming.outputHeight || 1920,
-      currentLabel
+      targetW,
+      targetH,
+      currentLabel,
+      isEnhanced
     );
     filters.push(...cropResult.filters);
     currentLabel = cropResult.mapLabel;
@@ -369,8 +427,8 @@ export function buildMasterCommand({
       filters.push(`[${prefixInput}]trim=start=0:end=${transitionAt},setpts=PTS-STARTPTS[${prefixTrim}]`);
       filters.push(`[${suffixInput}]trim=start=${transitionAt}:end=${duration},setpts=PTS-STARTPTS[${suffixTrim}]`);
 
-      const prefixResult = buildReframeFilters(prefixTrim, transition.from || reframeMode, reframeKeyframes, `${prefixInput}_reframed`);
-      const suffixResult = buildReframeFilters(suffixTrim, transition.to || reframeMode, reframeKeyframes, `${suffixInput}_reframed`);
+      const prefixResult = buildReframeFilters(prefixTrim, transition.from || reframeMode, reframeKeyframes, `${prefixInput}_reframed`, targetW, targetH, isEnhanced);
+      const suffixResult = buildReframeFilters(suffixTrim, transition.to || reframeMode, reframeKeyframes, `${suffixInput}_reframed`, targetW, targetH, isEnhanced);
       filters.push(...prefixResult.filters);
       filters.push(...suffixResult.filters);
       filters.push(`[${prefixInput}_reframed][${suffixInput}_reframed]xfade=transition=fade:duration=${transitionDuration}:offset=${transitionAt}[transitioned]`);
@@ -378,75 +436,77 @@ export function buildMasterCommand({
     } else {
       const isFocusMode = reframeMode.startsWith('focus-');
       const hasKeyframes = Array.isArray(reframeKeyframes) && reframeKeyframes.length > 0;
+      const panelH = Math.round(targetH / 2);
+      const scaleFlags = isEnhanced ? ':flags=lanczos+accurate_rnd' : '';
+      const postEnhancer = isEnhanced ? `,${buildPostScaleEnhancerFilter()}` : '';
+
+      let baseInput = currentLabel;
+      if (isEnhanced) {
+        filters.push(`[${currentLabel}]${buildPreScaleEnhancerFilter()}[denoised]`);
+        baseInput = 'denoised';
+      }
 
       if (reframeMode === 'split-screen') {
-        let topCropX = '(iw-1080)/2';
+        let topCropX = `(iw-${targetW})/2`;
         if (hasKeyframes) {
           const sortedKF = [...reframeKeyframes].sort((a, b) => a.time - b.time);
-          topCropX = buildKeyframedCropExpr(sortedKF, 1080);
+          topCropX = buildKeyframedCropExpr(sortedKF, targetW);
         }
-        filters.push(`[${currentLabel}]split=3[in0][in1][in2]`);
-        filters.push(`[in0]scale=1080:960:force_original_aspect_ratio=increase,crop=1080:960:${topCropX}:0[top]`);
-        filters.push(`[in1]scale=1080:960:force_original_aspect_ratio=increase,crop=1080:960,boxblur=20:4[botbg]`);
-        filters.push(`[in2]scale=1080:-2:force_original_aspect_ratio=decrease[botfg]`);
+        filters.push(`[${baseInput}]split=3[in0][in1][in2]`);
+        filters.push(`[in0]scale=${targetW}:${panelH}:force_original_aspect_ratio=increase${scaleFlags},crop=${targetW}:${panelH}:${topCropX}:0[top]`);
+        filters.push(`[in1]scale=${targetW}:${panelH}:force_original_aspect_ratio=increase,crop=${targetW}:${panelH},boxblur=20:4[botbg]`);
+        filters.push(`[in2]scale=${targetW}:-2:force_original_aspect_ratio=decrease${scaleFlags}[botfg]`);
         filters.push(`[botbg][botfg]overlay=(W-w)/2:(H-h)/2:format=auto:eof_action=repeat[bottom]`);
-        filters.push(`[top][bottom]vstack=inputs=2,format=yuv420p[reframed]`);
+        filters.push(`[top][bottom]vstack=inputs=2${postEnhancer},format=yuv420p[reframed]`);
         currentLabel = 'reframed';
 
       } else if (isFocusMode) {
-        let cropX = getFocusCropX(reframeMode);
+        let cropX = getFocusCropX(reframeMode, targetW);
         if (hasKeyframes) {
           const sortedKF = [...reframeKeyframes].sort((a, b) => a.time - b.time);
-          cropX = buildKeyframedCropExpr(sortedKF, 1080);
+          cropX = buildKeyframedCropExpr(sortedKF, targetW);
         }
         filters.push(
-          `[${currentLabel}]scale=-2:1920:force_original_aspect_ratio=increase,crop=1080:1920:${cropX}:0,format=yuv420p[reframed]`
+          `[${baseInput}]scale=-2:${targetH}:force_original_aspect_ratio=increase${scaleFlags},crop=${targetW}:${targetH}:${cropX}:0${postEnhancer},format=yuv420p[reframed]`
         );
         currentLabel = 'reframed';
 
       } else {
         // blur-pad (default)
-        filters.push(`[${currentLabel}]split=2[in0][in1]`);
+        filters.push(`[${baseInput}]split=2[in0][in1]`);
         filters.push(
-          `[in0]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=25:5[bg]`
+          `[in0]scale=${targetW}:${targetH}:force_original_aspect_ratio=increase,crop=${targetW}:${targetH},boxblur=25:5[bg]`
         );
         filters.push(
-          `[in1]scale=1080:-2:force_original_aspect_ratio=decrease[fg]`
+          `[in1]scale=${targetW}:-2:force_original_aspect_ratio=decrease${scaleFlags}[fg]`
         );
         filters.push(
-          `[bg][fg]overlay=(W-w)/2:(H-h)/2:format=auto:eof_action=repeat,format=yuv420p[reframed]`
+          `[bg][fg]overlay=(W-w)/2:(H-h)/2:format=auto:eof_action=repeat${postEnhancer},format=yuv420p[reframed]`
         );
         currentLabel = 'reframed';
       }
     }
   }
 
-  // DISABLED: buildReactionZoomFilter uses zoompan with enable='between(t,...)',
-  // which is not supported by this FFmpeg build ("Timeline ('enable' option) not
-  // supported with filter 'zoompan'"). This broke ALL clip rendering.
-  // TODO: Reimplement as time-varying crop expression (like buildKeyframedCropExpr)
-  // const reactionZoom = buildReactionZoomFilter({ cues, virality, duration });
-  // if (reactionZoom) {
-  //   filters.push(`[${currentLabel}]${reactionZoom}[reactioned]`);
-  //   currentLabel = 'reactioned';
-  // }
-
   // Stage 2: Watermark (optional)
   if (wmHasText) {
-    const pos = getWatermarkPosition(watermark.position || 'top-right', true);
+    const pos = getWatermarkPosition(watermark.position || 'top-right', true, scaleFactor);
     const opacity = watermark.opacity ?? 0.9;
-    const fontSize = Math.min(28, Math.max(16, Math.round((typeof watermark.size === 'number' ? watermark.size : 24) * 0.55)));
+    const baseFontSize = Math.min(28, Math.max(16, Math.round((typeof watermark.size === 'number' ? watermark.size : 24) * 0.55)));
+    const fontSize = Math.round(baseFontSize * scaleFactor);
+    const borderW = Math.max(1, Math.round(1.5 * scaleFactor));
     const safeText = String(watermark.text).replace(/'/g, "\\\\'").replace(/:/g, '\\\\:');
     const fontPath = escapeFFmpegPath('C:/Windows/Fonts/arialbd.ttf');
 
     filters.push(
-      `[${currentLabel}]drawtext=text='${safeText}':fontfile='${fontPath}':fontsize=${fontSize}:fontcolor=white@${opacity}:borderw=1:bordercolor=black@0.8:box=0:x=${pos.x}:y=${pos.y}[watermarked]`
+      `[${currentLabel}]drawtext=text='${safeText}':fontfile='${fontPath}':fontsize=${fontSize}:fontcolor=white@${opacity}:borderw=${borderW}:bordercolor=black@0.8:box=0:x=${pos.x}:y=${pos.y}[watermarked]`
     );
     currentLabel = 'watermarked';
   } else if (wmHasImage) {
-    const pos = getWatermarkPosition(watermark.position || 'top-right', false);
+    const pos = getWatermarkPosition(watermark.position || 'top-right', false, scaleFactor);
     const opacity = watermark.opacity ?? 0.9;
-    const wmWidth = typeof watermark.size === 'number' && watermark.size > 10 ? Math.min(220, Math.round(watermark.size * 0.8)) : 180;
+    const baseWmWidth = typeof watermark.size === 'number' && watermark.size > 10 ? Math.min(220, Math.round(watermark.size * 0.8)) : 180;
+    const wmWidth = Math.round(baseWmWidth * scaleFactor);
 
     filters.push(
       `[1:v]scale=${wmWidth}:-1,format=rgba,colorchannelmixer=aa=${opacity}[wm]`
@@ -460,9 +520,6 @@ export function buildMasterCommand({
   // Stage 3: Captions (optional)
   if (hasCaptions) {
     const srtEscaped = escapeFFmpegPath(srtPath);
-    // Point libass at the repo-bundled fonts so presets like 'Bebas Neue'
-    // resolve even when not installed system-wide. Uses escapeFontsDir (absolute,
-    // CWD-independent) with the same colon-escape convention as escapeFFmpegPath.
     const fontsDirEscaped = escapeFontsDir(CAPTION_FONTS_DIR);
     const fontsDirOpt = `:fontsdir='${fontsDirEscaped}'`;
     if (srtPath.toLowerCase().endsWith('.ass')) {
@@ -471,21 +528,24 @@ export function buildMasterCommand({
       );
     } else {
       const style = getCaptionStyle(captionStyle);
+      const scaledSize = Math.round(style.size * scaleFactor);
+      const scaledOutline = Math.round(style.outlineW * scaleFactor);
+      const scaledMarginV = Math.round(style.marginV * scaleFactor);
       const forceStyle = [
         `FontName=Arial`,
-        `FontSize=${style.size}`,
+        `FontSize=${scaledSize}`,
         `PrimaryColour=${style.primary}`,
         `OutlineColour=${style.outline}`,
         `BackColour=${style.backColour || '&H80000000'}`,
-        `Outline=${style.outlineW}`,
+        `Outline=${scaledOutline}`,
         `Shadow=${style.shadow}`,
         `BorderStyle=${style.borderStyle || 3}`,
         `Alignment=${style.align}`,
-        `MarginV=${style.marginV}`,
+        `MarginV=${scaledMarginV}`,
       ].join(',');
 
       filters.push(
-        `[${currentLabel}]subtitles='${srtEscaped}':original_size=1080x1920:force_style='${forceStyle}'[captioned]`
+        `[${currentLabel}]subtitles='${srtEscaped}':original_size=${targetW}x${targetH}:force_style='${forceStyle}'[captioned]`
       );
     }
     currentLabel = 'captioned';
@@ -495,16 +555,6 @@ export function buildMasterCommand({
   const filterStr = filters.join(';');
   console.log('[caption-debug] Full filter graph:', filterStr);
   const audioMap = (trimSegments && trimSegments.length > 0) ? '[concata]' : '[trimmeda]';
-  // Branch FIRST on whether trimSegments is set, then fall back to the
-  // findSafeClipEnd path. Do NOT unify both cases into one formula:
-  //   - trimSegments path: the filter graph concatenates [seg.in, seg.out]
-  //     ranges, so the output duration is the SUM of segment lengths.
-  //     `start`/`duration` are ignored by this path; computing -t from
-  //     findSafeClipEnd(start + duration) would be unrelated to the actual
-  //     concatenated content and could cut the clip short or run past it.
-  //   - non-trim path: the filter graph trims to [start, safeEnd] where
-  //     safeEnd = findSafeClipEnd({ targetEnd: start + duration, ... }), so
-  //     effectiveDuration = safeEnd - start matches what was actually trimmed.
   let effectiveDuration;
   if (trimSegments && trimSegments.length > 0) {
     effectiveDuration = Math.max(0.1, trimSegments.reduce(
@@ -514,6 +564,11 @@ export function buildMasterCommand({
   } else {
     effectiveDuration = Math.max(0.1, (findSafeClipEnd({ targetEnd: start + duration, words, maxLookahead: 0.8, minGap: 0.2 }) - start));
   }
+
+  // Optimize encoding parameters for 4K UHD vs 2K Quad-HD vs standard HD
+  const crf = is4K ? '18' : (resolution === '2k' ? '20' : '22');
+  const audioBitrate = is4K ? '320k' : (resolution === '2k' ? '256k' : '192k');
+
   const args = [
     '-y',
     ...inputArgs,
@@ -522,10 +577,10 @@ export function buildMasterCommand({
     '-map', `[${currentLabel}]`,
     '-map', audioMap,
     '-c:v', 'libx264',
-    '-preset', 'veryfast',   // was 'fast' — ~30% faster encode, same quality
-    '-crf', '22',
+    '-preset', 'veryfast',
+    '-crf', crf,
     '-c:a', 'aac',
-    '-b:a', '192k',
+    '-b:a', audioBitrate,
     '-avoid_negative_ts', 'make_zero',
     '-async', '1',
     '-vsync', '1',
@@ -579,98 +634,113 @@ export const LAYOUT_MODES = ['auto', 'top', 'bottom', 'left', 'right', ...Object
 
 /**
  * Build an FFmpeg filter_complex string from user-defined crop regions.
- * Supports all 6 Clipzi-style layout modes.
+ * Supports all 6 Clipzi-style layout modes with AI 4K enhancement.
  *
  * @param {string} mode         One of: vertical, split, trio, spotlight, centered, horizontal
  * @param {Array}  regions      Array of { x, y, width, height, sourceWidth, sourceHeight }
  * @param {number} outputW      Output width (default 1080)
  * @param {number} outputH      Output height (default 1920)
+ * @param {string} inputLabel   Input stream label
+ * @param {boolean} enhance4k   Apply AI sharpening & clarity boost
  * @returns {{ filters: string[], mapLabel: string }}
  */
-// NOTE: uses force_original_aspect_ratio=increase + crop (fill), consistent with the
-// other reframe modes in this file (blur-pad, focus-*, split-screen) — NOT pad/letterbox.
-// Black letterbox bars inside individual crop panels would look broken for a Shorts tool.
-export function buildCustomCropFilter(mode, regions, outputW = 1080, outputH = 1920, inputLabel = '0:v') {
+export function buildCustomCropFilter(mode, regions, outputW = 1080, outputH = 1920, inputLabel = '0:v', enhance4k = false) {
   const filters = [];
+  const scaleFlags = enhance4k ? ':flags=lanczos+accurate_rnd' : '';
+  const postEnhancer = enhance4k ? `,${buildPostScaleEnhancerFilter()}` : '';
+  const preFilter = enhance4k ? `${buildPreScaleEnhancerFilter()},` : '';
 
   switch (mode) {
     case 'vertical':
     case 'centered':
     case 'horizontal': {
-      // Single crop
-      const r = regions[0] || { x: 0, y: 0, width: 1080, height: 1920 };
-      const pad = mode === 'horizontal' ? `${outputW}:${outputH}` : `${outputW}:${outputH}`;
+      // Single crop: hqdn3d -> crop -> scale(lanczos) -> crop -> unsharp -> eq
+      const r = regions[0] || { x: 0, y: 0, width: outputW, height: outputH };
+      const pad = `${outputW}:${outputH}`;
       const scaleStr = mode === 'horizontal' ? `${outputW}:-2` : `${outputW}:${outputH}`;
       
       filters.push(
-        `[${inputLabel}]crop=${r.width}:${r.height}:${r.x}:${r.y},scale=${scaleStr}:force_original_aspect_ratio=increase,crop=${pad},format=yuv420p[reframed]`
+        `[${inputLabel}]${preFilter}crop=${r.width}:${r.height}:${r.x}:${r.y},scale=${scaleStr}:force_original_aspect_ratio=increase${scaleFlags},crop=${pad}${postEnhancer},format=yuv420p[reframed]`
       );
       return { filters, mapLabel: 'reframed' };
     }
 
     case 'split': {
-      // Two crops
+      // Two crops: hqdn3d -> split -> scale(lanczos) -> vstack -> unsharp -> eq
       const panelH = Math.round(outputH / 2);
-      filters.push(`[${inputLabel}]split=2[in0][in1]`);
+      let inLabel = inputLabel;
+      if (enhance4k) {
+        filters.push(`[${inputLabel}]${buildPreScaleEnhancerFilter()}[denoised]`);
+        inLabel = 'denoised';
+      }
+      filters.push(`[${inLabel}]split=2[in0][in1]`);
       regions.slice(0, 2).forEach((r, i) => {
         filters.push(
-          `[in${i}]crop=${r.width}:${r.height}:${r.x}:${r.y},scale=${outputW}:${panelH}:force_original_aspect_ratio=increase,crop=${outputW}:${panelH}[split${i}]`
+          `[in${i}]crop=${r.width}:${r.height}:${r.x}:${r.y},scale=${outputW}:${panelH}:force_original_aspect_ratio=increase${scaleFlags},crop=${outputW}:${panelH}[split${i}]`
         );
       });
-      filters.push(`[split0][split1]vstack=inputs=2,format=yuv420p[reframed]`);
+      filters.push(`[split0][split1]vstack=inputs=2${postEnhancer},format=yuv420p[reframed]`);
       return { filters, mapLabel: 'reframed' };
     }
 
     case 'trio': {
-      // Three crops
       const panelH = Math.round(outputH / 3);
-      filters.push(`[${inputLabel}]split=3[in0][in1][in2]`);
+      let inLabel = inputLabel;
+      if (enhance4k) {
+        filters.push(`[${inputLabel}]${buildPreScaleEnhancerFilter()}[denoised]`);
+        inLabel = 'denoised';
+      }
+      filters.push(`[${inLabel}]split=3[in0][in1][in2]`);
       regions.slice(0, 3).forEach((r, i) => {
         filters.push(
-          `[in${i}]crop=${r.width}:${r.height}:${r.x}:${r.y},scale=${outputW}:${panelH}:force_original_aspect_ratio=increase,crop=${outputW}:${panelH}[trio${i}]`
+          `[in${i}]crop=${r.width}:${r.height}:${r.x}:${r.y},scale=${outputW}:${panelH}:force_original_aspect_ratio=increase${scaleFlags},crop=${outputW}:${panelH}[trio${i}]`
         );
       });
-      filters.push(`[trio0][trio1][trio2]vstack=inputs=3,format=yuv420p[reframed]`);
+      filters.push(`[trio0][trio1][trio2]vstack=inputs=3${postEnhancer},format=yuv420p[reframed]`);
       return { filters, mapLabel: 'reframed' };
     }
 
     case 'spotlight': {
-      // Zoomed in top, context bottom
       const spotH = Math.round(outputH * 0.6);
       const ctxH = outputH - spotH;
+      let inLabel = inputLabel;
+      if (enhance4k) {
+        filters.push(`[${inputLabel}]${buildPreScaleEnhancerFilter()}[denoised]`);
+        inLabel = 'denoised';
+      }
       const inputs = [];
       if (regions[0]) inputs.push('in0');
       if (regions[1]) inputs.push('in1');
       
       if (inputs.length > 0) {
-        filters.push(`[${inputLabel}]split=${inputs.length}[${inputs.join('][')}]`);
+        filters.push(`[${inLabel}]split=${inputs.length}[${inputs.join('][')}]`);
       }
 
       if (regions[0]) {
         const r = regions[0];
         filters.push(
-          `[in0]crop=${r.width}:${r.height}:${r.x}:${r.y},scale=${outputW}:${spotH}:force_original_aspect_ratio=increase,crop=${outputW}:${spotH}[spot]`
+          `[in0]crop=${r.width}:${r.height}:${r.x}:${r.y},scale=${outputW}:${spotH}:force_original_aspect_ratio=increase${scaleFlags},crop=${outputW}:${spotH}[spot]`
         );
       }
       if (regions[1]) {
         const r = regions[1];
         filters.push(
-          `[in1]crop=${r.width}:${r.height}:${r.x}:${r.y},scale=${outputW}:${ctxH}:force_original_aspect_ratio=increase,crop=${outputW}:${ctxH}[ctx]`
+          `[in1]crop=${r.width}:${r.height}:${r.x}:${r.y},scale=${outputW}:${ctxH}:force_original_aspect_ratio=increase${scaleFlags},crop=${outputW}:${ctxH}[ctx]`
         );
       }
       
       if (regions[0] && regions[1]) {
-        filters.push(`[spot][ctx]vstack=inputs=2,format=yuv420p[reframed]`);
+        filters.push(`[spot][ctx]vstack=inputs=2${postEnhancer},format=yuv420p[reframed]`);
       } else {
-        filters.push(`[${regions[0] ? 'spot' : 'ctx'}]format=yuv420p[reframed]`);
+        filters.push(`[${regions[0] ? 'spot' : 'ctx'}]${postEnhancer ? buildPostScaleEnhancerFilter() + ',' : ''}format=yuv420p[reframed]`);
       }
       return { filters, mapLabel: 'reframed' };
     }
 
     default: {
-      const r = regions[0] || { x: 0, y: 0, width: 1080, height: 1920 };
+      const r = regions[0] || { x: 0, y: 0, width: outputW, height: outputH };
       filters.push(
-        `[${inputLabel}]crop=${r.width}:${r.height}:${r.x}:${r.y},scale=${outputW}:${outputH}:force_original_aspect_ratio=increase,crop=${outputW}:${outputH},format=yuv420p[reframed]`
+        `[${inputLabel}]${preFilter}crop=${r.width}:${r.height}:${r.x}:${r.y},scale=${outputW}:${outputH}:force_original_aspect_ratio=increase${scaleFlags},crop=${outputW}:${outputH}${postEnhancer},format=yuv420p[reframed]`
       );
       return { filters, mapLabel: 'reframed' };
     }
