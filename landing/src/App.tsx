@@ -302,12 +302,12 @@ function App() {
             <div className="mb-8">
               <div className="flex items-center gap-3 mb-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span>
-                <h3 className="text-lg font-medium text-[#ECECEC]">3 AI-Generated Output Clips</h3>
+                <h3 className="text-lg font-medium text-[#ECECEC]">2 AI-Generated Output Clips</h3>
               </div>
               <p className="text-xs text-gray-400">Extracted, reframed to 9:16 portrait, and auto-captioned.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-[#141414] border border-[#262626] rounded-2xl overflow-hidden flex flex-col hover:border-[#444] transition-all">
                 <div className="p-3 bg-[#1A1A1A] border-b border-[#262626] flex items-center justify-between text-xs text-gray-400 font-mono">
                   <span>Clip 01</span>
@@ -340,21 +340,6 @@ function App() {
                 </div>
               </div>
 
-              <div className="bg-[#141414] border border-[#262626] rounded-2xl overflow-hidden flex flex-col hover:border-[#444] transition-all">
-                <div className="p-3 bg-[#1A1A1A] border-b border-[#262626] flex items-center justify-between text-xs text-gray-400 font-mono">
-                  <span>Clip 03</span>
-                  <span className="text-primary text-[10px] uppercase font-bold">Highlight Cut</span>
-                </div>
-                <div className="aspect-[9/16] w-full bg-black">
-                  <video
-                    controls
-                    preload="metadata"
-                    playsInline
-                    className="w-full h-full object-cover"
-                    src="/demos/final-clip-3.mp4"
-                  />
-                </div>
-              </div>
             </div>
 
           </div>
