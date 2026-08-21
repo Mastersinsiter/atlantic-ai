@@ -74,20 +74,8 @@ function App() {
         </div>
       </section>
 
-      <section id="pricing" className="bg-black py-12 px-4 md:px-6">
-        <div className="max-w-4xl mx-auto text-center text-gray-500 text-sm">
-          Pricing details coming soon.
-        </div>
-      </section>
-
-      <section id="creator-profile" className="bg-black py-12 px-4 md:px-6">
-        <div className="max-w-4xl mx-auto text-center text-gray-500 text-sm">
-          Creator profile settings coming soon.
-        </div>
-      </section>
-
-      {/* SECTION 3: FEATURES */}
-      <section id="features" className="min-h-screen bg-black relative px-4 md:px-6 py-24 overflow-hidden">
+      {/* SECTION 3: FEATURES / SHOWCASE */}
+      <section id="features" className="min-h-screen bg-black relative px-4 md:px-6 py-24 overflow-hidden border-t border-[#1a1a1a]">
         <div className="absolute inset-0 bg-noise opacity-[0.15] pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto relative z-10">
@@ -346,28 +334,178 @@ function App() {
         </div>
       </section>
 
-      <section id="get-started" className="bg-black py-24 px-4 md:px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl text-[#ECECEC] font-medium mb-6">
-            Drop in a video or paste a link.
-          </h2>
-          <p className="text-gray-400 text-sm sm:text-base mb-10">
-            Atlantic AI handles the rest — highlight detection, vertical reframe, word-accurate captions.
-          </p>
-          <button
-            type="button"
-            onClick={() => {
-              window.location.href = ATLANTIC_APP_URL;
-            }}
-            className="group bg-primary text-black rounded-full font-medium text-sm sm:text-base px-1 py-1 pl-6 flex items-center gap-4 hover:gap-6 transition-all duration-300 mx-auto"
-          >
-            Go to Atlantic AI
-            <div className="bg-black rounded-full w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
-              <ArrowRight className="text-[#ECECEC] w-4 h-4 sm:w-5 sm:h-5" />
+      {/* SECTION 5: PRICING */}
+      <section id="pricing" className="bg-[#0c0c0c] py-24 px-4 md:px-6 border-t border-[#222]">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <div className="text-primary text-[10px] sm:text-xs uppercase tracking-widest font-bold mb-4">
+              Simple & Transparent
             </div>
-          </button>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl text-[#ECECEC] font-medium tracking-tight mb-4">
+              Choose your creator plan
+            </h2>
+            <p className="text-gray-400 max-w-xl mx-auto text-sm sm:text-base">
+              All plans include Gemini AI highlight detection, 9:16 portrait reframing, and word-accurate animated captions.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Free Beta */}
+            <div className="bg-[#141414] border border-[#282828] rounded-3xl p-8 flex flex-col justify-between hover:border-[#444] transition-all">
+              <div>
+                <div className="text-xs uppercase tracking-wider text-gray-400 font-mono mb-2">Beta Access</div>
+                <h3 className="text-2xl font-bold text-white mb-2">Free</h3>
+                <p className="text-xs text-gray-400 mb-6">Test the AI clipping pipeline with your own streams.</p>
+                <div className="flex items-baseline gap-1 mb-6">
+                  <span className="text-4xl font-extrabold text-white">$0</span>
+                  <span className="text-xs text-gray-400">/ month</span>
+                </div>
+                <ul className="space-y-3 mb-8 text-xs text-gray-300">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-primary shrink-0" />
+                    <span>Up to 10 clips per day</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-primary shrink-0" />
+                    <span>Gemini AI Multimodal Analysis</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-primary shrink-0" />
+                    <span>720p 60fps Vertical Export</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-primary shrink-0" />
+                    <span>7 Animated Caption Styles</span>
+                  </li>
+                </ul>
+              </div>
+              <a
+                href={ATLANTIC_APP_URL}
+                className="w-full py-3 rounded-xl bg-[#222] hover:bg-[#333] text-white text-xs font-semibold text-center transition-colors block border border-[#333]"
+              >
+                Start Free in Studio →
+              </a>
+            </div>
+
+            {/* Pro Creator (Featured) */}
+            <div className="bg-[#181818] border-2 border-primary rounded-3xl p-8 flex flex-col justify-between relative shadow-[0_0_40px_rgba(94,210,156,0.15)]">
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-primary text-black font-bold text-[10px] uppercase tracking-wider px-3 py-1 rounded-full">
+                Most Popular
+              </div>
+              <div>
+                <div className="text-xs uppercase tracking-wider text-primary font-mono mb-2">Pro Streamer</div>
+                <h3 className="text-2xl font-bold text-white mb-2">Creator</h3>
+                <p className="text-xs text-gray-400 mb-6">For daily streamers, podcasters & YouTubers.</p>
+                <div className="flex items-baseline gap-1 mb-6">
+                  <span className="text-4xl font-extrabold text-white">$19</span>
+                  <span className="text-xs text-gray-400">/ month</span>
+                </div>
+                <ul className="space-y-3 mb-8 text-xs text-gray-300">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-primary shrink-0" />
+                    <span>Unlimited AI Clip Detection</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-primary shrink-0" />
+                    <span>1080p 60fps Full HD Export</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-primary shrink-0" />
+                    <span>Faster-Whisper Word-Level Timing</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-primary shrink-0" />
+                    <span>Facecam + Gameplay Split Screen</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-primary shrink-0" />
+                    <span>No Atlantic Watermark</span>
+                  </li>
+                </ul>
+              </div>
+              <a
+                href={ATLANTIC_APP_URL}
+                className="w-full py-3 rounded-xl bg-primary hover:bg-[#4dbd88] text-black text-xs font-bold text-center transition-colors block"
+              >
+                Launch Creator Studio →
+              </a>
+            </div>
+
+            {/* Studio / Agency */}
+            <div className="bg-[#141414] border border-[#282828] rounded-3xl p-8 flex flex-col justify-between hover:border-[#444] transition-all">
+              <div>
+                <div className="text-xs uppercase tracking-wider text-gray-400 font-mono mb-2">Team & Agency</div>
+                <h3 className="text-2xl font-bold text-white mb-2">Studio</h3>
+                <p className="text-xs text-gray-400 mb-6">For esports orgs, gaming houses & video agencies.</p>
+                <div className="flex items-baseline gap-1 mb-6">
+                  <span className="text-4xl font-extrabold text-white">$49</span>
+                  <span className="text-xs text-gray-400">/ month</span>
+                </div>
+                <ul className="space-y-3 mb-8 text-xs text-gray-300">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-primary shrink-0" />
+                    <span>4K 60fps Ultra HD Video Pipeline</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-primary shrink-0" />
+                    <span>Multi-Channel Auto Publishing</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-primary shrink-0" />
+                    <span>Custom Brand Fonts & Styles</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-primary shrink-0" />
+                    <span>Priority GPU Cloud Rendering</span>
+                  </li>
+                </ul>
+              </div>
+              <a
+                href={ATLANTIC_APP_URL}
+                className="w-full py-3 rounded-xl bg-[#222] hover:bg-[#333] text-white text-xs font-semibold text-center transition-colors block border border-[#333]"
+              >
+                Get Studio Access →
+              </a>
+            </div>
+          </div>
         </div>
       </section>
+
+      {/* SECTION 6: GET STARTED CTA */}
+      <section id="get-started" className="bg-black py-24 px-4 md:px-6 border-t border-[#1a1a1a]">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl text-[#ECECEC] font-bold tracking-tight mb-6">
+            Drop in your video or paste a link.
+          </h2>
+          <p className="text-gray-400 text-sm sm:text-base mb-10 max-w-xl mx-auto">
+            Atlantic AI handles the rest — multimodal highlight detection, vertical 9:16 reframe, and frame-accurate animated captions.
+          </p>
+          <a
+            href={ATLANTIC_APP_URL}
+            className="group bg-primary text-black rounded-full font-bold text-sm sm:text-base px-8 py-4 inline-flex items-center gap-4 hover:scale-105 transition-transform duration-300 shadow-[0_0_30px_rgba(94,210,156,0.3)]"
+          >
+            Launch Atlantic Studio Now
+            <ArrowRight className="text-black w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" />
+          </a>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="bg-[#070b0a] py-12 px-6 border-t border-[#1a1a1a] text-center text-xs text-gray-500">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-white font-semibold">
+            <span className="w-2.5 h-2.5 rounded-full bg-primary"></span>
+            Atlantic AI
+          </div>
+          <p>© 2026 Atlantic AI. Built for creators who post daily.</p>
+          <div className="flex gap-6">
+            <a href="#about" className="hover:text-white transition-colors">How it works</a>
+            <a href="#features" className="hover:text-white transition-colors">Showcase</a>
+            <a href="#demo" className="hover:text-white transition-colors">Demo</a>
+            <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }
