@@ -31,6 +31,11 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use('/outputs', express.static(OUTPUT_DIR));
 app.use('/uploads', express.static(UPLOAD_DIR));
+app.use(express.static(FRONTEND_DIR));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(FRONTEND_DIR, 'index.html'));
+});
 
 // ── Concurrent job limiter ──
 const MAX_CONCURRENT_JOBS = 2;
