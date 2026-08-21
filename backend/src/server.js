@@ -358,7 +358,7 @@ app.post('/api/profile/watermark-image', upload.single('watermark'), (req, res) 
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-app.get('/api/health', (req, res) => {
+app.get(['/healthz', '/api/health'], (req, res) => {
   res.json({
     status: 'ok',
     uptime: process.uptime(),
